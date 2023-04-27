@@ -72,7 +72,7 @@ export default function ManagerPersonalAccount() {
               </li>
 
               <li>
-                <Link to="/orderlist">
+                <Link to="/personalareacheckpay">
                   <svg
                     width="40"
                     height="40"
@@ -115,7 +115,13 @@ export default function ManagerPersonalAccount() {
               {userInfo.job === "product manager" ||
               userInfo.job === "admin" ? (
                 <li>
-                  <Link to="/requestlist">
+                  <Link
+                    to={`${
+                      userInfo.job === "admin"
+                        ? "/requestlist"
+                        : "/personalareanew"
+                    }`}
+                  >
                     <svg
                       width="40"
                       height="40"
@@ -165,7 +171,7 @@ export default function ManagerPersonalAccount() {
                           fill="#292D32"
                         />
                       </svg>
-                      Курс
+                      Курс & Категории
                     </Link>
                   </li>
                   <li>

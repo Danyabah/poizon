@@ -1,21 +1,35 @@
-import React from "react";
+import React, { useState } from "react";
 import Header from "../components/Header";
+import { useParams } from "react-router-dom";
+import { useEffect } from "react";
+import axios from "axios";
 
 export default function OrderPage() {
+  const { id } = useParams();
+  const [product, setProduct] = useState({});
+  useEffect(() => {
+    axios.get(`http://45.84.227.72:5000/checklist/${id}`).then((res) => {
+      setProduct(res.data);
+    });
+  }, []);
+
+  console.log(product);
   return (
     <>
       <Header />
-      <div class="line"></div>
-      <div class="push60 hidden-xss"></div>
-      <div class="push20 visible-xss"></div>
-      <section class="main-section">
-        <div class="container">
-          <div class="main-inner">
-            <div class="title">Название товара</div>
-            <div class="push20"></div>
-            <div class="text size">
-              Размер: 41
-              <a href="#">
+      <div className="line"></div>
+      <div className="push60 hidden-xss"></div>
+      <div className="push20 visible-xss"></div>
+      <section className="main-section">
+        <div className="container">
+          <div className="main-inner">
+            <div className="title">
+              {product?.brand} {product?.model}
+            </div>
+            <div className="push20"></div>
+            <div className="text size">
+              Размер: {product?.size}
+              <a href={product?.link} rel="noreferrer" target="_blank">
                 Открыть в Poizon
                 <svg
                   width="32"
@@ -36,85 +50,85 @@ export default function OrderPage() {
                 </svg>
               </a>
             </div>
-            <div class="push40 hidden-xss"></div>
-            <div class="push20 visible-xss"></div>
-            <div class="price">19 214 ₽</div>
-            <div class="push40 hidden-xss"></div>
-            <div class="push20 visible-xss"></div>
+            <div className="push40 hidden-xss"></div>
+            <div className="push20 visible-xss"></div>
+            <div className="price">19 214 ₽</div>
+            <div className="push40 hidden-xss"></div>
+            <div className="push20 visible-xss"></div>
             <section>
-              <div class="order-img-wrap">
-                <div class="img-wrapper">
+              <div className="order-img-wrap">
+                <div className="img-wrapper">
                   <a
                     href=""
-                    class="absolute fancybox"
+                    className="absolute fancybox"
                     data-fancybox="portfolio"
                     data-thumb="images/1.jpg"
                   ></a>
                   <img src="" alt="" />
                 </div>
-                <div class="table-wrapper">
+                <div className="table-wrapper">
                   <table>
                     <tr>
                       <th>Цена в CNY</th>
-                      <td>1 579 ¥</td>
+                      <td>{product?.curencycurency2.toLocaleString()} ¥</td>
                     </tr>
                     <tr>
                       <th>Курс обмена</th>
-                      <td>10,3 ₽</td>
+                      <td>{product?.currency.toLocaleString()} ₽</td>
                     </tr>
                     <tr>
                       <th>Цена в RUB</th>
-                      <td>16 264 ₽</td>
+                      <td>{product?.currency3.toLocaleString()} ₽</td>
                     </tr>
                     <tr>
                       <th>Доставка по Китаю</th>
-                      <td>350 ₽</td>
+                      <td>{product?.chinadelivery.toLocaleString()} ₽</td>
                     </tr>
                     <tr>
                       <th>Доставка в РФ</th>
-                      <td>1 100 ₽</td>
+                      <td>{product?.chinadelivery2.toLocaleString()} ₽</td>
                     </tr>
                     <tr>
                       <th>Комиссия сервиса</th>
-                      <td>1 500 ₽</td>
+                      <td>{product?.commission.toLocaleString()} ₽</td>
                     </tr>
                   </table>
                 </div>
               </div>
-              <div class="push60 hidden-xss"></div>
-              <div class="push25 visible-xss"></div>
-              <div class="history-wrap">
-                <div class="title">История заказа</div>
-                <div class="push60 hidden-xss"></div>
-                <div class="push20 visible-xss"></div>
-                <div class="text">
+              <div className="push60 hidden-xss"></div>
+              <div className="push25 visible-xss"></div>
+              <div className="history-wrap">
+                <div className="title">История заказа</div>
+                <div className="push60 hidden-xss"></div>
+                <div className="push20 visible-xss"></div>
+                <div className="text">
                   В этом разделе мы показываем, где сейчас ваш заказ. Обычно до
                   России заказы доходят за три недели.
                 </div>
-                <div class="push50 hidden-xss"></div>
-                <div class="push20 visible-xss"></div>
+                <div className="push50 hidden-xss"></div>
+                <div className="push20 visible-xss"></div>
                 <ul>
-                  <li class="text">Проверка оплаты</li>
-                  <li class="text">Оплачен</li>
-                  <li class="text">На закупке</li>
-                  <li class="text">Закуплен</li>
-                  <li class="text">На складе в Китае</li>
-                  <li class="text">Доставка на склад РФ</li>
-                  <li class="text">На складе в РФ</li>
-                  <li class="text">Доставляется</li>
-                  <li class="text">Завершен</li>
+                  <li className="text">Проверка оплаты</li>
+                  <li className="text">Оплачен</li>
+                  <li className="text">На закупке</li>
+                  <li className="text">Закуплен</li>
+                  <li className="text">На складе в Китае</li>
+                  <li className="text">Доставка на склад РФ</li>
+                  <li className="text">На складе в РФ</li>
+                  <li className="text">Доставляется</li>
+                  <li className="text">Завершен</li>
                 </ul>
                 <a
                   href="pay.html"
                   style={{ gridGap: "10px" }}
-                  class="button no-icon"
+                  className="button no-icon"
                 >
                   Оплатить <span>19 214 ₽</span>
                 </a>
               </div>
             </section>
-            <div class="push100"></div>
-            <div class="push100"></div>
+            <div className="push100"></div>
+            <div className="push100"></div>
           </div>
         </div>
       </section>

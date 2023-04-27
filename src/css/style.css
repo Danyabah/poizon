@@ -2343,3 +2343,19 @@ option {
 
   border-radius: 10px;
 }
+.image__item img {
+  width: 250px;
+  height: 250px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+.image__item {
+  display: inline-block;
+  position: relative;
+}
+.image__list {
+  display: flex;
+  flex-wrap: wrap;
+  row-gap: 20px;
+  column-gap: 20px;
+}

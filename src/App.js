@@ -57,7 +57,7 @@ function App() {
         <Route path="/ordercard" element={<OrderCard />} />
         <Route path="/orderlist" element={<OrderList />} />
         <Route path="/orderpageinprogress" element={<OrderPageInProgress />} />
-        <Route path="/orderpage" element={<OrderPage />} />
+        <Route path="/orderpage/:id" element={<OrderPage />} />
         <Route path="/order" element={<Order />} />
         <Route path="/pay" element={<Pay />} />
         <Route

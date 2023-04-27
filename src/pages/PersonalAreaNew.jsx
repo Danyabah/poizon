@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 export default function PersonalAreaNew() {
   return (
@@ -42,10 +43,10 @@ export default function PersonalAreaNew() {
           <div class="main-inner main-inner-menu">
             <ul class="tabs">
               <li class="current">
-                <a href="personal_area_New.html">Новые</a>
+                <Link to="/personalareanew">Новые</Link>
               </li>
               <li>
-                <a href="personal_area_Purchase.html">На закупке</a>
+                <Link to="/personalareapurchase">На закупке</Link>
               </li>
               <li>
                 <a href="#">Выкуплен</a>

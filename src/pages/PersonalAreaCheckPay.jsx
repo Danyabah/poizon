@@ -1,6 +1,17 @@
-import React from "react";
+import axios from "axios";
+import React, { useEffect } from "react";
+import { Link } from "react-router-dom";
 
 export default function PersonalAreaCheckPay() {
+  useEffect(() => {
+    axios
+      .get(
+        `http://45.84.227.72:5000/checklist/?page=1&limit=10&previewimage=no`
+      )
+      .then((data) => {
+        console.log(data);
+      });
+  }, []);
   return (
     <>
       <header class="header-wrapper">
@@ -8,7 +19,7 @@ export default function PersonalAreaCheckPay() {
           <div class="header">
             <div class="logo">POIZON</div>
             <div class="buttons-wrapper">
-              <a href="#" class="track button">
+              <Link to="/personalareaorder" class="track button">
                 <svg
                   width="24"
                   height="24"
@@ -30,7 +41,7 @@ export default function PersonalAreaCheckPay() {
                   />
                 </svg>
                 Новый заказ
-              </a>
+              </Link>
             </div>
           </div>
         </div>
