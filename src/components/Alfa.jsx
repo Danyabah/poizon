@@ -30,7 +30,10 @@ export default function Alfa() {
   };
 
   const validSchema = Yup.object().shape({
-    cardnumber: Yup.string().required("Необходимо указать номер карты"),
+    cardnumber: Yup.string()
+      .min(16, "Укажите 16 цифр номера")
+      .max(16, "Укажите 16 цифр номера")
+      .required("Необходимо указать номер карты"),
     requisites: Yup.string().required("Необходимо указать реквизиты"),
   });
 
@@ -86,7 +89,9 @@ export default function Alfa() {
               />
             </div>
             <div className="push10"></div>
-            <button className="button no-icon">Сохранить</button>
+            <button type="submit" className="button no-icon">
+              Сохранить
+            </button>
           </Form>
         );
       }}

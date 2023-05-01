@@ -1,17 +1,22 @@
 import React, { useState } from "react";
 import Header from "../components/Header";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useEffect } from "react";
 import axios from "axios";
+import { useDispatch } from "react-redux";
+import { setCurrentProductInfo } from "../redux/slices/userReducer";
 
 export default function OrderPage() {
   const { id } = useParams();
   const [product, setProduct] = useState({});
+  const dispatch = useDispatch();
+
   useEffect(() => {
     axios.get(`http://45.84.227.72:5000/checklist/${id}`).then((res) => {
       setProduct(res.data);
+      dispatch(setCurrentProductInfo(res.data));
     });
-  }, []);
+  }, [id]);
 
   console.log(product);
   return (
@@ -52,46 +57,44 @@ export default function OrderPage() {
             </div>
             <div className="push40 hidden-xss"></div>
             <div className="push20 visible-xss"></div>
-            <div className="price">19 214 ₽</div>
+            <div className="price">
+              {product?.fullprice?.toLocaleString()} ₽
+            </div>
             <div className="push40 hidden-xss"></div>
             <div className="push20 visible-xss"></div>
             <section>
               <div className="order-img-wrap">
                 <div className="img-wrapper">
-                  <a
-                    href=""
-                    className="absolute fancybox"
-                    data-fancybox="portfolio"
-                    data-thumb="images/1.jpg"
-                  ></a>
-                  <img src="" alt="" />
+                  <img src={product?.Image?.[0]} alt="" />
                 </div>
                 <div className="table-wrapper">
                   <table>
-                    <tr>
-                      <th>Цена в CNY</th>
-                      <td>{product?.curencycurency2.toLocaleString()} ¥</td>
-                    </tr>
-                    <tr>
-                      <th>Курс обмена</th>
-                      <td>{product?.currency.toLocaleString()} ₽</td>
-                    </tr>
-                    <tr>
-                      <th>Цена в RUB</th>
-                      <td>{product?.currency3.toLocaleString()} ₽</td>
-                    </tr>
-                    <tr>
-                      <th>Доставка по Китаю</th>
-                      <td>{product?.chinadelivery.toLocaleString()} ₽</td>
-                    </tr>
-                    <tr>
-                      <th>Доставка в РФ</th>
-                      <td>{product?.chinadelivery2.toLocaleString()} ₽</td>
-                    </tr>
-                    <tr>
-                      <th>Комиссия сервиса</th>
-                      <td>{product?.commission.toLocaleString()} ₽</td>
-                    </tr>
+                    <tbody>
+                      <tr>
+                        <th>Цена в CNY</th>
+                        <td>{product?.curencycurency2?.toLocaleString()} ¥</td>
+                      </tr>
+                      <tr>
+                        <th>Курс обмена</th>
+                        <td>{product?.currency?.toLocaleString()} ₽</td>
+                      </tr>
+                      <tr>
+                        <th>Цена в RUB</th>
+                        <td>{product?.currency3?.toLocaleString()} ₽</td>
+                      </tr>
+                      <tr>
+                        <th>Доставка по Китаю</th>
+                        <td>{product?.chinadelivery?.toLocaleString()} ₽</td>
+                      </tr>
+                      <tr>
+                        <th>Доставка в РФ</th>
+                        <td>{product?.chinadelivery2?.toLocaleString()} ₽</td>
+                      </tr>
+                      <tr>
+                        <th>Комиссия сервиса</th>
+                        <td>{product?.commission?.toLocaleString()} ₽</td>
+                      </tr>
+                    </tbody>
                   </table>
                 </div>
               </div>
@@ -118,13 +121,13 @@ export default function OrderPage() {
                   <li className="text">Доставляется</li>
                   <li className="text">Завершен</li>
                 </ul>
-                <a
-                  href="pay.html"
+                <Link
+                  to="/pay"
                   style={{ gridGap: "10px" }}
                   className="button no-icon"
                 >
                   Оплатить <span>19 214 ₽</span>
-                </a>
+                </Link>
               </div>
             </section>
             <div className="push100"></div>

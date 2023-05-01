@@ -841,7 +841,7 @@ option {
   color: #fff;
 }
 .pay-inner .item:nth-child(1) {
-  background: #649c55;
+  background: rgb(39, 41, 38);
 }
 .pay-inner .item:nth-child(2) {
   background: #f5df72;
@@ -1063,12 +1063,15 @@ option {
   justify-content: center;
   grid-gap: 40px;
 }
-.pagination a {
+.pagination button {
+  background-color: white;
+  border: none;
   font-weight: 400;
   font-size: 36px;
   line-height: 44px;
   color: #000;
 }
+
 .pagination li {
   width: 60px;
   height: 60px;
@@ -1201,7 +1204,7 @@ option {
   position: relative;
   padding-left: 40px;
 }
-.order-table .table-row .table-td:first-child:before {
+/* .order-table .table-row .table-td:first-child:before {
   position: absolute;
   content: "";
   width: 20px;
@@ -1209,7 +1212,7 @@ option {
   border: 1px solid #000000;
   border-radius: 100%;
   left: 0;
-}
+} */
 @media only screen and (max-width: 647px) {
   .order-table .table-td {
     padding: 8px 0;

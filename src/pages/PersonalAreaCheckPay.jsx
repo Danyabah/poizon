@@ -1,25 +1,34 @@
 import axios from "axios";
 import React, { useEffect } from "react";
-import { Link } from "react-router-dom";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function PersonalAreaCheckPay() {
+  const [categ, setCateg] = useState("payment");
+  const [products, setProducts] = useState([]);
+  const [page, setPage] = useState(1);
+  const [totalPage, setTotalPage] = useState(1);
+  const navigate = useNavigate();
   useEffect(() => {
     axios
       .get(
-        `http://45.84.227.72:5000/checklist/?page=1&limit=10&previewimage=no`
+        `http://45.84.227.72:5000/checklist/?page=${page}&limit=10&previewimage=no`
       )
       .then((data) => {
         console.log(data);
+        setProducts(data.data.data);
+        setTotalPage(data.data.total_pages);
       });
-  }, []);
+  }, [page]);
+
   return (
     <>
-      <header class="header-wrapper">
-        <div class="container">
-          <div class="header">
-            <div class="logo">POIZON</div>
-            <div class="buttons-wrapper">
-              <Link to="/personalareaorder" class="track button">
+      <header className="header-wrapper">
+        <div className="container">
+          <div className="header">
+            <div className="logo">POIZON</div>
+            <div className="buttons-wrapper">
+              <Link to="/personalareaorder" className="track button">
                 <svg
                   width="24"
                   height="24"
@@ -46,98 +55,135 @@ export default function PersonalAreaCheckPay() {
           </div>
         </div>
       </header>
-      <div class="line"></div>
-      <section class="main-section">
-        <div class="container">
-          <div class="push45 hidden-xss"></div>
-          <div class="push20 visible-xss"></div>
-          <div class="main-inner">
-            <form class="search-wrapper">
-              <div class="form-group">
-                <label class="label" for="search">
+      <div className="line"></div>
+      <section className="main-section">
+        <div className="container">
+          <div className="push45 hidden-xss"></div>
+          <div className="push20 visible-xss"></div>
+          <div className="main-inner">
+            <form className="search-wrapper">
+              <div className="form-group">
+                <label className="label" htmlFor="search">
                   Поиск
                 </label>
                 <input
                   name="search"
                   type="text"
-                  class="form-control"
+                  className="form-control"
                   id="search"
                 />
               </div>
             </form>
           </div>
-          <div class="push50 hidden-xss"></div>
-          <div class="push15 visible-xss"></div>
+          <div className="push50 hidden-xss"></div>
+          <div className="push15 visible-xss"></div>
         </div>
-        <div class="line hidden-xss"></div>
-        <div class="container">
-          <div class="push25 hidden-xss"></div>
+        <div className="line hidden-xss"></div>
+        <div className="container">
+          <div className="push25 hidden-xss"></div>
 
-          <div class="main-inner">
-            <ul class="tabs">
-              <li>
-                <a href="#">Черновик</a>
+          <div className="main-inner">
+            <ul className="tabs">
+              <li
+                className={categ === 1 ? "current" : ""}
+                onClick={() => setCateg(1)}
+              >
+                <span>Черновик</span>
               </li>
-              <li>
-                <a href="#">Расчет</a>
+              <li
+                className={categ === "neworder" ? "current" : ""}
+                onClick={() => setCateg("neworder")}
+              >
+                <span>Расчет</span>
               </li>
-              <li class="current">
-                <a href="personal_area_Check_pay.html">Проверка оплаты</a>
+              <li
+                className={categ === "payment" ? "current" : ""}
+                onClick={() => setCateg("payment")}
+              >
+                <span>Проверка оплаты</span>
               </li>
-              <li>
-                <a href="#">На закупке</a>
+              <li
+                className={categ === "buying" ? "current" : ""}
+                onClick={() => setCateg("buying")}
+              >
+                <span>На закупке</span>
               </li>
             </ul>
           </div>
         </div>
-        <div class="line"></div>
-        <div class="check-table table">
-          <div class="container">
-            <div class="table-row">
-              <div class="table-td">Номер</div>
-              <div class="table-td">Дата</div>
-              <div class="table-td">Сумма</div>
-              <div class="table-td">Способ оплаты</div>
-              <div class="table-td">Место</div>
+        <div className="line"></div>
+        <div className="check-table table">
+          <div className="container">
+            <div className="table-row">
+              <div className="table-td">Номер</div>
+              <div className="table-td">Дата</div>
+              <div className="table-td">Сумма</div>
+              <div className="table-td">Способ оплаты</div>
+              <div className="table-td">Место</div>
             </div>
           </div>
-          <div class="line hidden-xss"></div>
-          <div class="container">
-            <div class="table-row">
-              <div class="table-td">1554</div>
-              <div class="table-td">15.10.2022</div>
-              <div class="table-td">19214.00</div>
-              <div class="table-td">
-                Перевод по номеру
-                <br /> карты Тинькофф
-              </div>
-              <div class="table-td">Адрес</div>
-            </div>
+          <div className="line hidden-xss"></div>
+          <div className="container">
+            {products
+              ?.filter((prod) => prod.status === categ)
+              ?.map((obj) => (
+                <div key={obj?.id} className="table-row">
+                  <div
+                    className="table-td"
+                    style={{ cursor: "pointer" }}
+                    onClick={() => navigate(`/personalareapay/${obj?.id}`)}
+                  >
+                    {obj?.id}
+                  </div>
+                  <div className="table-td">15.10.2022</div>
+                  <div className="table-td">
+                    {obj?.fullprice?.toLocaleString()}
+                  </div>
+                  <div className="table-td">
+                    Перевод по номеру
+                    <br /> карты{" "}
+                    {obj?.paymenttype === "tink"
+                      ? "Тинькофф"
+                      : obj?.paymenttype === "ralf"
+                      ? "Райффайзен"
+                      : obj?.paymenttype === "alfa"
+                      ? "Альфабанк"
+                      : ""}
+                  </div>
+                  <div className="table-td">{obj?.delivery}</div>
+                </div>
+              ))}
           </div>
-          <div class="line hidden-xss"></div>
+          <div className="line hidden-xss"></div>
         </div>
-        <div class="push80 hidden-xss"></div>
-        <div class="push55 visible-xss"></div>
-        <div class="container">
-          <ul class="pagination">
+        <div className="push80 hidden-xss"></div>
+        <div className="push55 visible-xss"></div>
+        <div className="container">
+          <ul className="pagination">
             <li>
-              <a href="#" class="prev-page">
+              <button
+                disabled={page === 1}
+                onClick={() => setPage((prev) => prev - 1)}
+                className="prev-page"
+              >
                 {"<"}
-              </a>
+              </button>
             </li>
             <li>
-              <a href="#" class="page">
-                1
-              </a>
+              <button className="page">{page}</button>
             </li>
             <li>
-              <a href="#" class="next-page">
+              <button
+                disabled={page === totalPage}
+                className="next-page"
+                onClick={() => setPage((prev) => prev + 1)}
+              >
                 {">"}
-              </a>
+              </button>
             </li>
           </ul>
         </div>
-        <div class="push80"></div>
+        <div className="push80"></div>
       </section>
     </>
   );

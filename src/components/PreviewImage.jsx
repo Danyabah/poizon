@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setImages } from "../redux/slices/adminReducer";
 
-export default function PreviewImage({ file }) {
+export default function PreviewImage({ name, file, setField }) {
   const [preview, setPreview] = useState([]);
   const dispatch = useDispatch();
 
@@ -14,6 +14,7 @@ export default function PreviewImage({ file }) {
         reader.onload = () => {
           if (!preview.includes(reader.result)) {
             setPreview([...preview, reader.result]);
+            setField(name, [...preview, reader.result]);
           }
         };
       }
@@ -28,6 +29,10 @@ export default function PreviewImage({ file }) {
   function deletePreview(e) {
     let img = e.target.closest(".image__item").querySelector("img");
     setPreview(preview.filter((el) => el !== img.src));
+    setField(
+      name,
+      preview.filter((el) => el !== img.src)
+    );
   }
 
   return (

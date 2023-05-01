@@ -4,6 +4,9 @@ const initialState = {
   paymentInfo: {},
   images: [],
   publicLink: "",
+  selectedProduct: {},
+  orderProduct: {},
+  chinaProduct: {},
 };
 
 export const userSlice = createSlice({
@@ -19,10 +22,25 @@ export const userSlice = createSlice({
     setPublicLink: (state, action) => {
       state.publicLink = action.payload;
     },
+    setSelectedProduct: (state, action) => {
+      state.selectedProduct = action.payload;
+    },
+    setOrderProduct: (state, action) => {
+      state.orderProduct = action.payload;
+    },
+    setChinaProduct: (state, action) => {
+      state.chinaProduct = action.payload;
+    },
   },
 });
 
-export const { setPaymentCurrency, setImages, setPublicLink } =
-  userSlice.actions;
+export const {
+  setPaymentCurrency,
+  setImages,
+  setPublicLink,
+  setSelectedProduct,
+  setOrderProduct,
+  setChinaProduct,
+} = userSlice.actions;
 
 export default userSlice.reducer;

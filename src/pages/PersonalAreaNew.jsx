@@ -1,15 +1,80 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import { setChinaProduct, setOrderProduct } from "../redux/slices/adminReducer";
+import PurchaseForm from "../components/PurchaseForm";
+import { useMutation } from "@tanstack/react-query";
 
 export default function PersonalAreaNew() {
+  const [categ, setCateg] = useState("buying");
+  const [products, setProducts] = useState([]);
+  const [page, setPage] = useState(1);
+  const product = useSelector((state) => state.admin.orderProduct);
+  const chinaProduct = useSelector((state) => state.admin.chinaProduct);
+  const [totalPage, setTotalPage] = useState(1);
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    axios
+      .get(
+        `http://45.84.227.72:5000/checklist/?page=${page}&limit=10&previewimage=no`
+      )
+      .then((data) => {
+        setProducts(data.data.data);
+        setTotalPage(data.data.total_pages);
+      });
+  }, [page]);
+
+  function changeProduct(obj) {
+    switch (categ) {
+      case "buying":
+        dispatch(setOrderProduct(obj));
+        break;
+      case "bought":
+        dispatch(setChinaProduct(obj));
+      default:
+        break;
+    }
+  }
+
+  const onSubmit = (values) => {
+    mutate(values, {
+      onSuccess: (response) => {
+        alert("Сохранено");
+        console.log(response);
+        setCateg("buying");
+        dispatch(setChinaProduct(null));
+        window.location.reload();
+      },
+      onError: (response) => {
+        alert("Произошла ошибка");
+      },
+    });
+  };
+
+  const { mutate } = useMutation({
+    mutationFn: () => {
+      return axios.patch(
+        `http://45.84.227.72:5000/checklist/${chinaProduct?.id}`,
+        {
+          status: "china",
+        }
+      );
+    },
+  });
+
+  console.log(categ);
+  console.log(products);
   return (
     <>
-      <header class="header-wrapper">
-        <div class="container">
-          <div class="header">
-            <div class="logo">POIZON</div>
-            <div class="buttons-wrapper">
-              <a href="#" class="track button">
+      <header className="header-wrapper">
+        <div className="container">
+          <div className="header">
+            <div className="logo">POIZON</div>
+            <div className="buttons-wrapper">
+              <Link to="/personalareaorder" className="track button">
                 <svg
                   width="24"
                   height="24"
@@ -31,108 +96,152 @@ export default function PersonalAreaNew() {
                   />
                 </svg>
                 Новый заказ
-              </a>
+              </Link>
             </div>
           </div>
         </div>
       </header>
-      <div class="line hidden-xss"></div>
-      <form class="main-section">
-        <div class="container">
-          <div class="push40 line hidden-xss"></div>
-          <div class="main-inner main-inner-menu">
-            <ul class="tabs">
-              <li class="current">
-                <Link to="/personalareanew">Новые</Link>
+      <div className="line hidden-xss"></div>
+      <div className="main-section">
+        <div className="container">
+          <div className="push40 line hidden-xss"></div>
+          <div className="main-inner main-inner-menu">
+            <ul className="tabs">
+              <li
+                className={categ === "buying" ? "current" : ""}
+                onClick={() => setCateg("buying")}
+              >
+                <span>Новые</span>
               </li>
-              <li>
-                <Link to="/personalareapurchase">На закупке</Link>
+              <li className={categ === 2 ? "current" : ""}>
+                <span>На закупке</span>
               </li>
-              <li>
-                <a href="#">Выкуплен</a>
+              <li
+                className={categ === "bought" ? "current" : ""}
+                onClick={() => setCateg("bought")}
+              >
+                <span>Выкуплен</span>
               </li>
-              <li>
-                <a href="#">На складе в Китае</a>
+              <li
+                className={categ === "china" ? "current" : ""}
+                onClick={() => setCateg("china")}
+              >
+                <span>На складе в китае</span>
               </li>
             </ul>
           </div>
-          <div class="push15 hidden-xss"></div>
-          <div class="push10 visible-xss"></div>
+          <div className="push15 hidden-xss"></div>
+          <div className="push10 visible-xss"></div>
         </div>
-        <div class="line hidden-xss"></div>
-        <div class="container">
-          <div class="push40  hidden-xss"></div>
-          <div class="main-inner">
-            <div class="text">Заказ на сумму 837.00 CNY</div>
-            <div class="push20 hidden-xss"></div>
-            <div class="push10 visible-xss"></div>
-            <button class="button button-new no-icon">На закупку</button>
-          </div>
-          <div class="push40 hidden-xss"></div>
-          <div class="push20 visible-xss"></div>
-        </div>
-        <div class="line"></div>
-        <div class="order-table table">
-          <div class="container">
-            <div class="table-row table-row-th">
-              <div class="table-td">Заказ</div>
-              <div class="table-td">Дата</div>
-              <div class="table-td">CNY</div>
-              <div class="table-td">Товар</div>
+        <div className="line hidden-xss"></div>
+        {categ === 2 ? (
+          <PurchaseForm setCateg={setCateg} />
+        ) : (
+          <>
+            <div className="container">
+              <div className="push40  hidden-xss"></div>
+              {product && categ === "buying" && (
+                <div className="main-inner">
+                  <div className="text">
+                    Заказ #{product?.id} на сумму {product?.curencycurency2} CNY
+                  </div>
+                  <div className="push20 hidden-xss"></div>
+                  <div className="push10 visible-xss"></div>
+                  <button
+                    className="button button-new no-icon"
+                    onClick={() => setCateg(2)}
+                  >
+                    На закупку
+                  </button>
+                </div>
+              )}
+              {chinaProduct && categ === "bought" && (
+                <div className="main-inner">
+                  <div className="text">
+                    Заказ #{chinaProduct?.id} на сумму{" "}
+                    {chinaProduct?.curencycurency2} CNY
+                  </div>
+                  <div className="push20 hidden-xss"></div>
+                  <div className="push10 visible-xss"></div>
+                  <button
+                    className="button button-new no-icon"
+                    onClick={() => onSubmit()}
+                  >
+                    На складе в Китае
+                  </button>
+                </div>
+              )}
+              <div className="push40 hidden-xss"></div>
+              <div className="push20 visible-xss"></div>
             </div>
-          </div>
-          <div class="line"></div>
-          <div class="container">
-            <div class="table-row">
-              <div class="table-td">2905</div>
-              <div class="table-td">22.10.2022</div>
-              <div class="table-td">169.00</div>
-              <div class="table-td">Название товара</div>
+            <div className="line"></div>
+            <div className="order-table table">
+              <div className="container">
+                <div className="table-row table-row-th">
+                  <div className="table-td">Заказ</div>
+                  <div className="table-td">Дата</div>
+                  <div className="table-td">CNY</div>
+                  <div className="table-td">Товар</div>
+                </div>
+              </div>
+              <div className="line"></div>
+              {products
+                ?.filter((prod) => prod.status === categ)
+                ?.map((obj) => (
+                  <div key={obj?.id}>
+                    <div className="container">
+                      <div className="table-row">
+                        <div
+                          className="table-td"
+                          style={{ cursor: "pointer" }}
+                          onClick={() => changeProduct(obj)}
+                        >
+                          {obj?.id}
+                        </div>
+                        <div className="table-td">22.10.2022</div>
+                        <div className="table-td">
+                          {obj?.curencycurency2?.toLocaleString()}
+                        </div>
+                        <div className="table-td">
+                          {obj?.brand} {obj?.model}
+                        </div>
+                      </div>
+                    </div>
+                    <div className="line"></div>
+                  </div>
+                ))}
             </div>
-          </div>
-          <div class="line"></div>
-          <div class="container">
-            <div class="table-row">
-              <div class="table-td">2906</div>
-              <div class="table-td">22.10.2022</div>
-              <div class="table-td">109.00</div>
-              <div class="table-td">Название товара</div>
-            </div>
-          </div>
-          <div class="line"></div>
-          <div class="container">
-            <div class="table-row">
-              <div class="table-td">2900</div>
-              <div class="table-td">22.10.2022</div>
-              <div class="table-td">559.00</div>
-              <div class="table-td">Название товара</div>
-            </div>
-          </div>
-          <div class="line"></div>
-        </div>
-        <div class="push80 hidden-xss"></div>
-        <div class="push20 visible-xss"></div>
-        <div class="container">
-          <ul class="pagination">
+          </>
+        )}
+        <div className="push80 hidden-xss"></div>
+        <div className="push20 visible-xss"></div>
+        <div className="container">
+          <ul className="pagination">
             <li>
-              <a href="#" class="prev-page">
+              <button
+                disabled={page === 1}
+                onClick={() => setPage((prev) => prev - 1)}
+                className="prev-page"
+              >
                 {"<"}
-              </a>
+              </button>
             </li>
             <li>
-              <a href="#" class="page">
-                1
-              </a>
+              <button className="page">{page}</button>
             </li>
             <li>
-              <a href="#" class="next-page">
+              <button
+                disabled={page === totalPage}
+                className="next-page"
+                onClick={() => setPage((prev) => prev + 1)}
+              >
                 {">"}
-              </a>
+              </button>
             </li>
           </ul>
         </div>
-        <div class="push60"></div>
-      </form>
+        <div className="push60"></div>
+      </div>
     </>
   );
 }

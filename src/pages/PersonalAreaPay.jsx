@@ -1,14 +1,37 @@
-import React from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { status } from "../utils/utils";
+import PaymentTab from "../components/PaymentTab";
+import { useDispatch } from "react-redux";
+import { setSelectedProduct } from "../redux/slices/adminReducer";
+import OrderTab from "../components/OrderTab";
+import ClientTab from "../components/ClientTab";
+import DeliveryTab from "../components/DeliveryTab";
 
 export default function PersonalAreaPay() {
+  const { id } = useParams();
+  const [product, setProduct] = useState({});
+  const [categ, setCateg] = useState(2);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    axios.get(`http://45.84.227.72:5000/checklist/${id}`).then((res) => {
+      setProduct(res.data);
+      dispatch(setSelectedProduct(res.data));
+    });
+  }, [id]);
+
+  console.log(product);
+
   return (
     <>
-      <header class="header-wrapper">
-        <div class="container">
-          <div class="header">
-            <div class="logo">POIZON</div>
-            <div class="buttons-wrapper">
-              <a href="#" class="track button">
+      <header className="header-wrapper">
+        <div className="container">
+          <div className="header">
+            <div className="logo">POIZON</div>
+            <div className="buttons-wrapper">
+              <a href="#" className="track button">
                 <svg
                   width="24"
                   height="24"
@@ -35,94 +58,57 @@ export default function PersonalAreaPay() {
           </div>
         </div>
       </header>
-      <div class="line"></div>
-      <div class="push60 hidden-xss"></div>
-      <div class="push20 visible-xss"></div>
-      <section class="main-section">
-        <div class="container">
-          <div class="main-inner">
-            <div class="title">Заказ #1561</div>
-            <div class="push20 hidden-xss"></div>
-            <div class="push10 visible-xss"></div>
-            <div class="text">Статус Проверка оплаты</div>
-            <div class="push40 hidden-xss"></div>
-            <div class="push10 visible-xss"></div>
-            <ul class="tabs">
-              <li>
-                <a href="personal_area_order.html">Заказ</a>
+      <div className="line"></div>
+      <div className="push60 hidden-xss"></div>
+      <div className="push20 visible-xss"></div>
+      <section className="main-section">
+        <div className="container">
+          <div className="main-inner">
+            <div className="title">Заказ #{product?.id}</div>
+            <div className="push20 hidden-xss"></div>
+            <div className="push10 visible-xss"></div>
+            <div className="text">Статус {status[product?.status]}</div>
+            <div className="push40 hidden-xss"></div>
+            <div className="push10 visible-xss"></div>
+            <ul className="tabs">
+              <li
+                className={categ === 1 ? "current" : ""}
+                onClick={() => setCateg(1)}
+              >
+                <span>Заказ</span>
               </li>
-              <li class="current">
-                <a href="personal_area_pay.html">Оплата</a>
+              <li
+                className={categ === 2 ? "current" : ""}
+                onClick={() => setCateg(2)}
+              >
+                <span>Оплата</span>
               </li>
-              <li>
-                <a href="#">Клиент</a>
+              <li
+                className={categ === 3 ? "current" : ""}
+                onClick={() => setCateg(3)}
+              >
+                <span>Клиент</span>
               </li>
-              <li>
-                <a href="#">Доставка</a>
+              <li
+                className={categ === 4 ? "current" : ""}
+                onClick={() => setCateg(4)}
+              >
+                <span>Доставка</span>
               </li>
             </ul>
           </div>
         </div>
-        <div class="line"></div>
-        <div class="container">
-          <div class="main-inner">
-            <section class="special-goods-wrapper">
-              <div class="section">
-                <div class="push60 hidden-xss"></div>
-                <div class="push10 visible-xss"></div>
-                <div class="box visible">
-                  <div class="button-wrapper">
-                    <button class="button no-icon">Принять оплату</button>
-                    <button class="button no-icon">Отклонить оплату</button>
-                  </div>
-                  <div class="push40 hidden-xss"></div>
-                  <div class="push10 visible-xss"></div>
-                  <form>
-                    <div class="form-group">
-                      <label class="label" for="sum">
-                        Сумма к оплате
-                      </label>
-                      <input
-                        name="sum"
-                        type="text"
-                        class="form-control"
-                        id="sum"
-                        disabled
-                        value="19214,00"
-                      />
-                    </div>
-                    <div class="form-group">
-                      <label class="label" for="type">
-                        Тип оплаты
-                      </label>
-                      <input
-                        name="type"
-                        type="text"
-                        class="form-control"
-                        id="type"
-                      />
-                    </div>
-                    <div class="push20 hidden-xss"></div>
-                    <div class="push10 visible-xss"></div>
-                    <div class="title-img">
-                      Изображение чека оплаты покупателем
-                    </div>
-                    <div class="push20 hidden-xss"></div>
-                    <div class="push10 visible-xss"></div>
-                    <div class="img-wrapper">
-                      <div class="item-img">
-                        <a
-                          href=""
-                          class="absolute fancybox"
-                          data-fancybox="portfolio"
-                          data-thumb="images/check.png"
-                        ></a>
-                        <img src="" />
-                      </div>
-                    </div>
-                    <div class="push90"></div>
-                  </form>
-                </div>
+        <div className="line"></div>
+        <div className="container">
+          <div className="main-inner">
+            <section className="special-goods-wrapper">
+              <div className="section">
+                <div className="push60 hidden-xss"></div>
+                <div className="push10 visible-xss"></div>
+                {categ === 4 && <DeliveryTab />}
+                {categ === 3 && <ClientTab />}
+                {categ === 2 && <PaymentTab />}
+                {categ === 1 && <OrderTab />}
               </div>
             </section>
           </div>

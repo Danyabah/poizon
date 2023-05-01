@@ -1,80 +1,39 @@
 import React from "react";
 import Header from "../components/Header";
+import { useSelector } from "react-redux";
+import UserForm from "../components/UserForm";
 
 export default function Order() {
+  const product = useSelector((state) => state.user.currentProductInfo);
   return (
     <>
       <Header />
-      <div class="line"></div>
-      <div class="push60 hidden-xss"></div>
-      <div class="push20 visible-xss"></div>
-      <section class="main-section">
-        <div class="container">
-          <div class="main-inner">
-            <div class="title">Заказ #1554</div>
-            <div class="push20 hidden-xss"></div>
-            <div class="push10 visible-xss"></div>
-            <div class="text">Название товара</div>
+      <div className="line"></div>
+      <div className="push60 hidden-xss"></div>
+      <div className="push20 visible-xss"></div>
+      <section className="main-section">
+        <div className="container">
+          <div className="main-inner">
+            <div className="title">Заказ #{product?.id}</div>
+            <div className="push20 hidden-xss"></div>
+            <div className="push10 visible-xss"></div>
+            <div className="text">
+              {" "}
+              {product?.brand} {product?.model}
+            </div>
           </div>
         </div>
-        <div class="push40 hidden-xss"></div>
-        <div class="push20 visible-xss"></div>
-        <div class="line"></div>
-        <div class="push40 hidden-xss"></div>
-        <div class="push20 visible-xss"></div>
-        <div class="container">
-          <div class="main-inner rf">
-            <form class="order">
-              <div class="form-group">
-                <label class="label" for="name">
-                  <span>*</span>Как к вам обращаться?
-                </label>
-                <input
-                  name="name"
-                  type="text"
-                  required
-                  class="required form-control"
-                  id="name"
-                />
-              </div>
-              <div class="form-group">
-                <label class="label" for="tel">
-                  <span>*</span>Телефон
-                </label>
-                <input
-                  name="tel"
-                  type="text"
-                  required
-                  class=" required form-control"
-                  id="tel"
-                />
-              </div>
-              <div class="push20 hidden-xss"></div>
-              <div class="text">
-                Если по заказу возникнут вопросы, то по номеру телефона мы
-                поймем чей заказ и оперативно созвонимся. Не рассылаем SMS-спам
-                и не звоним с рекламой.
-              </div>
-              <div class="push40 hidden-xss"></div>
-              <div class="push10 visible-xss"></div>
-              <div class="form-group">
-                <label class="label" for="Telegram">
-                  Telegram
-                </label>
-                <input
-                  name="Telegram"
-                  type="text"
-                  class="form-control"
-                  id="Telegram"
-                />
-              </div>
-              <div class="push20 hidden-xss"></div>
-              <div class="push5 visible-xss"></div>
-              <button class="button">Сохранить</button>
-            </form>
+        <div className="push40 hidden-xss"></div>
+        <div className="push20 visible-xss"></div>
+        <div className="line"></div>
+        <div className="push40 hidden-xss"></div>
+        <div className="push20 visible-xss"></div>
+        <div className="container">
+          <div className="main-inner rf">
+            <UserForm />
           </div>
         </div>
-        <div class="push90"></div>
+        <div className="push90"></div>
       </section>
     </>
   );

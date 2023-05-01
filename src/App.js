@@ -6,7 +6,7 @@ import AuthorizationWork from "./pages/AuthorizationWork";
 import AfterPay from "./pages/AfterPay";
 import Curs from "./pages/Curs";
 import Depot from "./pages/Depot";
-import InfoClient from "./pages/InfoClient";
+
 import ManagerPersonalAccount from "./pages/ManagerPersonalAccount";
 import OrderCard from "./pages/OrderCard";
 import OrderList from "./pages/OrderList";
@@ -19,7 +19,7 @@ import PersonalAreaCheckPay from "./pages/PersonalAreaCheckPay";
 import PersonalAreaNew from "./pages/PersonalAreaNew";
 import PersonalAreaOrder from "./pages/PersonalAreaOrder";
 import PersonalAreaPay from "./pages/PersonalAreaPay";
-import PersonalAreaPurchase from "./pages/PersonalAreaPurchase";
+
 import Promocode from "./pages/Promocode";
 import RequestCard from "./pages/RequestCard";
 import RequestList from "./pages/RequestList";
@@ -49,14 +49,17 @@ function App() {
           }
         />
         <Route path="/depot" element={<Depot />} />
-        <Route path="/infoclient" element={<InfoClient />} />
+
         <Route
           path="/managerpersonalaccount"
           element={<ManagerPersonalAccount />}
         />
         <Route path="/ordercard" element={<OrderCard />} />
         <Route path="/orderlist" element={<OrderList />} />
-        <Route path="/orderpageinprogress" element={<OrderPageInProgress />} />
+        <Route
+          path="/orderpageinprogress/:id"
+          element={<OrderPageInProgress />}
+        />
         <Route path="/orderpage/:id" element={<OrderPage />} />
         <Route path="/order" element={<Order />} />
         <Route path="/pay" element={<Pay />} />
@@ -74,11 +77,8 @@ function App() {
         />
         <Route path="/personalareanew" element={<PersonalAreaNew />} />
         <Route path="/personalareaorder" element={<PersonalAreaOrder />} />
-        <Route path="/personalareapay" element={<PersonalAreaPay />} />
-        <Route
-          path="/personalareapurchase"
-          element={<PersonalAreaPurchase />}
-        />
+        <Route path="/personalareapay/:id" element={<PersonalAreaPay />} />
+
         <Route
           path="/promocode"
           element={

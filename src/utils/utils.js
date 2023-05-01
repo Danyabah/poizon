@@ -90,3 +90,26 @@ export const subcategory = {
   foodndrinks: ["Еда", "Напиток"],
   different: ["Другое"],
 };
+
+export const status = {
+  payment: "Проверка оплаты",
+  //  buying: 'Оплачен',
+  buying: "На закупке",
+  bought: "Закуплен",
+  china: "На складе в Китае",
+  chinarush: "Доставка на склад РФ",
+  rush: "На складе в РФ",
+  cdek: "Доставляется",
+  completed: "Завершен",
+};
+
+export const stage = {
+  payment: 1,
+  buying: 2,
+  bought: 3,
+  china: 4,
+  chinarush: 5,
+  rush: 6,
+  cdek: 7,
+  completed: 8,
+};

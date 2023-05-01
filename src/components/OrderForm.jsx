@@ -249,7 +249,11 @@ export default function OrderForm() {
               <div className="push20 hidden-xss"></div>
               <div className="image__list">
                 {values.Image.length !== 0 && (
-                  <PreviewImage file={values.Image} />
+                  <PreviewImage
+                    name="Image"
+                    setField={setFieldValue}
+                    file={values.Image}
+                  />
                 )}
               </div>
 

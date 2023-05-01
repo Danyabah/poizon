@@ -1,6 +1,7 @@
 import React, { useRef } from "react";
 import OrderForm from "../components/OrderForm";
 import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 
 export default function PersonalAreaOrder() {
   const publicLink = useSelector((state) => state.admin.publicLink);
@@ -12,7 +13,7 @@ export default function PersonalAreaOrder() {
           <div className="header">
             <div className="logo">POIZON</div>
             <div className="buttons-wrapper">
-              <a href="personal_area_order.html" className="track button">
+              <Link to="/personalareaorder" className="track button">
                 <svg
                   width="24"
                   height="24"
@@ -34,7 +35,7 @@ export default function PersonalAreaOrder() {
                   />
                 </svg>
                 Новый заказ
-              </a>
+              </Link>
             </div>
           </div>
         </div>
@@ -79,13 +80,24 @@ export default function PersonalAreaOrder() {
                     <label className="label" htmlFor="public_link">
                       Публичная ссылка{" "}
                       <span>
-                        <i
+                        <svg
                           style={{ color: "blue", cursor: "pointer" }}
-                          className="uil uil-copy"
                           onClick={() => {
-                            navigator.clipboard.writeText(inp.current.value);
+                            navigator.clipboard.writeText(inp?.current.value);
                           }}
-                        ></i>
+                          width="23"
+                          height="27"
+                          viewBox="0 0 23 27"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            clipRule="evenodd"
+                            d="M5.93005 0.28142C6.12005 0.101031 6.38002 0 6.65002 0H13C15.76 0 18 2.11461 18 4.72222C20.76 4.72222 23 6.83683 23 9.44444V21.7222C23 24.3298 20.76 26.4444 18 26.4444H10C7.24 26.4444 5 24.3298 5 21.7222C2.24 21.7222 0 19.6076 0 17V6.35327C0 6.10488 0.100039 5.86691 0.290039 5.6903L5.93005 0.28142ZM16 4.72222V17C16 18.5649 14.66 19.8333 13 19.8333H5C3.34 19.8333 2 18.5649 2 17V8.5H8C8.55 8.5 9 8.07689 9 7.55556V1.88889H13C14.66 1.88889 16 3.15728 16 4.72222ZM7 1.9512V6.61111H2.14001L7 1.9512ZM10 24.5556C8.34 24.5556 7 23.2872 7 21.7222H13C15.76 21.7222 18 19.6076 18 17V6.61111C19.66 6.61111 21 7.8795 21 9.44444V21.7222C21 23.2872 19.66 24.5556 18 24.5556H10Z"
+                            fill="#0081AB"
+                          />
+                        </svg>
                       </span>
                     </label>
                     <input

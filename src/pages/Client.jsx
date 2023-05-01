@@ -1,7 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import Header from "../components/Header";
+import { useNavigate } from "react-router-dom";
 
 export default function Client() {
+  const [id, setId] = useState("");
+
+  const navigate = useNavigate();
   return (
     <>
       <Header />
@@ -20,12 +24,24 @@ export default function Client() {
             <form>
               <div className="form-group">
                 <label className="label" htmlFor="link">
-                  Ссылка на заказ
+                  Номер заказа
                 </label>
-                <input name="link" type="text" className="form-control" id="link" />
+                <input
+                  value={id}
+                  name="link"
+                  type="text"
+                  className="form-control"
+                  id="link"
+                  onChange={(e) => setId(e.target.value)}
+                />
               </div>
               <div className="push10 visible-xss"></div>
-              <button className="button no-icon enter">Отслеживать</button>
+              <button
+                className="button no-icon enter"
+                onClick={() => navigate(`/orderpageinprogress/${id}`)}
+              >
+                Отслеживать
+              </button>
             </form>
           </div>
         </div>
