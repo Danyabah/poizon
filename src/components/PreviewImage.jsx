@@ -17,6 +17,11 @@ export default function PreviewImage({ name, file, setField }) {
             setField(name, [...preview, reader.result]);
           }
         };
+      } else if (typeof element == "string") {
+        if (!preview.includes(element)) {
+          setPreview([...preview, element]);
+          setField(name, [...preview, element]);
+        }
       }
     });
   }, [file]);

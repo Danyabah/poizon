@@ -2,9 +2,17 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import { setChinaProduct, setOrderProduct } from "../redux/slices/adminReducer";
+import {
+  setChinaProduct,
+  setChinarushProduct,
+  setOrderProduct,
+} from "../redux/slices/adminReducer";
 import PurchaseForm from "../components/PurchaseForm";
 import { useMutation } from "@tanstack/react-query";
+import logo from "../utils/logo.PNG";
+import ChinaForm from "../components/ChinaForm";
+import { addToDraft } from "../utils/utils";
+import ChinarushForm from "../components/ChinarushForm";
 
 export default function PersonalAreaNew() {
   const [categ, setCateg] = useState("buying");
@@ -12,20 +20,26 @@ export default function PersonalAreaNew() {
   const [page, setPage] = useState(1);
   const product = useSelector((state) => state.admin.orderProduct);
   const chinaProduct = useSelector((state) => state.admin.chinaProduct);
+  const chinarushProduct = useSelector((state) => state.admin.chinarushProduct);
+  const reload = useSelector((state) => state.admin.reload);
   const [totalPage, setTotalPage] = useState(1);
 
   const dispatch = useDispatch();
 
-  useEffect(() => {
+  function getProducts() {
     axios
       .get(
-        `http://45.84.227.72:5000/checklist/?page=${page}&limit=10&previewimage=no`
+        `http://45.84.227.72:5000/checklist/?page=${page}&limit=10&previewimage=no&status=${categ}`
       )
       .then((data) => {
         setProducts(data.data.data);
         setTotalPage(data.data.total_pages);
       });
-  }, [page]);
+  }
+
+  useEffect(() => {
+    getProducts();
+  }, [page, reload, categ]);
 
   function changeProduct(obj) {
     switch (categ) {
@@ -34,45 +48,29 @@ export default function PersonalAreaNew() {
         break;
       case "bought":
         dispatch(setChinaProduct(obj));
+        break;
+      case "china":
+        dispatch(setChinarushProduct(obj));
+        break;
       default:
         break;
     }
   }
 
-  const onSubmit = (values) => {
-    mutate(values, {
-      onSuccess: (response) => {
-        alert("Сохранено");
-        console.log(response);
-        setCateg("buying");
-        dispatch(setChinaProduct(null));
-        window.location.reload();
-      },
-      onError: (response) => {
-        alert("Произошла ошибка");
-      },
-    });
-  };
-
-  const { mutate } = useMutation({
-    mutationFn: () => {
-      return axios.patch(
-        `http://45.84.227.72:5000/checklist/${chinaProduct?.id}`,
-        {
-          status: "china",
-        }
-      );
-    },
-  });
-
   console.log(categ);
+  console.log(chinarushProduct);
   console.log(products);
   return (
     <>
       <header className="header-wrapper">
         <div className="container">
           <div className="header">
-            <div className="logo">POIZON</div>
+            <div className="logo">
+              {" "}
+              <Link to={"/managerpersonalaccount"}>
+                <img className="img-logo " src={logo} alt="" />
+              </Link>
+            </div>
             <div className="buttons-wrapper">
               <Link to="/personalareaorder" className="track button">
                 <svg
@@ -153,6 +151,13 @@ export default function PersonalAreaNew() {
                   >
                     На закупку
                   </button>
+                  <div
+                    className="button button-new no-icon"
+                    style={{ marginLeft: "20px", backgroundColor: "#62b0ca" }}
+                    onClick={() => addToDraft(product)}
+                  >
+                    Отменить заказ
+                  </div>
                 </div>
               )}
               {chinaProduct && categ === "bought" && (
@@ -163,12 +168,18 @@ export default function PersonalAreaNew() {
                   </div>
                   <div className="push20 hidden-xss"></div>
                   <div className="push10 visible-xss"></div>
-                  <button
-                    className="button button-new no-icon"
-                    onClick={() => onSubmit()}
-                  >
-                    На складе в Китае
-                  </button>
+                  <ChinaForm id={chinaProduct?.id} />
+                </div>
+              )}
+              {chinarushProduct && categ === "china" && (
+                <div className="main-inner">
+                  <div className="text">
+                    Заказ #{chinarushProduct?.id} на сумму{" "}
+                    {chinarushProduct?.curencycurency2} CNY
+                  </div>
+                  <div className="push20 hidden-xss"></div>
+                  <div className="push10 visible-xss"></div>
+                  <ChinarushForm id={chinarushProduct?.id} />
                 </div>
               )}
               <div className="push40 hidden-xss"></div>
@@ -185,31 +196,31 @@ export default function PersonalAreaNew() {
                 </div>
               </div>
               <div className="line"></div>
-              {products
-                ?.filter((prod) => prod.status === categ)
-                ?.map((obj) => (
-                  <div key={obj?.id}>
-                    <div className="container">
-                      <div className="table-row">
-                        <div
-                          className="table-td"
-                          style={{ cursor: "pointer" }}
-                          onClick={() => changeProduct(obj)}
-                        >
-                          {obj?.id}
-                        </div>
-                        <div className="table-td">22.10.2022</div>
-                        <div className="table-td">
-                          {obj?.curencycurency2?.toLocaleString()}
-                        </div>
-                        <div className="table-td">
-                          {obj?.brand} {obj?.model}
-                        </div>
+              {products?.map((obj) => (
+                <div key={obj?.id}>
+                  <div className="container">
+                    <div className="table-row">
+                      <div
+                        className="table-td"
+                        style={{ cursor: "pointer" }}
+                        onClick={() => changeProduct(obj)}
+                      >
+                        {obj?.id}
+                      </div>
+                      <div className="table-td">
+                        {obj.currentDate?.slice(0, 10)}
+                      </div>
+                      <div className="table-td">
+                        {obj?.curencycurency2?.toLocaleString()}
+                      </div>
+                      <div className="table-td">
+                        {obj?.brand} {obj?.model}
                       </div>
                     </div>
-                    <div className="line"></div>
                   </div>
-                ))}
+                  <div className="line"></div>
+                </div>
+              ))}
             </div>
           </>
         )}

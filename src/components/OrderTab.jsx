@@ -8,31 +8,14 @@ import { useSelector } from "react-redux";
 export default function OrderTab() {
   const { id } = useParams();
   const inp = useRef(null);
+
   const product = useSelector((state) => state.admin.selectedProduct);
   const publicLink = `${window.location.origin}/${
     stage[product?.status] > 1 ? "orderpageinprogress" : "orderpage"
   }/${product.id}`;
 
   const byteString = product?.previewimage;
-  const bytes = new Uint8Array(byteString.length / 4); // создаем новый массив Uint8Array нужной длины
 
-  for (let i = 0; i < byteString.length; i += 4) {
-    bytes[i / 4] = parseInt(byteString.substr(i + 2, 2), 16); // преобразуем каждый байт в число и сохраняем его в массиве
-  }
-
-  console.log(bytes); // выводим массив байтов в консоль
-  // Create a Blob from the bytes
-  const blob = new Blob(bytes, { type: "image/jpg" });
-
-  // Create a URL for the Blob
-  const url = URL.createObjectURL(blob);
-
-  // Create an img tag and set its src attribute to the URL
-  const img = document.createElement("img");
-  img.src = url;
-
-  // Append the img tag to a container element in the DOM
-  console.log(img);
   return (
     <div className="box visible">
       <form>
@@ -196,15 +179,20 @@ export default function OrderTab() {
         <div className="push20 hidden-xss"></div>
         <div className="push10 visible-xss"></div>
         <div className="img-wrapper">
-          <div className="item-img">
+          <div class="item-img">
             <a
-              href={product?.paymentprovement}
+              href={`data:image/jpg;base64,${byteString}`}
               className="absolute fancybox"
               target="_blank"
             ></a>
-            <img src={product?.paymentprovement} />
+            <img
+              style={{ objectFit: "contain" }}
+              src={`data:image/jpg;base64,${byteString}`}
+              alt=""
+            />
           </div>
         </div>
+
         <div className="push90"></div>
       </form>
     </div>

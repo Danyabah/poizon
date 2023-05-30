@@ -1,17 +1,45 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Header from "../components/Header";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 export default function Depot() {
-  useEffect(() => {
+  const [products, setProducts] = useState([]);
+  const [page, setPage] = useState(1);
+  const [totalPage, setTotalPage] = useState(1);
+  const [search, setSearch] = useState("");
+
+  function renderProducts() {
     axios
       .get(
-        `http://45.84.227.72:5000/checklist/?page=1&limit=10&previewimage=no`
+        `http://45.84.227.72:5000/checklist/?page=${page}&limit=10&previewimage=no&status=rush&search=${search}`
       )
       .then((data) => {
-        console.log(data);
+        setProducts(data.data.data);
+        setTotalPage(data.data.total_pages);
       });
-  }, []);
+  }
+
+  useEffect(() => {
+    renderProducts();
+  }, [page, search]);
+
+  function onSubmit(id) {
+    if (window.confirm("Вы уверены?")) {
+      try {
+        axios
+          .patch(`http://45.84.227.72:5000/checklist/${id}`, {
+            status: "completed",
+          })
+          .then(() => {
+            alert("Заказ Доставлен!");
+            renderProducts();
+          });
+      } catch (err) {
+        console.log(err);
+      }
+    }
+  }
   return (
     <>
       <Header />
@@ -30,6 +58,8 @@ export default function Depot() {
                   Поиск
                 </label>
                 <input
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
                   name="search"
                   type="text"
                   className="form-control"
@@ -50,14 +80,46 @@ export default function Depot() {
               <div className="table-td">Телефон</div>
               <div className="table-td">Имя</div>
             </div>
-            <div className="table-row">
-              <div className="table-td"></div>
-              <div className="table-td"></div>
-              <div className="table-td"></div>
-              <div className="table-td"></div>
-              <div className="table-td"></div>
-              <div className="table-td"></div>
-            </div>
+            {products?.map((product) => (
+              <div key={product?.id} className="table-row">
+                <div style={{ cursor: "pointer" }} className="table-td">
+                  <Link to={`/personalareapay/${product?.id}`}>
+                    {product?.id.slice(0, 8) + "..."}
+                  </Link>
+                </div>
+                <div className="table-td">
+                  {product.startDate?.slice(0, 10)}
+                </div>
+                <div className="table-td">
+                  {product.currentDate?.slice(0, 10)}
+                </div>
+                <div className="table-td">
+                  {product.delivery && product?.delivery?.slice(0, 9) + "..."}
+                </div>
+                <div className="table-td">{product?.buyerphone}</div>
+                <div className="table-td" style={{ position: "relative" }}>
+                  {product?.buyername}
+                  {product?.delivery === "Самовывоз из шоурума" && (
+                    <span
+                      style={{
+                        position: "absolute",
+                        right: "-35%",
+                        top: "35%",
+                        fontSize: "35px",
+                        color: "#428bca",
+                        cursor: "pointer",
+                      }}
+                    >
+                      {" "}
+                      <i
+                        className="uil uil-check-circle"
+                        onClick={() => onSubmit(product?.id)}
+                      ></i>
+                    </span>
+                  )}
+                </div>
+              </div>
+            ))}
           </div>
         </div>
         <div className="push100 hidden-xss"></div>
@@ -65,23 +127,29 @@ export default function Depot() {
         <div className="container">
           <ul className="pagination">
             <li>
-              <a href="#" className="prev-page">
+              <button
+                disabled={page === 1}
+                onClick={() => setPage((prev) => prev - 1)}
+                className="prev-page"
+              >
                 {"<"}
-              </a>
+              </button>
             </li>
             <li>
-              <a href="#" className="page">
-                1
-              </a>
+              <button className="page">{page}</button>
             </li>
             <li>
-              <a href="#" className="next-page">
+              <button
+                disabled={page === totalPage}
+                className="next-page"
+                onClick={() => setPage((prev) => prev + 1)}
+              >
                 {">"}
-              </a>
+              </button>
             </li>
           </ul>
         </div>
-        <div className="push80"></div>
+        <div className="push60"></div>
       </section>
     </>
   );

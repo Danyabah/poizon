@@ -17,7 +17,7 @@ export default function Promocode() {
       axios
         .delete(`http://45.84.227.72:5000/promo/`, { data: { name: name } })
         .then(() => {
-          e.target.closest(".item").remove();
+          window?.location.reload();
         });
     }
   }

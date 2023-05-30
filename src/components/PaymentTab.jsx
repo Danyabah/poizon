@@ -1,17 +1,21 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { stage, status } from "../utils/utils";
+import { addToDraft, stage, status } from "../utils/utils";
 import { useMutation } from "@tanstack/react-query";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function PaymentTab() {
   const { id } = useParams();
   const product = useSelector((state) => state.admin.selectedProduct);
+  const reload = useSelector((state) => state.admin.reload);
+  const dispatch = useDispatch();
 
   const { mutate } = useMutation({
     mutationFn: (values) => {
-      return axios.patch(`http://45.84.227.72:5000/checklist/${id}`, values);
+      if (window.confirm("вы уверены?")) {
+        return axios.patch(`http://45.84.227.72:5000/checklist/${id}`, values);
+      }
     },
   });
 
@@ -19,7 +23,7 @@ export default function PaymentTab() {
     mutate(values, {
       onSuccess: (response) => {
         console.log(response);
-        alert("Сохранено");
+
         window.location.reload();
       },
       onError: (response) => {
@@ -40,15 +44,22 @@ export default function PaymentTab() {
           </button>
         </div>
       ) : (
-        <div className="button-wrapper">
-          <button
-            className="button no-icon"
-            onClick={() => onSubmit({ status: "buying" })}
-          >
-            Принять оплату
-          </button>
-          <button className="button no-icon">Отклонить оплату</button>
-        </div>
+        product.status === "payment" && (
+          <div className="button-wrapper">
+            <button
+              className="button no-icon"
+              onClick={() => onSubmit({ status: "buying" })}
+            >
+              Принять оплату
+            </button>
+            <button
+              className="button no-icon"
+              onClick={() => addToDraft(product)}
+            >
+              Отклонить оплату
+            </button>
+          </div>
+        )
       )}
 
       <div className="push40 hidden-xss"></div>

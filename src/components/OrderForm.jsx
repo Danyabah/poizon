@@ -5,10 +5,10 @@ import * as Yup from "yup";
 import { useMutation } from "@tanstack/react-query";
 import { useDispatch, useSelector } from "react-redux";
 import { setUserInfo } from "../redux/slices/userReducer";
-import { subcategory } from "../utils/utils";
+import { addToDraft, subcategory, translate } from "../utils/utils";
 import PreviewImage from "./PreviewImage";
-import { useLocation } from "react-router-dom";
-import { setPublicLink } from "../redux/slices/adminReducer";
+import { useLocation, useParams } from "react-router-dom";
+import { setPreviewimage, setPublicLink } from "../redux/slices/adminReducer";
 
 export default function OrderForm() {
   const [categories, setCategories] = useState([]);
@@ -22,6 +22,19 @@ export default function OrderForm() {
   const [promo, setPromo] = useState([]);
   const dispatch = useDispatch();
 
+  const [product, setProduct] = useState({});
+
+  const { id } = useParams();
+
+  useEffect(() => {
+    axios.get(`http://45.84.227.72:5000/checklist/${id}`).then((res) => {
+      console.log(res);
+      if (typeof res.data["error"] == "undefined") {
+        setProduct(res.data);
+      }
+    });
+  }, [id]);
+  console.log(product);
   useEffect(() => {
     axios.get(`http://45.84.227.72:5000/category`).then((data) => {
       setCategories(data.data.categories);
@@ -38,14 +51,14 @@ export default function OrderForm() {
 
   const initialValues = {
     managerid: userInfo.managerid || "",
-    link: "",
+    link: product?.link || "",
     category: categories[0]?.category,
     subcategory:
       categories[0]?.category && subcategory[categories[0]?.category][0],
-    brand: "",
-    model: "",
-    size: 0,
-    Image: [],
+    brand: product?.brand || "",
+    model: product?.model || "",
+    size: product?.size || "",
+    Image: product?.Image || [],
     currency: currency || 0,
     curencycurency2: "",
     currency3: 0,
@@ -62,6 +75,8 @@ export default function OrderForm() {
       onSuccess: (response) => {
         const url = `${window.location.origin}/orderpage/${response.data.id}`;
         dispatch(setPublicLink(url));
+        console.log(response.data);
+        dispatch(setPreviewimage(response.data.previewimage));
         document.documentElement.scrollTo(0, 0);
         alert("Сохранено");
       },
@@ -75,7 +90,7 @@ export default function OrderForm() {
     link: Yup.string().required("Необходимо указать ссылку"),
     brand: Yup.string().required("Необходимо указать брэнд"),
     model: Yup.string().required("Необходимо указать модель"),
-    size: Yup.number()
+    size: Yup.string()
       .min(1, "Необходимо указать размер")
       .required("Необходимо указать размер"),
     curencycurency2: Yup.number()
@@ -88,22 +103,29 @@ export default function OrderForm() {
 
   const { mutate } = useMutation({
     mutationFn: (formPayload) => {
-      formPayload.curencycurency2 = +formPayload.curencycurency2;
-      formPayload.Image = imagesUrl; //потом почистить массив изображений
-      formPayload.size = +formPayload.size;
-      if (formPayload.promo.trim() === "") {
-        delete formPayload.promo;
-      }
-      if (formPayload.comment.trim() === "") {
-        delete formPayload.comment;
-      }
+      if (window.confirm("Вы уверены?")) {
+        formPayload.curencycurency2 = +formPayload.curencycurency2;
+        formPayload.Image = imagesUrl; //потом почистить массив изображений
 
-      return axios.post(
-        `http://45.84.227.72:5000/checklist/neworder`,
-        formPayload
-      );
+        formPayload.brand =
+          formPayload.brand[0].toUpperCase() + formPayload.brand.slice(1);
+        formPayload.model =
+          formPayload.model[0].toUpperCase() + formPayload.model.slice(1);
+        if (formPayload.promo && formPayload?.promo.trim() === "") {
+          delete formPayload.promo;
+        }
+        if (formPayload.comment && formPayload.comment.trim() === "") {
+          delete formPayload.comment;
+        }
+
+        return axios.post(
+          `http://45.84.227.72:5000/checklist/neworder`,
+          formPayload
+        );
+      }
     },
   });
+
   const fileRef = useRef(null);
 
   return (
@@ -131,6 +153,7 @@ export default function OrderForm() {
                 id="link"
               />
               <ErrorMessage
+                style={{ color: "red" }}
                 name="link"
                 component="span"
                 className="form-control"
@@ -163,11 +186,12 @@ export default function OrderForm() {
               >
                 {categories?.map((categ) => (
                   <option key={categ.category} value={categ.category}>
-                    {categ.category}
+                    {translate[categ.category]}
                   </option>
                 ))}
               </Field>
               <ErrorMessage
+                style={{ color: "red" }}
                 name="category"
                 component="span"
                 className="form-control"
@@ -190,6 +214,7 @@ export default function OrderForm() {
                 ))}
               </Field>
               <ErrorMessage
+                style={{ color: "red" }}
                 name="subcategory"
                 component="span"
                 className="form-control"
@@ -206,6 +231,7 @@ export default function OrderForm() {
                 id="brand"
               />
               <ErrorMessage
+                style={{ color: "red" }}
                 name="brand"
                 component="span"
                 className="form-control"
@@ -222,6 +248,7 @@ export default function OrderForm() {
                 id="model"
               />
               <ErrorMessage
+                style={{ color: "red" }}
                 name="model"
                 component="span"
                 className="form-control"
@@ -238,6 +265,7 @@ export default function OrderForm() {
                 id="size"
               />
               <ErrorMessage
+                style={{ color: "red" }}
                 name="size"
                 component="span"
                 className="form-control"
@@ -314,6 +342,7 @@ export default function OrderForm() {
 
             <div className="push50 hidden-xss"></div>
             <ErrorMessage
+              style={{ color: "red" }}
               name="Image"
               component="span"
               className="form-control"
@@ -362,6 +391,7 @@ export default function OrderForm() {
                 }}
               />
               <ErrorMessage
+                style={{ color: "red" }}
                 name="curencycurency2"
                 component="span"
                 className="form-control"
@@ -432,9 +462,31 @@ export default function OrderForm() {
                     setFieldValue("chinadelivery2", lastDelivery);
 
                     let obj = JSON.parse(e.target.value);
-                    if (obj.discount) {
-                      let price = lastPrice - (lastPrice / 100) * obj.discount;
+
+                    if (obj.discount && obj.nocommission) {
+                      let r = lastPrice - values.commission;
+                      let s = obj.discount * r;
+                      let price = r - s / 100;
                       setFieldValue("fullprice", Math.round(price, 2));
+                    } else if (obj.discount && obj.freedelivery) {
+                      let r = lastPrice - values.chinadelivery2;
+                      let s = obj.discount * r;
+                      let price = r - s / 100;
+                      setFieldValue("fullprice", Math.round(price, 2));
+                    } else if (obj.discount) {
+                      let s = obj.discount * lastPrice;
+                      let price = lastPrice - s / 100;
+                      setFieldValue("fullprice", Math.round(price, 2));
+                    } else if (obj.nocommission) {
+                      setFieldValue(
+                        "fullprice",
+                        Math.round(lastPrice - values.commission, 2)
+                      );
+                    } else if (obj.freedelivery) {
+                      setFieldValue(
+                        "fullprice",
+                        Math.round(lastPrice - values.chinadelivery2, 2)
+                      );
                     }
                     if (obj.nocommission) {
                       setFieldValue("commission", 0);
@@ -484,6 +536,13 @@ export default function OrderForm() {
             </div>
             <div className="push5 visible-xss"></div>
             <button className="button no-icon">Сохранить</button>
+            <div
+              className="button no-icon"
+              style={{ marginLeft: "20px", backgroundColor: "#62b0ca" }}
+              onClick={() => addToDraft(values)}
+            >
+              В Черновик
+            </div>
           </Form>
         );
       }}

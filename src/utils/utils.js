@@ -1,3 +1,5 @@
+import axios from "axios";
+
 export const subcategory = {
   shoes: [
     "Кроссовки",
@@ -110,6 +112,36 @@ export const stage = {
   china: 4,
   chinarush: 5,
   rush: 6,
+  READY_FOR_SHIPMENT_IN_SENDER_CITY: 7,
   cdek: 7,
   completed: 8,
+  DELIVERED: 8,
 };
+
+export const translate = {
+  shoes: "Обувь",
+  outerwear: "Верхняя одежда",
+  underwear: "Нижняя одежда",
+  bags: "Сумки",
+  cosmetics: "Косметика",
+  accessories: "Аксессуары",
+  technics: "Техника",
+  watches: "Часы",
+  toys: "Игрушки",
+  home: "Товары для дома",
+  foodndrinks: "Еда и напитки",
+  different: "Другое",
+};
+export function addToDraft(values) {
+  if (window.confirm("Вы уверены что хотите отменить заказ?")) {
+    let copy = { ...values };
+    // copy.status = "draft";
+    delete copy.status;
+    axios.post(`http://45.84.227.72:5000/checklist/draft`, copy).then((res) => {
+      if (res.status === 200) {
+        alert("добавлено в черновик");
+      }
+      console.log(res);
+    });
+  }
+}

@@ -86,6 +86,7 @@ export default function CategoryForm() {
                 ))}
               </Field>
               <ErrorMessage
+                style={{ color: "red" }}
                 name="category"
                 component="span"
                 className="form-control"
@@ -103,6 +104,7 @@ export default function CategoryForm() {
                 id="chinarush"
               />
               <ErrorMessage
+                style={{ color: "red" }}
                 name="chinarush"
                 component="span"
                 className="form-control"

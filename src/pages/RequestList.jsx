@@ -1,17 +1,29 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Header from "../components/Header";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 export default function RequestList() {
-  useEffect(() => {
+  const [products, setProducts] = useState([]);
+  const [page, setPage] = useState(1);
+  const [categ, setCateg] = useState("bought");
+
+  const [totalPage, setTotalPage] = useState(1);
+
+  function getProducts() {
     axios
       .get(
-        `http://45.84.227.72:5000/checklist/?page=1&limit=10&previewimage=no`
+        `http://45.84.227.72:5000/checklist/?page=${page}&limit=10&previewimage=no&status=${categ}`
       )
       .then((data) => {
-        console.log(data);
+        setProducts(data.data.data);
+        setTotalPage(data.data.total_pages);
       });
-  }, []);
+  }
+  useEffect(() => {
+    getProducts();
+  }, [categ, page]);
+
   return (
     <>
       <Header />
@@ -25,6 +37,29 @@ export default function RequestList() {
           </div>
           <div className="push90 hidden-xss"></div>
           <div className="push20 visible-xss"></div>
+          <div className="container">
+            <div className="push40 line hidden-xss"></div>
+            <div className="main-inner main-inner-menu">
+              <ul className="tabs">
+                <li
+                  className={categ === "bought" ? "current" : ""}
+                  onClick={() => setCateg("bought")}
+                >
+                  <span>Оплачено</span>
+                </li>
+
+                <li
+                  className={categ === "buying" ? "current" : ""}
+                  onClick={() => setCateg("buying")}
+                >
+                  <span>Ожидает оплаты</span>
+                </li>
+              </ul>
+            </div>
+            <div className="push15 hidden-xss"></div>
+            <div className="push10 visible-xss"></div>
+          </div>
+          <div className="line hidden-xss"></div>
         </div>
         <div className="container">
           <div className="check-table depot table request orders">
@@ -41,13 +76,19 @@ export default function RequestList() {
                 <br /> заявки
               </div>
             </div>
-            <div className="table-row">
-              <div className="table-td">
-                <a href="request_card.html">1554</a>
+            {products.map((product) => (
+              <div className="table-row" key={product?.id}>
+                <div className="table-td">
+                  <Link to={`/personalareapay/${product?.id}`}>
+                    {product?.id}
+                  </Link>
+                </div>
+                <div className="table-td">{product.currentDate}</div>
+                <div className="table-td">
+                  {categ === "bought" ? "Оплачено" : "Ожидает оплаты"}
+                </div>
               </div>
-              <div className="table-td">22.10.2022 15:46</div>
-              <div className="table-td">Оплачено</div>
-            </div>
+            ))}
           </div>
         </div>
         <div className="push100 hidden-xss"></div>
@@ -56,19 +97,25 @@ export default function RequestList() {
         <div className="container">
           <ul className="pagination">
             <li>
-              <a href="#" className="prev-page">
+              <button
+                disabled={page === 1}
+                onClick={() => setPage((prev) => prev - 1)}
+                className="prev-page"
+              >
                 {"<"}
-              </a>
+              </button>
             </li>
             <li>
-              <a href="#" className="page">
-                1
-              </a>
+              <button className="page">{page}</button>
             </li>
             <li>
-              <a href="#" className="next-page">
+              <button
+                disabled={page === totalPage}
+                className="next-page"
+                onClick={() => setPage((prev) => prev + 1)}
+              >
                 {">"}
-              </a>
+              </button>
             </li>
           </ul>
         </div>

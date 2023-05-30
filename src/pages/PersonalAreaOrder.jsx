@@ -2,16 +2,24 @@ import React, { useRef } from "react";
 import OrderForm from "../components/OrderForm";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import logo from "../utils/logo.PNG";
 
 export default function PersonalAreaOrder() {
   const publicLink = useSelector((state) => state.admin.publicLink);
+  const previewimage = useSelector((state) => state.admin.previewimage);
   const inp = useRef(null);
   return (
     <>
       <header className="header-wrapper">
         <div className="container">
           <div className="header">
-            <div className="logo">POIZON</div>
+            <div className="logo">
+              {" "}
+              <Link to={"/managerpersonalaccount"}>
+                <img className="img-logo " src={logo} alt="" />
+              </Link>
+            </div>
+
             <div className="buttons-wrapper">
               <Link to="/personalareaorder" className="track button">
                 <svg
@@ -41,6 +49,9 @@ export default function PersonalAreaOrder() {
         </div>
       </header>
       <div className="line"></div>
+      <div>
+        <img src="" alt="" />
+      </div>
       <div className="push60 hidden-xss"></div>
       <div className="push20 visible-xss"></div>
       <section className="main-section">
@@ -54,16 +65,7 @@ export default function PersonalAreaOrder() {
             <div className="push20 visible-xss"></div>
             <ul className="tabs">
               <li className="current">
-                <a href="personal_area_order.html">Заказ</a>
-              </li>
-              <li>
-                <a href="personal_area_pay.html">Оплата</a>
-              </li>
-              <li>
-                <a href="#">Клиент</a>
-              </li>
-              <li>
-                <a href="#">Доставка</a>
+                <a href="#">Заказ</a>
               </li>
             </ul>
           </div>
@@ -111,6 +113,22 @@ export default function PersonalAreaOrder() {
                       id="public_link"
                     />
                   </div>
+                  <div className="form-group">
+                    <div className="img-preview">
+                      <a
+                        href={`data:image/jpg;base64,${previewimage}`}
+                        className=""
+                        target="_blank"
+                      >
+                        <img
+                          style={{ objectFit: "contain" }}
+                          src={`data:image/jpg;base64,${previewimage}`}
+                          alt=""
+                        />
+                      </a>
+                    </div>
+                  </div>
+
                   <OrderForm />
                   <div className="push80"></div>
                 </div>

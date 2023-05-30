@@ -4,27 +4,27 @@ import axios from "axios";
 import { useMutation } from "@tanstack/react-query";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import { setPaymentCurrency } from "../redux/slices/adminReducer";
+import { setAddress, setPaymentCurrency } from "../redux/slices/adminReducer";
 import { useDispatch } from "react-redux";
 
-export default function CursForm() {
-  const [currency, setCurrency] = useState("");
+export default function AddressForma() {
+  const [pickup, setPickup] = useState("");
   const dispatch = useDispatch();
   useEffect(() => {
-    axios.get(`http://45.84.227.72:5000/currency/`).then((res) => {
-      setCurrency(res.data.currency);
-      dispatch(setPaymentCurrency(res.data.currency));
+    axios.get(`http://45.84.227.72:5000/pickup`).then((res) => {
+      setPickup(res.data.pickup);
+      dispatch(setAddress(res.data.pickup));
     });
   }, []);
 
   const initialValues = {
-    currency: currency || "",
+    pickup: pickup || "",
   };
 
   const onSubmit = (values) => {
     mutate(values, {
       onSuccess: (response) => {
-        dispatch(setPaymentCurrency(response.data.currency));
+        dispatch(setAddress(response.data.pickup));
         alert("Сохранено");
       },
       onError: (response) => {
@@ -34,12 +34,12 @@ export default function CursForm() {
   };
 
   const validSchema = Yup.object().shape({
-    currency: Yup.number().required("Необходимо указать курс"),
+    pickup: Yup.string().required("Необходимо указать адрес"),
   });
 
   const { mutate } = useMutation({
     mutationFn: (formPayload) => {
-      return axios.post(`http://45.84.227.72:5000/currency/`, formPayload);
+      return axios.patch(`http://45.84.227.72:5000/pickup/`, formPayload);
     },
   });
   return (
@@ -53,23 +53,23 @@ export default function CursForm() {
         return (
           <>
             <Form className="main-inner">
-              <div className="title">Курс</div>
+              <div className="title">Адрес Самовывоза</div>
               <div className="push40 hidden-xss"></div>
               <div className="push10 visible-xss"></div>
               <div className="form-group">
-                <label className="label" htmlFor="curs">
-                  Курс RUB/CNY
+                <label className="label" htmlFor="pickup">
+                  Адрес
                 </label>
                 <div className="push10 visible-xss"></div>
                 <Field
-                  name="currency"
-                  type="number"
+                  name="pickup"
+                  type="text"
                   className="form-control"
-                  id="currency"
+                  id="pickup"
                 />
                 <ErrorMessage
                   style={{ color: "red" }}
-                  name="currency"
+                  name="pickup"
                   component="span"
                   className="form-control"
                 />

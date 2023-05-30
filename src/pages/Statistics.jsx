@@ -23,9 +23,9 @@ export default function Statistics() {
             <Link to={"/statisticcategories"} className="item">
               Статистика с категориями
             </Link>
-            <Link to={"/statisticbrand"} className="item">
+            {/* <Link to={"/statisticbrand"} className="item">
               Статистика с брендами
-            </Link>
+            </Link> */}
             <Link to={"/statisticnumber"} className="item">
               Статистика с количеством людей, сделавших более определенного
               количества заказов

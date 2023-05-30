@@ -56,19 +56,7 @@ export default function DeliveryTab() {
             value={`${product?.delivery}`}
           />
         </div>
-        <div className="form-group">
-          <label className="label" htmlFor="sum">
-            Адрес
-          </label>
-          <input
-            name="sum"
-            type="text"
-            className="form-control"
-            id="sum"
-            disabled
-            value={`${product?.delivery}`}
-          />
-        </div>
+
         <div className="push20 hidden-xss"></div>
         <div className="push10 visible-xss"></div>
 

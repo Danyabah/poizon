@@ -22,11 +22,27 @@ export default function Alfa() {
       onSuccess: (response) => {
         console.log(response);
         alert("Сохранено");
+        window.location.reload();
       },
       onError: (response) => {
         alert("Произошла ошибка");
       },
     });
+  };
+
+  const onDisable = (values) => {
+    if (window?.confirm("Вы уверены что хотите отключить карту?")) {
+      mutate(values, {
+        onSuccess: (response) => {
+          console.log(response);
+          alert("Отключено");
+          window.location.reload();
+        },
+        onError: (response) => {
+          alert("Произошла ошибка");
+        },
+      });
+    }
   };
 
   const validSchema = Yup.object().shape({
@@ -67,6 +83,7 @@ export default function Alfa() {
                 id="requisites"
               />
               <ErrorMessage
+                style={{ color: "red" }}
                 name="requisites"
                 component="span"
                 className="form-control"
@@ -83,15 +100,35 @@ export default function Alfa() {
                 id="cardnumber"
               />
               <ErrorMessage
+                style={{ color: "red" }}
                 name="cardnumber"
                 component="span"
                 className="form-control"
               />
             </div>
             <div className="push10"></div>
-            <button type="submit" className="button no-icon">
-              Сохранить
-            </button>
+            {alfaInfo?.cardnumber !== 0 ? (
+              <button type="submit" className="button no-icon">
+                Сохранить
+              </button>
+            ) : (
+              <button type="submit" className="button no-icon">
+                Включить
+              </button>
+            )}
+            <span
+              className="button no-icon"
+              onClick={() =>
+                onDisable({ type: "alfa", cardnumber: 0, requisites: "" })
+              }
+              style={{
+                backgroundColor: "#DC143C",
+                color: "white",
+                marginLeft: "10px",
+              }}
+            >
+              Отключить
+            </span>
           </Form>
         );
       }}

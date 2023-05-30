@@ -60,6 +60,7 @@ export default function PersonalForm() {
                 id="name"
               />
               <ErrorMessage
+                style={{ color: "red" }}
                 name="name"
                 component="span"
                 className="form-control"
@@ -76,6 +77,7 @@ export default function PersonalForm() {
                 id="surname"
               />
               <ErrorMessage
+                style={{ color: "red" }}
                 name="surname"
                 component="span"
                 className="form-control"

@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { status } from "../utils/utils";
 import PaymentTab from "../components/PaymentTab";
 import { useDispatch } from "react-redux";
@@ -8,6 +8,7 @@ import { setSelectedProduct } from "../redux/slices/adminReducer";
 import OrderTab from "../components/OrderTab";
 import ClientTab from "../components/ClientTab";
 import DeliveryTab from "../components/DeliveryTab";
+import logo from "../utils/logo.PNG";
 
 export default function PersonalAreaPay() {
   const { id } = useParams();
@@ -29,9 +30,14 @@ export default function PersonalAreaPay() {
       <header className="header-wrapper">
         <div className="container">
           <div className="header">
-            <div className="logo">POIZON</div>
+            <div className="logo">
+              {" "}
+              <Link to={"/managerpersonalaccount"}>
+                <img className="img-logo " src={logo} alt="" />
+              </Link>
+            </div>
             <div className="buttons-wrapper">
-              <a href="#" className="track button">
+              <Link to={"/personalareaorder"} className="track button">
                 <svg
                   width="24"
                   height="24"
@@ -53,7 +59,7 @@ export default function PersonalAreaPay() {
                   />
                 </svg>
                 Новый заказ
-              </a>
+              </Link>
             </div>
           </div>
         </div>

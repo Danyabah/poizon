@@ -76,6 +76,7 @@ export default function AuthorizationWork() {
                         id="login"
                       />
                       <ErrorMessage
+                        style={{ color: "red" }}
                         name="login"
                         component="span"
                         className="form-control"
@@ -92,6 +93,7 @@ export default function AuthorizationWork() {
                         id="password"
                       />
                       <ErrorMessage
+                        style={{ color: "red" }}
                         name="password"
                         component="span"
                         className="form-control"

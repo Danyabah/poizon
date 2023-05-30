@@ -2,7 +2,9 @@
 @import url(jquery.fancybox3.min.css);
 @import url(settings.css);
 @import url(jquery.formstyler.css);
-
+iframe {
+  display: none;
+}
 body {
   font-family: "Inter", sans-serif;
   overflow-x: hidden;
@@ -82,10 +84,12 @@ a:hover {
 
 .header {
   display: flex;
-  grid-gap: 54px;
+  grid-gap: 20px;
   padding-top: 91px;
   padding-bottom: 50px;
   align-items: center;
+  /* justify-content: center; */
+  /* flex-direction: column; */
 }
 .logo {
   font-weight: 600;
@@ -542,12 +546,18 @@ option {
 }
 @media only screen and (max-width: 767px) {
 }
+.img-logo {
+  max-width: 250px;
+}
 @media only screen and (max-width: 647px) {
   .label,
   .text-label {
     font-size: 10.26px;
     line-height: 12px;
     margin-bottom: 8px;
+  }
+  .img-logo {
+    max-width: 70px;
   }
   .form-control {
     height: 25px;
@@ -1390,7 +1400,22 @@ option {
   transition: all 200ms ease-out;
 }
 .history-wrap li.ready:before {
-  border: 3px solid #11d600;
+  border: 3px solid #34a5ca;
+}
+.history-wrap li.current::before {
+  content: "";
+  background-image: url("../utils/box.png");
+  background-size: 130px auto;
+  background-repeat: no-repeat;
+  /* content: url("../utils/box.png"); */
+  border: none;
+  display: inline-block;
+  background-color: transparent;
+  width: 130px;
+  height: 130px;
+  position: absolute;
+  left: -50px;
+  top: -18px;
 }
 
 @media only screen and (max-width: 647px) {
@@ -1810,7 +1835,7 @@ option {
 }
 .table.depot .table-td {
   text-align: center;
-  padding: 40px;
+  padding: 20px;
 }
 .button.scanning {
   padding: 21px 31px 22px 27px;
@@ -1877,8 +1902,9 @@ option {
   border-bottom: 1px solid #e0e0e0;
 }
 .table.categories .table-row {
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(13, 1fr);
 }
+
 .table.categories .table-td,
 .table.brands .table-td {
   padding: 40px 20px;
@@ -1889,7 +1915,16 @@ option {
 .table.number .table-row {
   grid-template-columns: repeat(9, 1fr);
 }
-
+/* .categories .table {
+  overflow: scroll;
+} */
+.container.categ {
+  max-width: 100%;
+  overflow-x: scroll;
+}
+.categ .table-td {
+  min-width: 157px;
+}
 @media only screen and (max-width: 1160px) {
   .table.depot .table-td {
     padding: 5px;
@@ -2361,4 +2396,35 @@ option {
   flex-wrap: wrap;
   row-gap: 20px;
   column-gap: 20px;
+}
+.swiper {
+  width: 100%;
+  height: 100%;
+}
+
+.swiper-slide {
+  text-align: center;
+  font-size: 18px;
+  background: #fff;
+
+  /* Center slide text vertically */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.swiper-slide img {
+  display: block;
+  width: 600px;
+  height: 600px;
+  object-fit: contain;
+  margin: 0 auto;
+  border-radius: 10px;
+}
+.links__social {
+  font-size: 30px;
+}
+.links__social a {
+  margin: 0 15px;
+  color: #000;
 }

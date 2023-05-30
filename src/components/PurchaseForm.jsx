@@ -5,14 +5,15 @@ import { useDispatch, useSelector } from "react-redux";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import PreviewImage from "./PreviewImage";
-import { setOrderProduct } from "../redux/slices/adminReducer";
+import { setOrderProduct, setReload } from "../redux/slices/adminReducer";
 
 export default function PurchaseForm({ setCateg }) {
   const product = useSelector((state) => state.admin.orderProduct);
+  const reload = useSelector((state) => state.admin.reload);
   const dispatch = useDispatch();
+
   const initialValues = {
     realprice: 0,
-    trackid: "",
     checkphoto: [],
   };
 
@@ -20,31 +21,38 @@ export default function PurchaseForm({ setCateg }) {
     mutate(values, {
       onSuccess: (response) => {
         console.log(response);
-        alert("Сохранено");
-
+        dispatch(setReload(!reload));
         setCateg("bought");
         dispatch(setOrderProduct(null));
-        window.location.reload();
       },
       onError: (response) => {
+        console.log(response);
         alert("Произошла ошибка");
       },
     });
   };
 
   const validSchema = Yup.object().shape({
-    realprice: Yup.number().required("Необходимо указать фактическую цену"),
-    trackid: Yup.string().required("Необходимо указать номер отправления"),
+    realprice: Yup.number()
+      .min(1, "Необходимо указать фактическую цену")
+      .required("Необходимо указать фактическую цену"),
+    checkphoto: Yup.array()
+      .min(1, "Добавьте изображение чека")
+      .required("Добавьте изображение чека"),
   });
 
   const { mutate } = useMutation({
     mutationFn: (formPayload) => {
-      return axios.patch(`http://45.84.227.72:5000/checklist/${product?.id}`, {
-        status: "bought",
-        realprice: formPayload.realprice,
-        checkphoto: formPayload.checkphoto[0],
-        trackid: formPayload.trackid,
-      });
+      if (window?.confirm("Вы уверены?")) {
+        return axios.patch(
+          `http://45.84.227.72:5000/checklist/${product?.id}`,
+          {
+            status: "bought",
+            realprice: formPayload.realprice,
+            checkphoto: formPayload.checkphoto[0],
+          }
+        );
+      }
     },
   });
   return (
@@ -96,29 +104,13 @@ export default function PurchaseForm({ setCateg }) {
                   id="realprice"
                 />
                 <ErrorMessage
+                  style={{ color: "red" }}
                   name="realprice"
                   component="span"
                   className="form-control"
                 />
               </div>
 
-              <div className="form-group">
-                <label className="label" htmlFor="trackid">
-                  Номер отправления POIZON
-                </label>
-                <Field
-                  name="trackid"
-                  type="text"
-                  className="form-control"
-                  id="trackid"
-                />
-
-                <ErrorMessage
-                  name="trackid"
-                  component="span"
-                  className="form-control"
-                />
-              </div>
               <div className="push10 visible-xss"></div>
               <div className="label">Изображения чеков закупки</div>
               <div className="push10 hidden-xss"></div>
@@ -134,11 +126,7 @@ export default function PurchaseForm({ setCateg }) {
                     accept="image/jpeg,image/png,image/gif"
                     name="checkphoto"
                   />
-                  <ErrorMessage
-                    name="checkphoto"
-                    component="span"
-                    className="form-control"
-                  />
+
                   <div className="images-wrapper">
                     {values.checkphoto.length !== 0 && (
                       <PreviewImage
@@ -148,6 +136,7 @@ export default function PurchaseForm({ setCateg }) {
                       />
                     )}
                   </div>
+
                   <label htmlFor="checkphoto" className="button">
                     <svg
                       width="24"
@@ -182,6 +171,12 @@ export default function PurchaseForm({ setCateg }) {
                 </div>
               </div>
               <div className="push40 hidden-xss"></div>
+              <ErrorMessage
+                style={{ color: "red" }}
+                name="checkphoto"
+                component="span"
+                className="form-control"
+              />
               <div className="push20 visible-xss"></div>
               {/* <div className="label">Изображение со склада</div>
               <div className="push10 hidden-xss"></div>

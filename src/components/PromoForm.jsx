@@ -55,6 +55,7 @@ export default function PromoForm({ setOpen }) {
                 id="name"
               />
               <ErrorMessage
+                style={{ color: "red" }}
                 name="name"
                 component="span"
                 className="form-control"

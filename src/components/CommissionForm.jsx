@@ -71,6 +71,7 @@ export default function CommisionForm() {
                 id="commission"
               />
               <ErrorMessage
+                style={{ color: "red" }}
                 name="commission"
                 component="span"
                 className="form-control"
@@ -88,6 +89,7 @@ export default function CommisionForm() {
                 id="chinadelivery"
               />
               <ErrorMessage
+                style={{ color: "red" }}
                 name="chinadelivery"
                 component="span"
                 className="form-control"

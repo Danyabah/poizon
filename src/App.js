@@ -8,8 +8,7 @@ import Curs from "./pages/Curs";
 import Depot from "./pages/Depot";
 
 import ManagerPersonalAccount from "./pages/ManagerPersonalAccount";
-import OrderCard from "./pages/OrderCard";
-import OrderList from "./pages/OrderList";
+
 import OrderPageInProgress from "./pages/OrderPageInProgress";
 import OrderPage from "./pages/OrderPage";
 import Order from "./pages/Order";
@@ -21,7 +20,7 @@ import PersonalAreaOrder from "./pages/PersonalAreaOrder";
 import PersonalAreaPay from "./pages/PersonalAreaPay";
 
 import Promocode from "./pages/Promocode";
-import RequestCard from "./pages/RequestCard";
+
 import RequestList from "./pages/RequestList";
 import Scanning from "./pages/Scanning";
 import StatisticApplication from "./pages/StatisticApplication";
@@ -31,6 +30,11 @@ import StatisticNumber from "./pages/StatisticNumber";
 import Statistics from "./pages/Statistics";
 import Admin from "./components/Admin";
 import PersonalArea from "./pages/PersonalArea";
+import Address from "./pages/Address";
+import PrivateManager from "./components/PrivateManager";
+import Pvzcdek from "./components/Crrcdek";
+import Crrcdek from "./components/Crrcdek";
+import Pvz from "./components/Pvz";
 
 function App() {
   return (
@@ -48,14 +52,27 @@ function App() {
             </Admin>
           }
         />
+        <Route
+          path="/address"
+          element={
+            <Admin>
+              <Address />
+            </Admin>
+          }
+        />
+        <Route path="/pvz/:id" element={<Pvz />} />
+
         <Route path="/depot" element={<Depot />} />
 
         <Route
           path="/managerpersonalaccount"
-          element={<ManagerPersonalAccount />}
+          element={
+            <PrivateManager>
+              <ManagerPersonalAccount />
+            </PrivateManager>
+          }
         />
-        <Route path="/ordercard" element={<OrderCard />} />
-        <Route path="/orderlist" element={<OrderList />} />
+
         <Route
           path="/orderpageinprogress/:id"
           element={<OrderPageInProgress />}
@@ -63,6 +80,8 @@ function App() {
         <Route path="/orderpage/:id" element={<OrderPage />} />
         <Route path="/order" element={<Order />} />
         <Route path="/pay" element={<Pay />} />
+        <Route path="/crrcdek/:id" element={<Crrcdek />} />
+
         <Route
           path="/paymentmethod"
           element={
@@ -77,6 +96,7 @@ function App() {
         />
         <Route path="/personalareanew" element={<PersonalAreaNew />} />
         <Route path="/personalareaorder" element={<PersonalAreaOrder />} />
+        <Route path="/personalareaorder/:id" element={<PersonalAreaOrder />} />
         <Route path="/personalareapay/:id" element={<PersonalAreaPay />} />
 
         <Route
@@ -87,7 +107,7 @@ function App() {
             </Admin>
           }
         />
-        <Route path="/requestcard" element={<RequestCard />} />
+
         <Route path="/requestlist" element={<RequestList />} />
         <Route path="/scanning" element={<Scanning />} />
         <Route

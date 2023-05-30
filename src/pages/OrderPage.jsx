@@ -1,24 +1,30 @@
 import React, { useState } from "react";
 import Header from "../components/Header";
-import { Link, useParams } from "react-router-dom";
+import { Link, Navigate, useParams } from "react-router-dom";
 import { useEffect } from "react";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { setCurrentProductInfo } from "../redux/slices/userReducer";
+import { stage } from "../utils/utils";
 
 export default function OrderPage() {
   const { id } = useParams();
   const [product, setProduct] = useState({});
+  const [promo, setPromo] = useState({});
   const dispatch = useDispatch();
 
   useEffect(() => {
     axios.get(`http://45.84.227.72:5000/checklist/${id}`).then((res) => {
       setProduct(res.data);
       dispatch(setCurrentProductInfo(res.data));
+      setPromo(JSON.parse(res.data?.promo));
     });
   }, [id]);
-
+  if (stage[product?.status] > 1) {
+    return <Navigate to={`/orderpageinprogress/${id}`} />;
+  }
   console.log(product);
+  console.log(promo);
   return (
     <>
       <Header />
@@ -58,8 +64,11 @@ export default function OrderPage() {
             <div className="push40 hidden-xss"></div>
             <div className="push20 visible-xss"></div>
             <div className="price">
-              {product?.fullprice?.toLocaleString()} ₽
+              {product?.fullprice?.toLocaleString()} ₽{" "}
             </div>
+            {promo?.name && (
+              <span className="text size">Применен промокод: {promo.name}</span>
+            )}
             <div className="push40 hidden-xss"></div>
             <div className="push20 visible-xss"></div>
             <section>

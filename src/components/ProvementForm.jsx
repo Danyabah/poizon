@@ -109,6 +109,7 @@ export default function ProvementForm() {
               </div>
               <div className="push50 hidden-xss"></div>
               <ErrorMessage
+                style={{ color: "red" }}
                 name="paymentprovement"
                 component="span"
                 className="form-control"

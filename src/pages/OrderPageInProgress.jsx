@@ -5,11 +5,20 @@ import { Link, useParams } from "react-router-dom";
 import { stage, status } from "../utils/utils";
 import axios from "axios";
 import { setCurrentProductInfo } from "../redux/slices/userReducer";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation } from "swiper";
+// Import Swiper styles
+import "swiper/css";
+import "swiper/css/navigation";
+
+// import required modules
 
 export default function OrderPageInProgress() {
   const [visible, setVisible] = useState(false);
   const [product, setProduct] = useState({});
   const dispatch = useDispatch();
+  const [date, setDate] = useState(0);
+  const [pickup, setPickup] = useState("");
 
   const { id } = useParams();
 
@@ -19,11 +28,54 @@ export default function OrderPageInProgress() {
       setProduct(res.data);
       dispatch(setCurrentProductInfo(res.data));
     });
+
+    axios.get(`http://45.84.227.72:5000/pickup`).then((res) => {
+      setPickup(res.data.pickup);
+    });
   }, [id]);
 
-  console.log(product);
-  console.log(status[product?.status]);
-  console.log(stage[product?.status]);
+  useEffect(() => {
+    if (product.startDate && product.currentDate) {
+      let dmyStart = product.startDate?.slice(0, 10).split(".");
+      let hmStart = product.startDate?.slice(11).split(":");
+
+      let [dayStart, monthStart, yearStart] = dmyStart;
+      let [hourStart, minuteStart, secondStart] = hmStart;
+
+      let dmyEnd = product.currentDate?.slice(0, 10).split(".");
+      let hmEnd = product.currentDate?.slice(11).split(":");
+
+      let [dayEnd, monthEnd, yearEnd] = dmyEnd;
+      let [hourEnd, minuteEnd, secondEnd] = hmEnd;
+
+      let dateStart = new Date(
+        yearStart,
+        monthStart - 1,
+        dayStart,
+        hourStart,
+        minuteStart
+      );
+
+      let dateEnd = new Date(yearEnd, monthEnd - 1, dayEnd, hourEnd, minuteEnd);
+
+      let timeDiff = Math.abs(dateEnd.getTime() - dateStart.getTime());
+      let diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
+      // setDate(diffDays);
+
+      const titles = ["День", "Дня", "Дней"];
+      const cases = [2, 0, 1, 1, 1, 2];
+      let str = `${
+        titles[
+          diffDays % 100 > 4 && diffDays % 100 < 20
+            ? 2
+            : cases[diffDays % 10 < 5 ? diffDays % 10 : 5]
+        ]
+      }`;
+
+      setDate(`${diffDays} ${str}`);
+    }
+  }, [product]);
+
   return (
     <>
       <Header />
@@ -35,7 +87,33 @@ export default function OrderPageInProgress() {
           <div className="main-inner">
             <div className="text">Статус: {status[product?.status]}</div>
             <div className="push40 hidden-xss"></div>
+            <Swiper
+              navigation={true}
+              modules={[Navigation]}
+              className="mySwiper"
+            >
+              {product?.Image?.length !== 0 && (
+                <>
+                  <SwiperSlide key={0}>
+                    <img
+                      src={`data:image/jpg;base64,${product?.previewimage}`}
+                      alt=""
+                    />
+                  </SwiperSlide>
+                  {product?.Image?.map((img, index) => {
+                    if (index > 0) {
+                      return (
+                        <SwiperSlide key={index}>
+                          <img src={img} alt="" />
+                        </SwiperSlide>
+                      );
+                    }
+                  })}
+                </>
+              )}
+            </Swiper>
             <div className="push20 visible-xss"></div>
+            <div className="push40 hidden-xss"></div>
             <div className="title">
               {product?.brand} {product?.model}
             </div>
@@ -52,7 +130,7 @@ export default function OrderPageInProgress() {
               rel="noreferrer"
               target="_blank"
             >
-              Ссылка
+              Товар
             </a>
             <div className="push20 hidden-xss"></div>
             <div className="push10 visible-xss"></div>
@@ -108,9 +186,9 @@ export default function OrderPageInProgress() {
             <div className="text">Способ доставки: {product?.delivery}</div>
             <div className="push20 hidden-xss"></div>
             <div className="push5 visible-xss"></div>
-            <div className="text">
-              Адрес: Тверь Проспект Победы, 73 На Проспекте Победы
-            </div>
+            {product?.delivery === "Самовывоз из шоурума" && (
+              <div className="text">Адрес самовывоза: {pickup}</div>
+            )}
             <div className="push35 hidden-xss"></div>
             <div className="push15 visible-xss"></div>
             {stage[product?.status] < 6 && (
@@ -134,7 +212,11 @@ export default function OrderPageInProgress() {
                 <ul>
                   <li
                     className={`text ${
-                      stage[product?.status] > 0 ? "ready" : ""
+                      stage[product?.status] === 1
+                        ? "current"
+                        : stage[product?.status] > 1
+                        ? "ready"
+                        : ""
                     }`}
                   >
                     Проверка оплаты
@@ -159,14 +241,22 @@ export default function OrderPageInProgress() {
                   </li>
                   <li
                     className={`text ${
-                      stage[product?.status] > 1 ? "ready" : ""
+                      stage[product?.status] === 2
+                        ? "current"
+                        : stage[product?.status] > 1
+                        ? "ready"
+                        : ""
                     }`}
                   >
                     На закупке
                   </li>
                   <li
                     className={`text ${
-                      stage[product?.status] > 2 ? "ready" : ""
+                      stage[product?.status] === 3
+                        ? "current"
+                        : stage[product?.status] > 2
+                        ? "ready"
+                        : ""
                     }`}
                   >
                     Закуплен
@@ -190,38 +280,60 @@ export default function OrderPageInProgress() {
                   </li>
                   <li
                     className={`text ${
-                      stage[product?.status] > 3 ? "ready" : ""
+                      stage[product?.status] === 4
+                        ? "current"
+                        : stage[product?.status] > 3
+                        ? "ready"
+                        : ""
                     }`}
                   >
                     На складе в Китае
                   </li>
                   <li
                     className={`text ${
-                      stage[product?.status] > 4 ? "ready" : ""
+                      stage[product?.status] === 5
+                        ? "current"
+                        : stage[product?.status] > 4
+                        ? "ready"
+                        : ""
                     }`}
                   >
-                    Доставка на склад РФ
+                    Отправлено на склад в РФ
                   </li>
                   <li
                     className={`text ${
-                      stage[product?.status] > 5 ? "ready" : ""
+                      stage[product?.status] === 6
+                        ? "current"
+                        : stage[product?.status] > 5
+                        ? "ready"
+                        : ""
                     }`}
                   >
                     На складе в РФ
                   </li>
+                  {product?.delivery !== "Самовывоз из шоурума" && (
+                    <li
+                      className={`text ${
+                        stage[product?.status] === 7
+                          ? "current"
+                          : stage[product?.status] > 6
+                          ? "ready"
+                          : ""
+                      }`}
+                    >
+                      Доставляется
+                    </li>
+                  )}
                   <li
                     className={`text ${
-                      stage[product?.status] > 6 ? "ready" : ""
+                      stage[product?.status] === 8
+                        ? "current"
+                        : stage[product?.status] > 7
+                        ? "ready"
+                        : ""
                     }`}
                   >
-                    Доставляется
-                  </li>
-                  <li
-                    className={`text ${
-                      stage[product?.status] > 7 ? "ready" : ""
-                    }`}
-                  >
-                    Завершен
+                    Доставлено {product.status === "completed" && `за: ${date}`}
                   </li>
                 </ul>
               </div>

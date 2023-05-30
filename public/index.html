@@ -23,6 +23,29 @@
     />
 
     <title>Poizon Store</title>
+    <script
+      id="ISDEKscript"
+      type="text/javascript"
+      src="https://widget.cdek.ru/widget/widjet.js"
+      charset="utf-8"
+    ></script>
+    <script>
+      window.getCdek = function () {
+        var widjet = new ISDEKWidjet({
+          hidedelt: true,
+          defaultCity: "Москва",
+          cityFrom: "Москва",
+          link: "forpvz",
+          onChoose: function (info) {
+            ipjq('[name="pvz"]').val(info.id);
+            ipjq('[name="address"]').val(
+              " г." + info.cityName + ", " + info.PVZ.Address
+            );
+            console.dir(info);
+          },
+        });
+      };
+    </script>
   </head>
   <body>
     <div id="root"></div>

@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import UserHeader from "../components/UserHeader";
 import { useDispatch } from "react-redux";
 import { clearUserInfo } from "../redux/slices/userReducer";
+import logo from "../utils/logo.PNG";
 
 export default function ManagerPersonalAccount() {
   const userInfo = useSelector((state) => state.user.userInfo);
@@ -18,7 +19,9 @@ export default function ManagerPersonalAccount() {
       <header className="header-wrapper">
         <div className="container">
           <div className="header header">
-            <div className="logo">POIZON</div>
+            <Link to={"/managerpersonalaccount"}>
+              <img className="img-logo " src={logo} alt="" />
+            </Link>
             <div className="buttons-wrapper">
               <Link to="/personalarea" className="user">
                 <UserHeader />
@@ -172,6 +175,12 @@ export default function ManagerPersonalAccount() {
                         />
                       </svg>
                       Курс & Категории
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to="/address">
+                      <i className="uil uil-map"></i>
+                      Адрес Самовывоза
                     </Link>
                   </li>
                   <li>

@@ -1,5 +1,5 @@
 import axios from "axios";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { useMutation } from "@tanstack/react-query";
@@ -13,6 +13,14 @@ export default function UserForm() {
   const dispatch = useDispatch();
   const product = useSelector((state) => state.user.currentProductInfo);
   const navigate = useNavigate();
+  const [pickup, setPickup] = useState("");
+
+  useEffect(() => {
+    axios.get(`http://45.84.227.72:5000/pickup`).then((res) => {
+      setPickup(res.data.pickup);
+    });
+  }, []);
+  console.log(pickup);
 
   const initialValues = {
     buyername: product.buyername || "",
@@ -28,7 +36,13 @@ export default function UserForm() {
       onSuccess: (response) => {
         console.log(response);
         dispatch(setCurrentProductInfo(response.data));
-        navigate(`/orderpageinprogress/${response.data.id}`);
+        if (response.data.delivery === "Курьерская доставка CDEK") {
+          navigate(`/crrcdek/${response.data.id}`);
+        } else if (response.data.delivery === "Пункт выдачи заказов CDEK") {
+          navigate(`/pvz/${response.data.id}`);
+        } else {
+          navigate(`/orderpageinprogress/${response.data.id}`);
+        }
       },
       onError: (response) => {
         alert("Произошла ошибка");
@@ -73,6 +87,7 @@ export default function UserForm() {
                 id="buyername"
               />
               <ErrorMessage
+                style={{ color: "red" }}
                 name="buyername"
                 component="span"
                 className="form-control"
@@ -80,7 +95,7 @@ export default function UserForm() {
             </div>
             <div className="form-group">
               <label className="label" htmlFor="buyerphone">
-                <span>*</span>Телефон
+                <span>*</span>Телефон WhatsApp
               </label>
               <Field
                 name="buyerphone"
@@ -90,6 +105,7 @@ export default function UserForm() {
                 id="buyerphone"
               />
               <ErrorMessage
+                style={{ color: "red" }}
                 name="buyerphone"
                 component="span"
                 className="form-control"
@@ -113,6 +129,9 @@ export default function UserForm() {
               <label className="label" htmlFor="delivery">
                 <span>*</span>Тип доставки
               </label>
+              <label className="label" htmlFor="delivery">
+                <b>Адрес самовывоза:</b> {pickup}
+              </label>
               <Field
                 as="select"
                 name="delivery"
@@ -123,8 +142,12 @@ export default function UserForm() {
                 <option value="Самовывоз из шоурума">
                   Самовывоз из шоурума
                 </option>
-                <option value="Тип доставки 2">Тип доставки 2</option>
-                <option value="Тип доставки 3">Тип доставки 3</option>
+                <option value="Пункт выдачи заказов CDEK">
+                  Пункт выдачи заказов CDEK
+                </option>
+                <option value="Курьерская доставка CDEK">
+                  Курьерская доставка CDEK
+                </option>
               </Field>
             </div>
             <div className="form-group">
