@@ -56,7 +56,8 @@ export default function Scanning() {
             {JSON.stringify(product) !== "{}" && (
               <>
                 <div className="text">
-                  Заказ #{product?.id}; телефон: {product?.buyerphone}
+                  Заказ #{product?.id}; телефон: {product?.buyerphone}; tg:{" "}
+                  {product?.tg}
                 </div>
                 <div className="push20 hidden-xss"></div>
                 <div className="push10 visible-xss"></div>

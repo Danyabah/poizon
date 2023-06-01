@@ -26,6 +26,7 @@ export default function PromoForm({ setOpen }) {
 
   const validSchema = Yup.object().shape({
     name: Yup.string().required("Необходимо указать название промокода"),
+    discount: Yup.string().required("Укажите % скидки"),
   });
 
   const { mutate } = useMutation({
@@ -62,7 +63,7 @@ export default function PromoForm({ setOpen }) {
               />
             </div>
             <div className="form-group">
-              <label className="label" htmlFor="freedelivery">
+              <label className="label" htmlFor="discount">
                 % Скидки
               </label>
               <Field
@@ -70,6 +71,12 @@ export default function PromoForm({ setOpen }) {
                 name="discount"
                 className="form-control"
                 id="discount"
+              />
+              <ErrorMessage
+                style={{ color: "red" }}
+                name="discount"
+                component="span"
+                className="form-control"
               />
             </div>
             <div className="form-group">

@@ -44,12 +44,12 @@ export default function Pvz() {
 
   const onSubmit = (values) => {
     console.log(values);
-    let pvz = document.querySelector("#pvz").value;
-    if (pvz.trim() === "") {
-      alert("Выберите ПВЗ");
-      return;
-    }
-    values.pvz = pvz;
+    // let pvz = document.querySelector("#pvz").value;
+    // if (pvz.trim() === "") {
+    //   alert("Выберите ПВЗ");
+    //   return;
+    // }
+    // values.pvz = pvz;
     mutate(values, {
       onSuccess: (response) => {
         console.log(response);
@@ -62,7 +62,7 @@ export default function Pvz() {
       },
     });
   };
-
+  // минимум 2 слова !
   const validSchema = Yup.object().shape({
     buyername: Yup.string().required("Необходимо указать имя"),
     buyerphone: Yup.string().required("Необходимо указать номер телефона"),
@@ -154,7 +154,7 @@ export default function Pvz() {
                   <Form className="order">
                     <div className="push20 hidden-xss"></div>
                     <div className="text">
-                      Подтвердите ваши данные и выберете Пункт Выдачи Заказов
+                      Проверьте данные получателя и выберете Пунт Выдачи Заказов
                     </div>
                     <div className="push40 hidden-xss"></div>
                     <div className="push10 visible-xss"></div>
@@ -194,7 +194,7 @@ export default function Pvz() {
                         className="form-control"
                       />
                     </div>
-                    <div className="form-group">
+                    {/* <div className="form-group">
                       <label className="label" htmlFor="pvz">
                         <span>*</span>Код ПВЗ
                       </label>
@@ -212,7 +212,14 @@ export default function Pvz() {
                         component="span"
                         className="form-control"
                       />
+                    </div> */}
+                    <div className="text">
+                      <b>Выберете Пункт Выдачи Заказов СДЭК</b>
                     </div>
+                    <div className="push20 hidden-xss"></div>
+                    <div id="forpvz" style={{ height: "500px" }}></div>
+                    <div className="push20 hidden-xss"></div>
+                    <div className="push5 visible-xss"></div>
                     <div className="form-group">
                       <label className="label" htmlFor="address">
                         <span>*</span>Адрес ПВЗ
@@ -226,7 +233,6 @@ export default function Pvz() {
                         id="address"
                       />
                     </div>
-                    <div id="forpvz" style={{ height: "500px" }}></div>
                     <div className="push20 hidden-xss"></div>
                     <ErrorMessage
                       style={{ color: "red" }}
@@ -234,12 +240,22 @@ export default function Pvz() {
                       component="span"
                       className="form-control"
                     />
+                    {/* <div className="push20 hidden-xss"></div>
+                    <div className="push5 visible-xss"></div> */}
+                    <div className="text">
+                      <span>*</span>У некоторых пунктов выдачи СДЭК (ПВЗ) нет
+                      возможности доставлять заказы. Если у желаемого ПВЗ нет
+                      кнопки "Выбрать", то поищите, пожалуйста, другой ближайший
+                      ПВЗ к вам, который доставляет заказы интернет-магазинов.
+                    </div>
                     <div className="push20 hidden-xss"></div>
-                    <div className="push5 visible-xss"></div>
                     <button className="button" type="submit">
                       Сохранить
                     </button>
                   </Form>
+                  <div className="push20 hidden-xss"></div>
+                  <div className="push5 visible-xss"></div>
+
                   {/* <input type="text" name="pvz" placeholder="Код ПВЗ" />
                   <input type="text" name="address" placeholder="Адрес ПВЗ" /> */}
                 </div>

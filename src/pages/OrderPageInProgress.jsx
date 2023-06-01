@@ -336,6 +336,26 @@ export default function OrderPageInProgress() {
                     Доставлено {product.status === "completed" && `за: ${date}`}
                   </li>
                 </ul>
+                {product.status === "completed" && (
+                  <div className="text">
+                    Спасибо большое за заказ! Были бы Вам очень благодарны, если
+                    сможете оставить небольшой отзыв с фото в диалоге{" "}
+                    <b>
+                      {" "}
+                      <a
+                        href="https://t.me/noziop"
+                        rel="noreferrer"
+                        target="_blank"
+                      >
+                        телеграм нашего менеджера
+                      </a>
+                    </b>
+                    .<br />
+                    <div className="push25 hidden-xss"></div>
+                    <div className="push15 visible-xss"></div>
+                    За отзыв с фото даем скидку <b>150₽</b> на следующий заказ.
+                  </div>
+                )}
               </div>
             </section>
             <div className="push100"></div>

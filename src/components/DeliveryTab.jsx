@@ -59,6 +59,24 @@ export default function DeliveryTab() {
 
         <div className="push20 hidden-xss"></div>
         <div className="push10 visible-xss"></div>
+        {product?.trackid && (
+          <div className="form-group">
+            <label className="label" htmlFor="sum">
+              Трек номер
+            </label>
+            <input
+              name="sum"
+              type="text"
+              className="form-control"
+              id="sum"
+              disabled
+              value={`${product?.trackid}`}
+            />
+          </div>
+        )}
+
+        <div className="push20 hidden-xss"></div>
+        <div className="push10 visible-xss"></div>
 
         <div className="push90"></div>
       </form>

@@ -62,7 +62,7 @@ export default function Pay() {
                   <Link
                     to="/afterpay"
                     onClick={() => dispatch(setPayMethod("ralf"))}
-                    className="item"
+                    className="item ralf"
                   >
                     <div className="item-title">
                       Перевод на карту Райффайзен
@@ -81,7 +81,7 @@ export default function Pay() {
                   <Link
                     to="/afterpay"
                     onClick={() => dispatch(setPayMethod("tink"))}
-                    className="item"
+                    className="item tink"
                   >
                     <div className="item-title">
                       Перевод по номеру карты Тинькофф
@@ -105,7 +105,7 @@ export default function Pay() {
                 {alfa.cardnumber !== 0 && (
                   <Link
                     to="/afterpay"
-                    className="item"
+                    className="item alfa"
                     onClick={() => dispatch(setPayMethod("alfa"))}
                   >
                     <div className="item-title">Перевод на карту Альфабанк</div>

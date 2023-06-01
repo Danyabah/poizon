@@ -163,7 +163,9 @@ export default function PersonalAreaCheckPay() {
         <div className="check-table table">
           <div className="container">
             <div className="table-row">
-              <div className="table-td">Номер</div>
+              <div className="table-td" style={{ justifyContent: "center" }}>
+                Номер
+              </div>
               <div className="table-td">Дата</div>
               <div className="table-td">Сумма</div>
               <div className="table-td">Способ оплаты</div>
@@ -213,10 +215,11 @@ export default function PersonalAreaCheckPay() {
                 <div className="table-td" style={{ position: "relative" }}>
                   {obj?.delivery}{" "}
                   {obj?.status === "payment" ? (
-                    <span
+                    <div
+                      className="flex-i"
                       style={{
                         position: "absolute",
-                        right: "-35%",
+                        right: "-100%",
                         top: "35%",
                         fontSize: "35px",
                         color: "#428bca",
@@ -229,7 +232,8 @@ export default function PersonalAreaCheckPay() {
                           onSubmit({ status: "buying", id: obj?.id })
                         }
                       ></i>
-                    </span>
+                      <span className="confirm-i">Принять</span>
+                    </div>
                   ) : (
                     categ === "draft" && (
                       <span

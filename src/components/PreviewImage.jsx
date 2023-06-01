@@ -5,17 +5,23 @@ import { setImages } from "../redux/slices/adminReducer";
 export default function PreviewImage({ name, file, setField }) {
   const [preview, setPreview] = useState([]);
   const dispatch = useDispatch();
-
+  let arr = [];
+  console.log(file);
   useEffect(() => {
     file.forEach((element) => {
       if (element && typeof element == "object") {
         const reader = new FileReader();
         reader.readAsDataURL(element);
         reader.onload = () => {
-          if (!preview.includes(reader.result)) {
-            setPreview([...preview, reader.result]);
-            setField(name, [...preview, reader.result]);
-          }
+          // console.log(reader.result);
+          // if (!preview.includes(reader.result)) {
+          arr.push(reader.result);
+          console.log(arr);
+          setPreview(arr);
+          console.log(preview);
+          // setPreview(preview.push(reader.result));
+          setField(name, [...preview, reader.result]);
+          // }
         };
       } else if (typeof element == "string") {
         if (!preview.includes(element)) {
@@ -29,7 +35,7 @@ export default function PreviewImage({ name, file, setField }) {
   useEffect(() => {
     console.log(preview);
     dispatch(setImages(preview));
-  }, [preview]);
+  }, [preview, file]);
 
   function deletePreview(e) {
     let img = e.target.closest(".image__item").querySelector("img");
@@ -61,7 +67,7 @@ export default function PreviewImage({ name, file, setField }) {
             </svg>
           </div>
 
-          <img src={prev} alt="" />
+          <img src={prev} style={{ height: "200px" }} alt="" />
         </div>
       ))}
     </>

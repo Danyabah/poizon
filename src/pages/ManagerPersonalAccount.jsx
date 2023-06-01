@@ -70,7 +70,7 @@ export default function ManagerPersonalAccount() {
                       fill="#292D32"
                     />
                   </svg>
-                  Склад
+                  На складе РФ
                 </Link>
               </li>
 
@@ -296,7 +296,7 @@ export default function ManagerPersonalAccount() {
                           fill="#292D32"
                         />
                       </svg>
-                      Сканирование
+                      Принять на склад РФ
                     </Link>
                   </li>
                 </>

@@ -88,7 +88,7 @@ export default function OrderForm() {
 
   const validSchema = Yup.object().shape({
     link: Yup.string().required("Необходимо указать ссылку"),
-    brand: Yup.string().required("Необходимо указать брэнд"),
+    brand: Yup.string().required("Необходимо указать бренд"),
     model: Yup.string().required("Необходимо указать модель"),
     size: Yup.string()
       .min(1, "Необходимо указать размер")
@@ -222,7 +222,7 @@ export default function OrderForm() {
             </div>
             <div className="form-group">
               <label className="label" htmlFor="brand">
-                Брэнд
+                Бренд
               </label>
               <Field
                 name="brand"
@@ -298,6 +298,7 @@ export default function OrderForm() {
                     accept="image/jpeg,image/png,image/gif"
                     name="Image"
                     onChange={(e) => {
+                      console.log(Array.from(e.target.files));
                       setFieldValue("Image", Array.from(e.target.files));
                     }}
                   />

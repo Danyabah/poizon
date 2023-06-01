@@ -850,19 +850,19 @@ option {
   line-height: 29px;
   color: #fff;
 }
-.pay-inner .item:nth-child(1) {
+.pay-inner .item.ralf {
   background: rgb(39, 41, 38);
 }
-.pay-inner .item:nth-child(2) {
+.pay-inner .item.tink {
   background: #f5df72;
 }
-.pay-inner .item:nth-child(2) .item-title {
+.pay-inner .item.tink .item-title {
   color: #000;
 }
-.pay-inner .item:nth-child(3) {
+.pay-inner .item.alfa {
   background: #db4335;
 }
-.pay-inner .item:nth-child(3) svg {
+.pay-inner .item.alfa svg {
   margin-right: 10px;
 }
 
@@ -1058,6 +1058,7 @@ option {
 .table-td {
   background: #fff;
   padding: 40px 0;
+  text-align: center;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1208,7 +1209,7 @@ option {
 }
 
 .order-table .table-row {
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(5, 1fr);
 }
 .order-table .table-row .table-td:first-child {
   position: relative;
@@ -1404,8 +1405,8 @@ option {
 }
 .history-wrap li.current::before {
   content: "";
-  background-image: url("../utils/box.png");
-  background-size: 130px auto;
+  background-image: url("../utils/poizonbox.png");
+  background-size: 75px auto;
   background-repeat: no-repeat;
   /* content: url("../utils/box.png"); */
   border: none;
@@ -1414,8 +1415,9 @@ option {
   width: 130px;
   height: 130px;
   position: absolute;
-  left: -50px;
-  top: -18px;
+  left: -30px;
+  top: -7px;
+  border-radius: 0;
 }
 
 @media only screen and (max-width: 647px) {
@@ -2427,4 +2429,12 @@ option {
 .links__social a {
   margin: 0 15px;
   color: #000;
+}
+.confirm-i {
+  font-size: 20px;
+  margin-left: 10px;
+}
+.flex-i {
+  display: flex;
+  align-items: center;
 }

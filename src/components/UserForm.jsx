@@ -52,6 +52,7 @@ export default function UserForm() {
 
   const validSchema = Yup.object().shape({
     buyername: Yup.string().required("Необходимо указать имя"),
+    // + или 8
     buyerphone: Yup.string().required("Необходимо указать номер телефона"),
     delivery: Yup.string().required("Необходимо указать тип доставки"),
   });
