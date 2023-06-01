@@ -30,7 +30,7 @@ export default function Pvz() {
     });
     axios
       .post(
-        "https://api.edu.cdek.ru/v2/oauth/token?client_id=EMscd6r9JnFiQ3bLoyjJY6eM78JrJceI&client_secret=PjLZkKBHEiLK3YsjtNrt3TGNG0ahs3kG&grant_type=client_credentials"
+        "https://api.cdek.ru/v2/oauth/token?client_id=wZWtjnWtkX7Fin2tvDdUE6eqYz1t1GND&client_secret=lc2gmrmK5s1Kk6FhZbNqpQCaATQRlsOy&grant_type=client_credentials"
       )
       .then((res) => {
         setToken(res.data.access_token);
@@ -38,18 +38,20 @@ export default function Pvz() {
   }, [id]);
 
   const initialValues = {
-    buyername: product.buyername || "",
+    buyername: "",
+    buyersurname: "",
     buyerphone: product.buyerphone || "",
   };
 
   const onSubmit = (values) => {
     console.log(values);
-    // let pvz = document.querySelector("#pvz").value;
-    // if (pvz.trim() === "") {
-    //   alert("Выберите ПВЗ");
-    //   return;
-    // }
-    // values.pvz = pvz;
+    let pvz = document.querySelector("#pvz").value;
+
+    if (pvz.trim() === "") {
+      alert("Выберите ПВЗ");
+      return;
+    }
+    values.pvz = pvz;
     mutate(values, {
       onSuccess: (response) => {
         console.log(response);
@@ -65,12 +67,18 @@ export default function Pvz() {
   // минимум 2 слова !
   const validSchema = Yup.object().shape({
     buyername: Yup.string().required("Необходимо указать имя"),
-    buyerphone: Yup.string().required("Необходимо указать номер телефона"),
+    buyersurname: Yup.string().required("Необходимо указать фамилию"),
+    buyerphone: Yup.string()
+      .matches(
+        /^((8|\+7)[\- ]?)?(\(?\d{3}\)?[\- ]?)?[\d\- ]{7,10}$/,
+        "Проверьте номер телефона"
+      )
+      .required("Необходимо указать номер телефона"),
   });
   //   console.log(token);
   const { mutate } = useMutation({
     mutationFn: (formPayload) => {
-      let { buyername, buyerphone, pvz, address } = formPayload;
+      let { buyername, buyerphone, buyersurname, pvz, address } = formPayload;
       let newObj = {
         type: 1,
         number: product.id,
@@ -81,7 +89,7 @@ export default function Pvz() {
         threshold: 1000000,
         sum: 0,
         recipient: {
-          name: buyername,
+          name: `${buyername} ${buyersurname}`,
           phones: [
             {
               number: buyerphone,
@@ -111,7 +119,7 @@ export default function Pvz() {
           },
         ],
       };
-      return axios.post(`https://api.edu.cdek.ru/v2/orders`, newObj, {
+      return axios.post(`https://api.cdek.ru/v2/orders`, newObj, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -154,13 +162,13 @@ export default function Pvz() {
                   <Form className="order">
                     <div className="push20 hidden-xss"></div>
                     <div className="text">
-                      Проверьте данные получателя и выберете Пунт Выдачи Заказов
+                      Заполните данные получателя и выберете Пунт Выдачи Заказов
                     </div>
                     <div className="push40 hidden-xss"></div>
                     <div className="push10 visible-xss"></div>
                     <div className="form-group">
                       <label className="label" htmlFor="buyername">
-                        <span>*</span>Как к вам обращаться? (ФИО)
+                        <span>*</span>Имя получателя
                       </label>
                       <Field
                         name="buyername"
@@ -172,6 +180,24 @@ export default function Pvz() {
                       <ErrorMessage
                         style={{ color: "red" }}
                         name="buyername"
+                        component="span"
+                        className="form-control"
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label className="label" htmlFor="buyersurname">
+                        <span>*</span>Фамилия получателя
+                      </label>
+                      <Field
+                        name="buyersurname"
+                        type="text"
+                        required
+                        className="required form-control"
+                        id="buyersurname"
+                      />
+                      <ErrorMessage
+                        style={{ color: "red" }}
+                        name="buyersurname"
                         component="span"
                         className="form-control"
                       />
@@ -194,25 +220,17 @@ export default function Pvz() {
                         className="form-control"
                       />
                     </div>
-                    {/* <div className="form-group">
-                      <label className="label" htmlFor="pvz">
-                        <span>*</span>Код ПВЗ
-                      </label>
-                      <Field
-                        name="pvz"
-                        type="text"
-                        disabled
-                        required
-                        className=" required form-control"
-                        id="pvz"
-                      />
-                      <ErrorMessage
-                        style={{ color: "red" }}
-                        name="pvz"
-                        component="span"
-                        className="form-control"
-                      />
-                    </div> */}
+
+                    <input
+                      style={{ display: "none" }}
+                      name="pvz"
+                      type="text"
+                      disabled
+                      required
+                      className=" required form-control"
+                      id="pvz"
+                    />
+
                     <div className="text">
                       <b>Выберете Пункт Выдачи Заказов СДЭК</b>
                     </div>

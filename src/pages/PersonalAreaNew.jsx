@@ -169,8 +169,7 @@ export default function PersonalAreaNew() {
                     На закупку
                   </button>
                   <div
-                    className="button button-new no-icon"
-                    style={{ marginLeft: "20px", backgroundColor: "#62b0ca" }}
+                    className="button button-new no-icon draft-btn"
                     onClick={() => addToDraft(product)}
                   >
                     Отменить заказ

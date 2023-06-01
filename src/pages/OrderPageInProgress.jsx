@@ -19,6 +19,8 @@ export default function OrderPageInProgress() {
   const dispatch = useDispatch();
   const [date, setDate] = useState(0);
   const [pickup, setPickup] = useState("");
+  const [sdekStatus, setSdekStatus] = useState("");
+  const [token, setToken] = useState("");
 
   const { id } = useParams();
 
@@ -32,6 +34,27 @@ export default function OrderPageInProgress() {
     axios.get(`http://45.84.227.72:5000/pickup`).then((res) => {
       setPickup(res.data.pickup);
     });
+
+    axios
+      .post(
+        "https://api.cdek.ru/v2/oauth/token?client_id=wZWtjnWtkX7Fin2tvDdUE6eqYz1t1GND&client_secret=lc2gmrmK5s1Kk6FhZbNqpQCaATQRlsOy&grant_type=client_credentials"
+      )
+      .then((res) => {
+        setToken(res.data.access_token);
+      });
+
+    axios
+      .get(`https://api.cdek.ru/v2/orders?im_number=${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((res) => {
+        console.log(res);
+        setSdekStatus(
+          res.data.entity.statuses[res.data.entity.statuses.length - 1].code
+        );
+      });
   }, [id]);
 
   useEffect(() => {
@@ -314,9 +337,9 @@ export default function OrderPageInProgress() {
                   {product?.delivery !== "Самовывоз из шоурума" && (
                     <li
                       className={`text ${
-                        stage[product?.status] === 7
+                        stage[product?.status] === 7 || stage[sdekStatus] === 7
                           ? "current"
-                          : stage[product?.status] > 6
+                          : stage[product?.status] > 6 || stage[sdekStatus] > 6
                           ? "ready"
                           : ""
                       }`}
@@ -326,9 +349,9 @@ export default function OrderPageInProgress() {
                   )}
                   <li
                     className={`text ${
-                      stage[product?.status] === 8
+                      stage[product?.status] === 8 || stage[sdekStatus] === 8
                         ? "current"
-                        : stage[product?.status] > 7
+                        : stage[product?.status] > 7 || stage[sdekStatus] > 7
                         ? "ready"
                         : ""
                     }`}
@@ -356,6 +379,24 @@ export default function OrderPageInProgress() {
                     За отзыв с фото даем скидку <b>150₽</b> на следующий заказ.
                   </div>
                 )}
+                {product.status === "rush" &&
+                  product.delivery === "Самовывоз из шоурума" && (
+                    <div className="text">
+                      <b>
+                        Пожалуйста, предупредите нашего {""}
+                        <a
+                          href="https://t.me/noziop"
+                          rel="noreferrer"
+                          target="_blank"
+                        >
+                          менеджера в телеграм {""}
+                        </a>
+                        за час до того, как будете выезжать за посылкой на наш
+                        склад.
+                      </b>
+                      <br />
+                    </div>
+                  )}
               </div>
             </section>
             <div className="push100"></div>

@@ -77,8 +77,7 @@ export default function ChinaForm({ id }) {
               На складе в Китае
             </button>
             <div
-              className="button button-new no-icon"
-              style={{ marginLeft: "20px", backgroundColor: "#62b0ca" }}
+              className="button button-new no-icon draft-btn"
               onClick={() => addToDraft(chinaProduct)}
             >
               Отменить заказ

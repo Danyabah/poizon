@@ -538,8 +538,7 @@ export default function OrderForm() {
             <div className="push5 visible-xss"></div>
             <button className="button no-icon">Сохранить</button>
             <div
-              className="button no-icon"
-              style={{ marginLeft: "20px", backgroundColor: "#62b0ca" }}
+              className="button no-icon draft-btn"
               onClick={() => addToDraft(values)}
             >
               В Черновик

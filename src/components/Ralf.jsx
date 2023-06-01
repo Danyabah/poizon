@@ -117,15 +117,10 @@ export default function Ralf() {
               </button>
             )}
             <span
-              className="button no-icon"
+              className="button no-icon red"
               onClick={() =>
                 onDisable({ type: "ralf", cardnumber: 0, requisites: "" })
               }
-              style={{
-                backgroundColor: "#DC143C",
-                color: "white",
-                marginLeft: "10px",
-              }}
             >
               Отключить
             </span>

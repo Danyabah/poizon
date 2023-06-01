@@ -27,7 +27,7 @@ export default function Crrcdek() {
     });
     axios
       .post(
-        "https://api.edu.cdek.ru/v2/oauth/token?client_id=EMscd6r9JnFiQ3bLoyjJY6eM78JrJceI&client_secret=PjLZkKBHEiLK3YsjtNrt3TGNG0ahs3kG&grant_type=client_credentials"
+        "https://api.cdek.ru/v2/oauth/token?client_id=wZWtjnWtkX7Fin2tvDdUE6eqYz1t1GND&client_secret=lc2gmrmK5s1Kk6FhZbNqpQCaATQRlsOy&grant_type=client_credentials"
       )
       .then((res) => {
         setToken(res.data.access_token);
@@ -35,7 +35,8 @@ export default function Crrcdek() {
   }, [id]);
 
   const initialValues = {
-    buyername: product.buyername || "",
+    buyername: "",
+    buyersurname: "",
     buyerphone: product.buyerphone || "",
     city: "",
     street: "",
@@ -59,7 +60,13 @@ export default function Crrcdek() {
 
   const validSchema = Yup.object().shape({
     buyername: Yup.string().required("Необходимо указать имя"),
-    buyerphone: Yup.string().required("Необходимо указать номер телефона"),
+    buyersurname: Yup.string().required("Необходимо указать фамилию"),
+    buyerphone: Yup.string()
+      .matches(
+        /^((8|\+7)[\- ]?)?(\(?\d{3}\)?[\- ]?)?[\d\- ]{7,10}$/,
+        "Проверьте номер телефона"
+      )
+      .required("Необходимо указать номер телефона"),
     city: Yup.string().required("Необходимо указать адрес доставки"),
     street: Yup.string().required("Необходимо указать адрес доставки"),
     house: Yup.string().required("Необходимо указать адрес доставки"),
@@ -68,7 +75,8 @@ export default function Crrcdek() {
   //   console.log(token);
   const { mutate } = useMutation({
     mutationFn: (formPayload) => {
-      let { buyername, buyerphone, city, street, house, flat } = formPayload;
+      let { buyername, buyerphone, buyersurname, city, street, house, flat } =
+        formPayload;
       let newObj = {
         type: 1,
         number: product.id,
@@ -78,7 +86,7 @@ export default function Crrcdek() {
         threshold: 1000000,
         sum: 0,
         recipient: {
-          name: buyername,
+          name: `${buyername} ${buyersurname}`,
           phones: [
             {
               number: buyerphone,
@@ -111,7 +119,7 @@ export default function Crrcdek() {
           address: `г. ${city}, ${street}, д. ${house}, кв. ${flat}`,
         },
       };
-      return axios.post(`https://api.edu.cdek.ru/v2/orders`, newObj, {
+      return axios.post(`https://api.cdek.ru/v2/orders`, newObj, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -161,7 +169,7 @@ export default function Crrcdek() {
                     <div className="push10 visible-xss"></div>
                     <div className="form-group">
                       <label className="label" htmlFor="buyername">
-                        <span>*</span>Как к вам обращаться? (ФИО)
+                        <span>*</span>Имя получателя
                       </label>
                       <Field
                         name="buyername"
@@ -173,6 +181,24 @@ export default function Crrcdek() {
                       <ErrorMessage
                         style={{ color: "red" }}
                         name="buyername"
+                        component="span"
+                        className="form-control"
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label className="label" htmlFor="buyersurname">
+                        <span>*</span>Фамилия получателя
+                      </label>
+                      <Field
+                        name="buyersurname"
+                        type="text"
+                        required
+                        className="required form-control"
+                        id="buyersurname"
+                      />
+                      <ErrorMessage
+                        style={{ color: "red" }}
+                        name="buyersurname"
                         component="span"
                         className="form-control"
                       />

@@ -14,14 +14,14 @@ export default function PreviewImage({ name, file, setField }) {
         reader.readAsDataURL(element);
         reader.onload = () => {
           // console.log(reader.result);
-          // if (!preview.includes(reader.result)) {
-          arr.push(reader.result);
-          console.log(arr);
-          setPreview(arr);
-          console.log(preview);
-          // setPreview(preview.push(reader.result));
-          setField(name, [...preview, reader.result]);
-          // }
+          if (!preview.includes(reader.result)) {
+            arr.unshift(reader.result);
+            console.log(arr);
+            setPreview(arr);
+            console.log(preview);
+            // setPreview(preview.push(reader.result));
+            setField(name, [...preview, reader.result]);
+          }
         };
       } else if (typeof element == "string") {
         if (!preview.includes(element)) {
@@ -67,7 +67,7 @@ export default function PreviewImage({ name, file, setField }) {
             </svg>
           </div>
 
-          <img src={prev} style={{ height: "200px" }} alt="" />
+          <img src={prev} alt="" />
         </div>
       ))}
     </>

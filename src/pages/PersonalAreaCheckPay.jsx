@@ -215,17 +215,7 @@ export default function PersonalAreaCheckPay() {
                 <div className="table-td" style={{ position: "relative" }}>
                   {obj?.delivery}{" "}
                   {obj?.status === "payment" ? (
-                    <div
-                      className="flex-i"
-                      style={{
-                        position: "absolute",
-                        right: "-100%",
-                        top: "35%",
-                        fontSize: "35px",
-                        color: "#428bca",
-                        cursor: "pointer",
-                      }}
-                    >
+                    <div className="flex-i">
                       <i
                         className="uil uil-check-circle"
                         onClick={() =>

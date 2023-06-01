@@ -100,22 +100,13 @@ export default function Depot() {
                 <div className="table-td" style={{ position: "relative" }}>
                   {product?.buyername}
                   {product?.delivery === "Самовывоз из шоурума" && (
-                    <span
-                      style={{
-                        position: "absolute",
-                        right: "-35%",
-                        top: "35%",
-                        fontSize: "35px",
-                        color: "#428bca",
-                        cursor: "pointer",
-                      }}
-                    >
+                    <div className="flex-i-2">
                       {" "}
                       <i
                         className="uil uil-check-circle"
                         onClick={() => onSubmit(product?.id)}
                       ></i>
-                    </span>
+                    </div>
                   )}
                 </div>
               </div>

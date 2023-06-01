@@ -115,15 +115,10 @@ export default function Tink() {
               </button>
             )}
             <span
-              className="button no-icon"
+              className="button no-icon red"
               onClick={() =>
                 onDisable({ type: "tink", cardnumber: 0, requisites: "" })
               }
-              style={{
-                backgroundColor: "#DC143C",
-                color: "white",
-                marginLeft: "10px",
-              }}
             >
               Отключить
             </span>

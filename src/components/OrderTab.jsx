@@ -24,12 +24,11 @@ export default function OrderTab() {
             Публичная ссылка{" "}
             <span>
               <svg
+                className="svg-link"
                 style={{ color: "blue", cursor: "pointer" }}
                 onClick={() => {
                   navigator.clipboard.writeText(inp?.current.value);
                 }}
-                width="23"
-                height="27"
                 viewBox="0 0 23 27"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
