@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { useMutation } from "@tanstack/react-query";
@@ -17,6 +17,7 @@ export default function Pvz() {
   const { id } = useParams();
   const [product, setProduct] = useState({});
   const [token, setToken] = useState("");
+
   useEffect(() => {
     window.getCdek();
   }, [id]);
@@ -55,6 +56,7 @@ export default function Pvz() {
     mutate(values, {
       onSuccess: (response) => {
         console.log(response);
+        console.log(window.delivery_sum);
 
         navigate(`/orderpageinprogress/${id}`);
       },
@@ -83,8 +85,19 @@ export default function Pvz() {
         type: 1,
         number: product.id,
         tariff_code: "136",
-        shipment_point: "SPB34",
+        shipment_point: "SPB81",
         delivery_point: pvz,
+        sender: {
+          phones: [
+            {
+              number: "+79992020207",
+            },
+          ],
+        },
+        delivery_recipient_cost: {
+          value: +window?.delivery_sum + 3.75,
+          vat_rate: 6,
+        },
         value: 0,
         threshold: 1000000,
         sum: 0,
@@ -100,9 +113,9 @@ export default function Pvz() {
           {
             number: product.id,
             weight: 1200,
-            length: 350,
-            width: 260,
-            height: 140,
+            length: 35,
+            width: 26,
+            height: 14,
             items: [
               {
                 name: `${product?.brand} ${product?.model}`,

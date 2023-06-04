@@ -30,18 +30,70 @@
       charset="utf-8"
     ></script>
     <script>
+      let token = "";
+      fetch(
+        "https://api.cdek.ru/v2/oauth/token?client_id=wZWtjnWtkX7Fin2tvDdUE6eqYz1t1GND&client_secret=lc2gmrmK5s1Kk6FhZbNqpQCaATQRlsOy&grant_type=client_credentials",
+        {
+          method: "POST",
+          headers: {
+            Accept: "*/*",
+          },
+        }
+      )
+        .then((res) => res.json())
+        .then((data) => {
+          console.log(data);
+          token = data.access_token;
+        });
+
       window.getCdek = function () {
         var widjet = new ISDEKWidjet({
           hidedelt: true,
           defaultCity: "Москва",
-          cityFrom: "Москва",
+          cityFrom: "Санкт-Петербург",
+          country: "Россия",
           link: "forpvz",
           onChoose: function (info) {
             ipjq('[name="pvz"]').val(info.id);
             ipjq('[name="address"]').val(
               " г." + info.cityName + ", " + info.PVZ.Address
             );
-            console.dir(info);
+            console.log(info);
+            fetch(`https://api.cdek.ru/v2/calculator/tariff`, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+                Accept: "application/json",
+              },
+              body: JSON.stringify({
+                type: "1",
+                currency: "1",
+                lang: "rus",
+                tariff_code: "136",
+                from_location: {
+                  code: 137,
+                },
+                to_location: {
+                  code: +info.city,
+                },
+                packages: [
+                  {
+                    weight: 1200,
+                    length: 35,
+                    width: 26,
+                    height: 14,
+                  },
+                ],
+              }),
+            })
+              .then((res) => res.json())
+              .then((data) => {
+                console.log(data);
+                window.delivery_sum = data.delivery_sum;
+                window.period_min = data.period_min;
+                window.period_max = data.period_max;
+              });
           },
         });
       };

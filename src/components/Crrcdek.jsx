@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { useMutation } from "@tanstack/react-query";
@@ -13,10 +13,12 @@ import Header from "./Header";
 
 export default function Crrcdek() {
   const dispatch = useDispatch();
+  const [delivery, setDelivery] = useState(0);
   const navigate = useNavigate();
   const { id } = useParams();
   const [product, setProduct] = useState({});
   const [token, setToken] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     axios.get(`http://45.84.227.72:5000/checklist/${id}`).then((res) => {
@@ -43,6 +45,43 @@ export default function Crrcdek() {
     house: "",
     flat: "",
   };
+
+  function countDelivery(values) {
+    axios
+      .post(
+        `https://api.cdek.ru/v2/orders`,
+        {
+          type: "1",
+          currency: "1",
+          lang: "rus",
+          tariff_code: "137",
+          from_location: {
+            code: 137,
+          },
+          to_location: {
+            address: `г. ${values.city}, ${values.street}, д. ${values.house}, кв. ${values.flat}`,
+          },
+          packages: [
+            {
+              weight: 1200,
+              length: 35,
+              width: 26,
+              height: 14,
+            },
+          ],
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .then((res) => {
+        console.log(res);
+        setDelivery(res.data.delivery_sum);
+        setIsLoading(false);
+      });
+  }
 
   const onSubmit = (values) => {
     mutate(values, {
@@ -81,8 +120,18 @@ export default function Crrcdek() {
         type: 1,
         number: product.id,
         tariff_code: "137",
-        shipment_point: "SPB34",
-        value: 0,
+        shipment_point: "SPB81",
+        sender: {
+          phones: [
+            {
+              number: "+79992020207",
+            },
+          ],
+        },
+        delivery_recipient_cost: {
+          value: +delivery + 3.75,
+          vat_rate: 6,
+        },
         threshold: 1000000,
         sum: 0,
         recipient: {
@@ -97,9 +146,9 @@ export default function Crrcdek() {
           {
             number: product.id,
             weight: 1200,
-            length: 350,
-            width: 260,
-            height: 140,
+            length: 35,
+            width: 26,
+            height: 14,
             items: [
               {
                 name: `${product?.brand} ${product?.model}`,
@@ -135,6 +184,12 @@ export default function Crrcdek() {
       onSubmit={onSubmit}
     >
       {(formik) => {
+        const { isValid, values } = formik;
+        console.log(values);
+        if (isValid) {
+          countDelivery(values);
+        }
+        console.log(isValid);
         return (
           <>
             <Header />
@@ -296,7 +351,11 @@ export default function Crrcdek() {
 
                     <div className="push20 hidden-xss"></div>
                     <div className="push5 visible-xss"></div>
-                    <button className="button" type="submit">
+                    <button
+                      className="button button-crr"
+                      disabled={isLoading}
+                      type="submit"
+                    >
                       Сохранить
                     </button>
                   </Form>

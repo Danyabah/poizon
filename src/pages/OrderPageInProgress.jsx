@@ -214,11 +214,12 @@ export default function OrderPageInProgress() {
             )}
             <div className="push35 hidden-xss"></div>
             <div className="push15 visible-xss"></div>
-            {stage[product?.status] < 6 && (
-              <Link to={"/order"} className="change">
-                Изменить данные доставки
-              </Link>
-            )}
+            {stage[product?.status] < 6 &&
+              product?.delivery === "Самовывоз из шоурума" && (
+                <Link to={"/order"} className="change">
+                  Изменить данные доставки
+                </Link>
+              )}
             <div className="push40 hidden-xss"></div>
             <div className="push25 visible-xss"></div>
             <section>

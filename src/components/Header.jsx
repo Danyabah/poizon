@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 
 export default function Header() {
   const userInfo = useSelector((state) => state.user.userInfo);
-  console.log(userInfo);
+
   return (
     <header className="header-wrapper">
       <div className="container">

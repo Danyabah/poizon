@@ -52,8 +52,12 @@ export default function UserForm() {
 
   const validSchema = Yup.object().shape({
     buyername: Yup.string().required("Необходимо указать имя"),
-    // + или 8
-    buyerphone: Yup.string().required("Необходимо указать номер телефона"),
+    buyerphone: Yup.string()
+      .matches(
+        /^((8|\+7)[\- ]?)?(\(?\d{3}\)?[\- ]?)?[\d\- ]{7,10}$/,
+        "Проверьте номер телефона"
+      )
+      .required("Необходимо указать номер телефона"),
     delivery: Yup.string().required("Необходимо указать тип доставки"),
   });
 

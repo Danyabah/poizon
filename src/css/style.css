@@ -1584,7 +1584,10 @@ option {
 /*****************************/
 /*****************************/
 /*****************************/
-
+.button-crr:disabled {
+  background-color: #bdb8b8;
+  border-color: #000;
+}
 .title-button {
   display: flex;
   grid-gap: 40px;
