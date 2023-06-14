@@ -12,7 +12,7 @@ export default function Depot() {
   function renderProducts() {
     axios
       .get(
-        `http://45.84.227.72:5000/checklist/?page=${page}&limit=10&previewimage=no&status=rush&search=${search}`
+        `https://crm-poizonstore.ru/checklist/?page=${page}&limit=10&previewimage=no&status=rush&search=${search}`
       )
       .then((data) => {
         setProducts(data.data.data);
@@ -28,7 +28,7 @@ export default function Depot() {
     if (window.confirm("Вы уверены?")) {
       try {
         axios
-          .patch(`http://45.84.227.72:5000/checklist/${id}`, {
+          .patch(`https://crm-poizonstore.ru/checklist/${id}`, {
             status: "completed",
           })
           .then(() => {

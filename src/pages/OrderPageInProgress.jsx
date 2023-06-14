@@ -25,13 +25,13 @@ export default function OrderPageInProgress() {
   const { id } = useParams();
 
   useEffect(() => {
-    axios.get(`http://45.84.227.72:5000/checklist/${id}`).then((res) => {
+    axios.get(`https://crm-poizonstore.ru/checklist/${id}`).then((res) => {
       console.log(res);
       setProduct(res.data);
       dispatch(setCurrentProductInfo(res.data));
     });
 
-    axios.get(`http://45.84.227.72:5000/pickup`).then((res) => {
+    axios.get(`https://crm-poizonstore.ru/pickup`).then((res) => {
       setPickup(res.data.pickup);
     });
 

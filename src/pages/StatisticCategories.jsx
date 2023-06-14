@@ -5,7 +5,7 @@ import axios from "axios";
 export default function StatisticCategories() {
   const [statistic, setStatistic] = useState({});
   useEffect(() => {
-    axios.get(`http://45.84.227.72:5000/categories`).then((data) => {
+    axios.get(`https://crm-poizonstore.ru/categories`).then((data) => {
       setStatistic(data.data);
     });
   }, []);

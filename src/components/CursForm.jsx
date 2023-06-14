@@ -11,7 +11,7 @@ export default function CursForm() {
   const [currency, setCurrency] = useState("");
   const dispatch = useDispatch();
   useEffect(() => {
-    axios.get(`http://45.84.227.72:5000/currency/`).then((res) => {
+    axios.get(`https://crm-poizonstore.ru/currency/`).then((res) => {
       setCurrency(res.data.currency);
       dispatch(setPaymentCurrency(res.data.currency));
     });
@@ -39,7 +39,7 @@ export default function CursForm() {
 
   const { mutate } = useMutation({
     mutationFn: (formPayload) => {
-      return axios.post(`http://45.84.227.72:5000/currency/`, formPayload);
+      return axios.post(`https://crm-poizonstore.ru/currency/`, formPayload);
     },
   });
   return (

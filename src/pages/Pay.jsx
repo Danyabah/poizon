@@ -15,7 +15,7 @@ export default function Pay() {
   const [tink, setTinkInfo] = useState({});
 
   useEffect(() => {
-    axios.get(`http://45.84.227.72:5000/payment/`).then((res) => {
+    axios.get(`https://crm-poizonstore.ru/payment/`).then((res) => {
       setRalfInfo(res.data.ralf);
       setAlfaInfo(res.data.alfa);
       setTinkInfo(res.data.tink);

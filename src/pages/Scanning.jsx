@@ -17,7 +17,7 @@ export default function Scanning() {
   useEffect(() => {
     axios
       .get(
-        `http://45.84.227.72:5000/checklist/?page=${page}&limit=10&previewimage=no&status=chinarush&search=${search}`
+        `https://crm-poizonstore.ru/checklist/?page=${page}&limit=10&previewimage=no&status=chinarush&search=${search}`
       )
       .then((data) => {
         console.log(data.data);
@@ -30,7 +30,7 @@ export default function Scanning() {
     if (window.confirm("Вы уверены?")) {
       try {
         axios
-          .patch(`http://45.84.227.72:5000/checklist/${product?.id}`, {
+          .patch(`https://crm-poizonstore.ru/checklist/${product?.id}`, {
             status: "rush",
           })
           .then(() => {

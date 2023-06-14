@@ -45,7 +45,7 @@ export default function PurchaseForm({ setCateg }) {
     mutationFn: (formPayload) => {
       if (window?.confirm("Вы уверены?")) {
         return axios.patch(
-          `http://45.84.227.72:5000/checklist/${product?.id}`,
+          `https://crm-poizonstore.ru/checklist/${product?.id}`,
           {
             status: "bought",
             realprice: formPayload.realprice,

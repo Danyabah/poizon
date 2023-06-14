@@ -7,7 +7,7 @@ import { useMutation } from "@tanstack/react-query";
 export default function Ralf() {
   const [ralfInfo, setRalfInfo] = useState({});
   useEffect(() => {
-    axios.get(`http://45.84.227.72:5000/payment/`).then((res) => {
+    axios.get(`https://crm-poizonstore.ru/payment/`).then((res) => {
       setRalfInfo(res.data.ralf);
     });
   }, []);
@@ -56,7 +56,7 @@ export default function Ralf() {
   const { mutate } = useMutation({
     mutationFn: (formPayload) => {
       formPayload.type = "ralf";
-      return axios.post(`http://45.84.227.72:5000/payment/`, formPayload);
+      return axios.post(`https://crm-poizonstore.ru/payment/`, formPayload);
     },
   });
   return (

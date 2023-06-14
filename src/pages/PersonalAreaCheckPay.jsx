@@ -17,7 +17,7 @@ export default function PersonalAreaCheckPay() {
   function getProducts() {
     axios
       .get(
-        `http://45.84.227.72:5000/checklist/?page=${page}&limit=10&previewimage=no&status=${categ}&search=${search}`
+        `https://crm-poizonstore.ru/checklist/?page=${page}&limit=10&previewimage=no&status=${categ}&search=${search}`
       )
       .then((data) => {
         console.log(data.data.data);
@@ -32,7 +32,7 @@ export default function PersonalAreaCheckPay() {
 
   const { mutate } = useMutation({
     mutationFn: (values) => {
-      return axios.patch(`http://45.84.227.72:5000/checklist/${values.id}`, {
+      return axios.patch(`https://crm-poizonstore.ru/checklist/${values.id}`, {
         status: values.status,
       });
     },
@@ -54,7 +54,7 @@ export default function PersonalAreaCheckPay() {
 
   const onDelete = (id) => {
     if (window?.confirm("Вы уверены что хотите удалить товар?")) {
-      axios.delete(`http://45.84.227.72:5000/checklist/${id}`).then((res) => {
+      axios.delete(`https://crm-poizonstore.ru/checklist/${id}`).then((res) => {
         if (res.data.status === "success") {
           alert("Товар успешно удален");
           getProducts();

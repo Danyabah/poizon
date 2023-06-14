@@ -14,7 +14,10 @@ export default function PaymentTab() {
   const { mutate } = useMutation({
     mutationFn: (values) => {
       if (window.confirm("вы уверены?")) {
-        return axios.patch(`http://45.84.227.72:5000/checklist/${id}`, values);
+        return axios.patch(
+          `https://crm-poizonstore.ru/checklist/${id}`,
+          values
+        );
       }
     },
   });

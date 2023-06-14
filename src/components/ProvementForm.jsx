@@ -17,7 +17,7 @@ export default function ProvementForm() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    axios.get(`http://45.84.227.72:5000/payment/`).then((res) => {
+    axios.get(`https://crm-poizonstore.ru/payment/`).then((res) => {
       setCard(res.data[paymentmethod]);
     });
   }, [paymentmethod]);
@@ -50,7 +50,7 @@ export default function ProvementForm() {
 
   const { mutate } = useMutation({
     mutationFn: (formPayload) => {
-      return axios.patch(`http://45.84.227.72:5000/checklist/${product.id}`, {
+      return axios.patch(`https://crm-poizonstore.ru/checklist/${product.id}`, {
         status: "payment",
         paymenttype: formPayload.paymenttype,
         paymentprovement: formPayload.paymentprovement[0],

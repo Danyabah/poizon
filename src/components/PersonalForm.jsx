@@ -35,7 +35,7 @@ export default function PersonalForm() {
   const { mutate } = useMutation({
     mutationFn: (formPayload) => {
       formPayload.managerid = userInfo.managerid;
-      return axios.patch(`http://45.84.227.72:5000/login/`, formPayload);
+      return axios.patch(`https://crm-poizonstore.ru/login/`, formPayload);
     },
   });
 

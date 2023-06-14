@@ -5,7 +5,7 @@ import axios from "axios";
 export default function StatisticApplication() {
   const [statistic, setStatistic] = useState({});
   useEffect(() => {
-    axios.get(`http://45.84.227.72:5000/statistic`).then((data) => {
+    axios.get(`https://crm-poizonstore.ru/statistic`).then((data) => {
       setStatistic(data.data);
     });
   }, []);

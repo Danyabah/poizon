@@ -17,7 +17,7 @@ export default function PersonalAreaPay() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    axios.get(`http://45.84.227.72:5000/checklist/${id}`).then((res) => {
+    axios.get(`https://crm-poizonstore.ru/checklist/${id}`).then((res) => {
       setProduct(res.data);
       // console.log(res);
       dispatch(setSelectedProduct(res.data));

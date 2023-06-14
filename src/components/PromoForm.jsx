@@ -31,7 +31,7 @@ export default function PromoForm({ setOpen }) {
 
   const { mutate } = useMutation({
     mutationFn: (formPayload) => {
-      return axios.post(`http://45.84.227.72:5000/promo/`, formPayload);
+      return axios.post(`https://crm-poizonstore.ru/promo/`, formPayload);
     },
   });
 

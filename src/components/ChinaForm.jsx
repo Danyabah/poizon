@@ -37,7 +37,7 @@ export default function ChinaForm({ id }) {
   const { mutate } = useMutation({
     mutationFn: (formPayload) => {
       if (window.confirm("Вы уверены?")) {
-        return axios.patch(`http://45.84.227.72:5000/checklist/${id}`, {
+        return axios.patch(`https://crm-poizonstore.ru/checklist/${id}`, {
           status: "china",
           trackid: formPayload.trackid,
         });

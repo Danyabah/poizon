@@ -27,7 +27,7 @@ export default function OrderForm() {
   const { id } = useParams();
 
   useEffect(() => {
-    axios.get(`http://45.84.227.72:5000/checklist/${id}`).then((res) => {
+    axios.get(`https://crm-poizonstore.ru/checklist/${id}`).then((res) => {
       console.log(res);
       if (typeof res.data["error"] == "undefined") {
         setProduct(res.data);
@@ -36,15 +36,15 @@ export default function OrderForm() {
   }, [id]);
   console.log(product);
   useEffect(() => {
-    axios.get(`http://45.84.227.72:5000/category`).then((data) => {
+    axios.get(`https://crm-poizonstore.ru/category`).then((data) => {
       setCategories(data.data.categories);
       setLastDelivery(data.data.categories[0].chinarush);
       setPrice(data.data.price);
     });
-    axios.get(`http://45.84.227.72:5000/currency/`).then((res) => {
+    axios.get(`https://crm-poizonstore.ru/currency/`).then((res) => {
       setCurrency(res.data.currency);
     });
-    axios.get(`http://45.84.227.72:5000/promo/`).then((res) => {
+    axios.get(`https://crm-poizonstore.ru/promo/`).then((res) => {
       setPromo(res.data.promo);
     });
   }, []);
@@ -119,7 +119,7 @@ export default function OrderForm() {
         }
 
         return axios.post(
-          `http://45.84.227.72:5000/checklist/neworder`,
+          `https://crm-poizonstore.ru/checklist/neworder`,
           formPayload
         );
       }

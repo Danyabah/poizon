@@ -21,7 +21,7 @@ export default function Crrcdek() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    axios.get(`http://45.84.227.72:5000/checklist/${id}`).then((res) => {
+    axios.get(`https://crm-poizonstore.ru/checklist/${id}`).then((res) => {
       console.log(res);
       if (typeof res.data["error"] == "undefined") {
         setProduct(res.data);

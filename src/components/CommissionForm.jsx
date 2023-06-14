@@ -9,7 +9,7 @@ export default function CommisionForm() {
   const [chinadelivery, setChinadelivery] = useState(0);
 
   useEffect(() => {
-    axios.get(`http://45.84.227.72:5000/category/`).then((res) => {
+    axios.get(`https://crm-poizonstore.ru/category/`).then((res) => {
       setCommission(res.data.price.commission);
       setChinadelivery(res.data.price.chinadelivery);
     });
@@ -41,7 +41,7 @@ export default function CommisionForm() {
   const { mutate } = useMutation({
     mutationFn: (formPayload) => {
       return axios.post(
-        `http://45.84.227.72:5000/category/price/`,
+        `https://crm-poizonstore.ru/category/price/`,
         formPayload
       );
     },

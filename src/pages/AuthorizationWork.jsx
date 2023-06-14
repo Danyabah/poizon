@@ -25,8 +25,13 @@ export default function AuthorizationWork() {
   const onSubmit = (values) => {
     mutate(values, {
       onSuccess: (response) => {
-        dispatch(setUserInfo(response.data));
-        navigate("/managerpersonalaccount");
+        if (!response.data.error) {
+          dispatch(setUserInfo(response.data));
+          navigate("/managerpersonalaccount");
+        } else {
+          alert("Пользователь не найден");
+        }
+
         console.log(response.data);
         // navigate("/login");
       },
@@ -38,7 +43,7 @@ export default function AuthorizationWork() {
 
   const { mutate } = useMutation({
     mutationFn: (formPayload) => {
-      return axios.post("http://45.84.227.72:5000/login/", formPayload);
+      return axios.post("https://crm-poizonstore.ru/login/", formPayload);
     },
   });
 

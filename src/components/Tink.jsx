@@ -7,7 +7,7 @@ import { useMutation } from "@tanstack/react-query";
 export default function Tink() {
   const [tinkInfo, setTinkInfo] = useState({});
   useEffect(() => {
-    axios.get(`http://45.84.227.72:5000/payment/`).then((res) => {
+    axios.get(`https://crm-poizonstore.ru/payment/`).then((res) => {
       setTinkInfo(res.data.tink);
     });
   }, []);
@@ -56,7 +56,7 @@ export default function Tink() {
   const { mutate } = useMutation({
     mutationFn: (formPayload) => {
       formPayload.type = "tink";
-      return axios.post(`http://45.84.227.72:5000/payment/`, formPayload);
+      return axios.post(`https://crm-poizonstore.ru/payment/`, formPayload);
     },
   });
 

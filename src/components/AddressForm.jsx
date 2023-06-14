@@ -11,7 +11,7 @@ export default function AddressForma() {
   const [pickup, setPickup] = useState("");
   const dispatch = useDispatch();
   useEffect(() => {
-    axios.get(`http://45.84.227.72:5000/pickup`).then((res) => {
+    axios.get(`https://crm-poizonstore.ru/pickup`).then((res) => {
       setPickup(res.data.pickup);
       dispatch(setAddress(res.data.pickup));
     });
@@ -39,7 +39,7 @@ export default function AddressForma() {
 
   const { mutate } = useMutation({
     mutationFn: (formPayload) => {
-      return axios.patch(`http://45.84.227.72:5000/pickup/`, formPayload);
+      return axios.patch(`https://crm-poizonstore.ru/pickup/`, formPayload);
     },
   });
   return (

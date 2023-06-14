@@ -16,7 +16,7 @@ export default function UserForm() {
   const [pickup, setPickup] = useState("");
 
   useEffect(() => {
-    axios.get(`http://45.84.227.72:5000/pickup`).then((res) => {
+    axios.get(`https://crm-poizonstore.ru/pickup`).then((res) => {
       setPickup(res.data.pickup);
     });
   }, []);
@@ -64,7 +64,7 @@ export default function UserForm() {
   const { mutate } = useMutation({
     mutationFn: (formPayload) => {
       return axios.patch(
-        `http://45.84.227.72:5000/checklist/${product.id}`,
+        `https://crm-poizonstore.ru/checklist/${product.id}`,
         formPayload
       );
     },

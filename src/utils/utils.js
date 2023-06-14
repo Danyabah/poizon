@@ -137,11 +137,13 @@ export function addToDraft(values) {
     let copy = { ...values };
     // copy.status = "draft";
     delete copy.status;
-    axios.post(`http://45.84.227.72:5000/checklist/draft`, copy).then((res) => {
-      if (res.status === 200) {
-        alert("добавлено в черновик");
-      }
-      console.log(res);
-    });
+    axios
+      .post(`https://crm-poizonstore.ru/checklist/draft`, copy)
+      .then((res) => {
+        if (res.status === 200) {
+          alert("добавлено в черновик");
+        }
+        console.log(res);
+      });
   }
 }

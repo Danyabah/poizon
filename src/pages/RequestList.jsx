@@ -13,7 +13,7 @@ export default function RequestList() {
   function getProducts() {
     axios
       .get(
-        `http://45.84.227.72:5000/checklist/?page=${page}&limit=10&previewimage=no&status=${categ}`
+        `https://crm-poizonstore.ru/checklist/?page=${page}&limit=10&previewimage=no&status=${categ}`
       )
       .then((data) => {
         setProducts(data.data.data);

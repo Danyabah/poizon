@@ -7,7 +7,7 @@ export default function Promocode() {
   const [promo, setPromo] = useState([]);
   const [open, setOpen] = useState(false);
   useEffect(() => {
-    axios.get(`http://45.84.227.72:5000/promo/`).then((res) => {
+    axios.get(`https://crm-poizonstore.ru/promo/`).then((res) => {
       setPromo(res.data.promo);
     });
   }, [open]);
@@ -15,7 +15,7 @@ export default function Promocode() {
   function tryDelete(e, name) {
     if (window?.confirm(`Вы действительно хотите удалить промокод "${name}"`)) {
       axios
-        .delete(`http://45.84.227.72:5000/promo/`, { data: { name: name } })
+        .delete(`https://crm-poizonstore.ru/promo/`, { data: { name: name } })
         .then(() => {
           window?.location.reload();
         });
