@@ -49,7 +49,7 @@ export default function Crrcdek() {
   function countDelivery(values) {
     axios
       .post(
-        `https://api.cdek.ru/v2/orders`,
+        `https://api.cdek.ru/v2/calculator/tariff`,
         {
           type: "1",
           currency: "1",

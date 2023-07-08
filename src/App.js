@@ -32,7 +32,6 @@ import Admin from "./components/Admin";
 import PersonalArea from "./pages/PersonalArea";
 import Address from "./pages/Address";
 import PrivateManager from "./components/PrivateManager";
-import Pvzcdek from "./components/Crrcdek";
 import Crrcdek from "./components/Crrcdek";
 import Pvz from "./components/Pvz";
 
