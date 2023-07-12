@@ -20,7 +20,6 @@ export default function OrderPageInProgress() {
   const [date, setDate] = useState(0);
   const [pickup, setPickup] = useState("");
   const [sdekStatus, setSdekStatus] = useState("");
-  const [token, setToken] = useState("");
 
   const { id } = useParams();
 
@@ -36,19 +35,7 @@ export default function OrderPageInProgress() {
     });
 
     axios
-      .post(
-        "https://api.cdek.ru/v2/oauth/token?client_id=wZWtjnWtkX7Fin2tvDdUE6eqYz1t1GND&client_secret=lc2gmrmK5s1Kk6FhZbNqpQCaATQRlsOy&grant_type=client_credentials"
-      )
-      .then((res) => {
-        setToken(res.data.access_token);
-      });
-
-    axios
-      .get(`https://api.cdek.ru/v2/orders?im_number=${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
+      .get(`https://crm-poizonstore.ru/cdek/orders/?im_number=${id}`)
       .then((res) => {
         console.log(res);
         setSdekStatus(
@@ -115,15 +102,15 @@ export default function OrderPageInProgress() {
               modules={[Navigation]}
               className="mySwiper"
             >
-              {product?.Image?.length !== 0 && (
+              {product?.image?.length !== 0 && (
                 <>
                   <SwiperSlide key={0}>
                     <img
-                      src={`data:image/jpg;base64,${product?.previewimage}`}
+                      src={product?.previewimage}
                       alt=""
                     />
                   </SwiperSlide>
-                  {product?.Image?.map((img, index) => {
+                  {product?.image?.map((img, index) => {
                     if (index > 0) {
                       return (
                         <SwiperSlide key={index}>
@@ -206,7 +193,7 @@ export default function OrderPageInProgress() {
             </div>
             <div className="push30 hidden-xss"></div>
             <div className="push15 visible-xss"></div>
-            <div className="text">Способ доставки: {product?.delivery}</div>
+            <div className="text">Способ доставки: {product?.delivery_display}</div>
             <div className="push20 hidden-xss"></div>
             <div className="push5 visible-xss"></div>
             {product?.delivery === "Самовывоз из шоурума" && (

@@ -56,7 +56,7 @@ export default function Tink() {
   const { mutate } = useMutation({
     mutationFn: (formPayload) => {
       formPayload.type = "tink";
-      return axios.post(`https://crm-poizonstore.ru/payment/`, formPayload);
+      return axios.patch(`https://crm-poizonstore.ru/payment/`, formPayload);
     },
   });
 

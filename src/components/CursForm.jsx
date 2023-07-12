@@ -39,7 +39,7 @@ export default function CursForm() {
 
   const { mutate } = useMutation({
     mutationFn: (formPayload) => {
-      return axios.post(`https://crm-poizonstore.ru/currency/`, formPayload);
+      return axios.patch(`https://crm-poizonstore.ru/currency/`, formPayload);
     },
   });
   return (

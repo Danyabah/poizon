@@ -17,7 +17,7 @@ export default function Crrcdek() {
   const navigate = useNavigate();
   const { id } = useParams();
   const [product, setProduct] = useState({});
-  const [token, setToken] = useState("");
+ 
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -27,13 +27,7 @@ export default function Crrcdek() {
         setProduct(res.data);
       }
     });
-    axios
-      .post(
-        "https://api.cdek.ru/v2/oauth/token?client_id=wZWtjnWtkX7Fin2tvDdUE6eqYz1t1GND&client_secret=lc2gmrmK5s1Kk6FhZbNqpQCaATQRlsOy&grant_type=client_credentials"
-      )
-      .then((res) => {
-        setToken(res.data.access_token);
-      });
+
   }, [id]);
 
   const initialValues = {
@@ -49,7 +43,7 @@ export default function Crrcdek() {
   function countDelivery(values) {
     axios
       .post(
-        `https://api.cdek.ru/v2/calculator/tariff`,
+        `https://crm-poizonstore.ru/cdek/calculator/tariff/`,
         {
           type: "1",
           currency: "1",
@@ -69,11 +63,6 @@ export default function Crrcdek() {
               height: 14,
             },
           ],
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
         }
       )
       .then((res) => {
@@ -168,11 +157,7 @@ export default function Crrcdek() {
           address: `г. ${city}, ${street}, д. ${house}, кв. ${flat}`,
         },
       };
-      return axios.post(`https://api.cdek.ru/v2/orders`, newObj, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      return axios.post(`https://crm-poizonstore.ru/cdek/orders/`, newObj);
     },
   });
 

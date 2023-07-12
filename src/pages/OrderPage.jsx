@@ -10,14 +10,15 @@ import { stage } from "../utils/utils";
 export default function OrderPage() {
   const { id } = useParams();
   const [product, setProduct] = useState({});
-  const [promo, setPromo] = useState({});
+  const [promo, setPromo] = useState("");
   const dispatch = useDispatch();
 
   useEffect(() => {
     axios.get(`https://crm-poizonstore.ru/checklist/${id}`).then((res) => {
       setProduct(res.data);
       dispatch(setCurrentProductInfo(res.data));
-      setPromo(JSON.parse(res.data?.promo));
+      // console.log(res.data);
+      setPromo(res.data?.promo);
     });
   }, [id]);
   if (stage[product?.status] > 1) {
@@ -66,15 +67,15 @@ export default function OrderPage() {
             <div className="price">
               {product?.fullprice?.toLocaleString()} ₽{" "}
             </div>
-            {promo?.name && (
-              <span className="text size">Применен промокод: {promo.name}</span>
+            {promo && (
+              <span className="text size">Применен промокод: {promo}</span>
             )}
             <div className="push40 hidden-xss"></div>
             <div className="push20 visible-xss"></div>
             <section>
               <div className="order-img-wrap">
                 <div className="img-wrapper">
-                  <img src={product?.Image?.[0]} alt="" />
+                  <img src={product?.image?.[0]} alt="" />
                 </div>
                 <div className="table-wrapper">
                   <table>
@@ -101,7 +102,7 @@ export default function OrderPage() {
                       </tr>
                       <tr>
                         <th>Комиссия сервиса</th>
-                        <td>{product?.commission?.toLocaleString()} ₽</td>
+                        <td>{product?.comission?.toLocaleString()} ₽</td>
                       </tr>
                     </tbody>
                   </table>

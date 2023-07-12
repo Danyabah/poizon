@@ -5,9 +5,11 @@ import axios from "axios";
 export default function StatisticNumber() {
   const [statistic, setStatistic] = useState({});
   useEffect(() => {
-    axios.get(`https://crm-poizonstore.ru/storage`).then((data) => {
-      setStatistic(data.data);
-    });
+    axios
+      .get(`https://crm-poizonstore.ru//statistics/clients/ `)
+      .then((data) => {
+        setStatistic(data.data);
+      });
   }, []);
   console.log(statistic);
   return (

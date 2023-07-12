@@ -16,7 +16,7 @@ export default function CategoryForm() {
     axios.get(`https://crm-poizonstore.ru/category`).then((data) => {
       setCategories(data.data);
     });
-  }, [initialValues]);
+  }, []);
 
   // console.log(chinarush);
   const onSubmit = (values) => {
@@ -39,7 +39,7 @@ export default function CategoryForm() {
 
   const { mutate } = useMutation({
     mutationFn: (formPayload) => {
-      return axios.post(`https://crm-poizonstore.ru/category/`, formPayload);
+      return axios.patch(`https://crm-poizonstore.ru/category/`, formPayload);
     },
   });
 

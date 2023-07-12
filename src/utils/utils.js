@@ -94,6 +94,7 @@ export const subcategory = {
 };
 
 export const status = {
+  neworder:"Новый заказ",
   payment: "Проверка оплаты",
   //  buying: 'Оплачен',
   buying: "На закупке",
@@ -137,13 +138,11 @@ export function addToDraft(values) {
     let copy = { ...values };
     // copy.status = "draft";
     delete copy.status;
-    axios
-      .post(`https://crm-poizonstore.ru/checklist/draft`, copy)
-      .then((res) => {
-        if (res.status === 200) {
-          alert("добавлено в черновик");
-        }
-        console.log(res);
-      });
+    axios.post(`https://crm-poizonstore.ru/checklist/`, copy).then((res) => {
+      if (res.status === 200) {
+        alert("добавлено в черновик");
+      }
+      console.log(res);
+    });
   }
 }

@@ -56,7 +56,7 @@ export default function Ralf() {
   const { mutate } = useMutation({
     mutationFn: (formPayload) => {
       formPayload.type = "ralf";
-      return axios.post(`https://crm-poizonstore.ru/payment/`, formPayload);
+      return axios.patch(`https://crm-poizonstore.ru/payment/`, formPayload);
     },
   });
   return (

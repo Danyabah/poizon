@@ -116,13 +116,13 @@ export default function PersonalAreaOrder() {
                   <div className="form-group">
                     <div className="img-preview">
                       <a
-                        href={`data:image/jpg;base64,${previewimage}`}
+                        href={previewimage}
                         className=""
                         target="_blank"
                       >
                         <img
                           style={{ objectFit: "contain" }}
-                          src={`data:image/jpg;base64,${previewimage}`}
+                          src={previewimage}
                           alt=""
                         />
                       </a>

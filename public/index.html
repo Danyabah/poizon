@@ -45,22 +45,6 @@
       charset="utf-8"
     ></script>
     <script>
-      let token = "";
-      fetch(
-        "https://api.cdek.ru/v2/oauth/token?client_id=wZWtjnWtkX7Fin2tvDdUE6eqYz1t1GND&client_secret=lc2gmrmK5s1Kk6FhZbNqpQCaATQRlsOy&grant_type=client_credentials",
-        {
-          method: "POST",
-          headers: {
-            Accept: "*/*",
-          },
-        }
-      )
-        .then((res) => res.json())
-        .then((data) => {
-          console.log(data);
-          token = data.access_token;
-        });
-
       window.getCdek = function () {
         var widjet = new ISDEKWidjet({
           hidedelt: true,
@@ -74,13 +58,9 @@
               " г." + info.cityName + ", " + info.PVZ.Address
             );
             console.log(info);
-            fetch(`https://api.cdek.ru/v2/calculator/tariff`, {
+            fetch(`https://crm-poizonstore.ru/cdek/calculator/tariff/`, {
               method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`,
-                Accept: "application/json",
-              },
+
               body: JSON.stringify({
                 type: "1",
                 currency: "1",
@@ -101,6 +81,9 @@
                   },
                 ],
               }),
+              headers: {
+                "Content-Type": "application/json",
+              },
             })
               .then((res) => res.json())
               .then((data) => {

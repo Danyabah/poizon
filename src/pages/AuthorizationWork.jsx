@@ -26,6 +26,7 @@ export default function AuthorizationWork() {
     mutate(values, {
       onSuccess: (response) => {
         if (!response.data.error) {
+          console.log(response);
           dispatch(setUserInfo(response.data));
           navigate("/managerpersonalaccount");
         } else {

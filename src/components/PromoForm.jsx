@@ -8,7 +8,7 @@ export default function PromoForm({ setOpen }) {
     name: "",
     discount: "",
     freedelivery: false,
-    nocommission: false,
+    nocomission: false,
   };
 
   const onSubmit = (values) => {
@@ -89,10 +89,10 @@ export default function PromoForm({ setOpen }) {
             </div>
             <div className="form-group">
               <p className="row">
-                <label className="label" htmlFor="nocommission">
+                <label className="label" htmlFor="nocomission">
                   Без Комиссии
                 </label>
-                <Field name="nocommission" type="checkbox" id="nocommission" />
+                <Field name="nocomission" type="checkbox" id="nocomission" />
               </p>
             </div>
 

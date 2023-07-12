@@ -56,7 +56,7 @@ export default function Alfa() {
   const { mutate } = useMutation({
     mutationFn: (formPayload) => {
       formPayload.type = "alfa";
-      return axios.post(`https://crm-poizonstore.ru/payment/`, formPayload);
+      return axios.patch(`https://crm-poizonstore.ru/payment/`, formPayload);
     },
   });
 

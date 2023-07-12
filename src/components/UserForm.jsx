@@ -26,7 +26,7 @@ export default function UserForm() {
     buyername: product.buyername || "",
     buyerphone: product.buyerphone || "",
     tg: product.tg || "",
-    delivery: product.delivery || "Самовывоз из шоурума",
+    delivery: product.delivery || "pickup",
     recievername: product.recievername || "",
     recieverphone: product.recieverphone || "",
   };
@@ -36,9 +36,11 @@ export default function UserForm() {
       onSuccess: (response) => {
         console.log(response);
         dispatch(setCurrentProductInfo(response.data));
-        if (response.data.delivery === "Курьерская доставка CDEK") {
+        if (response.data.delivery_display === "Курьерская доставка CDEK") {
           navigate(`/crrcdek/${response.data.id}`);
-        } else if (response.data.delivery === "Пункт выдачи заказов CDEK") {
+        } else if (
+          response.data.delivery_display === "Пункт выдачи заказов CDEK"
+        ) {
           navigate(`/pvz/${response.data.id}`);
         } else {
           navigate(`/orderpageinprogress/${response.data.id}`);
@@ -144,15 +146,9 @@ export default function UserForm() {
                 className="select-styler form-control required"
                 id="delivery"
               >
-                <option value="Самовывоз из шоурума">
-                  Самовывоз из шоурума
-                </option>
-                <option value="Пункт выдачи заказов CDEK">
-                  Пункт выдачи заказов CDEK
-                </option>
-                <option value="Курьерская доставка CDEK">
-                  Курьерская доставка CDEK
-                </option>
+                <option value="pickup">Самовывоз из шоурума</option>
+                <option value="cdek">Пункт выдачи заказов CDEK</option>
+                <option value="cdek_courier">Курьерская доставка CDEK</option>
               </Field>
             </div>
             <div className="form-group">

@@ -10,8 +10,8 @@ export default function CommisionForm() {
 
   useEffect(() => {
     axios.get(`https://crm-poizonstore.ru/category/`).then((res) => {
-      setCommission(res.data.price.commission);
-      setChinadelivery(res.data.price.chinadelivery);
+      setCommission(res.data.prices.comission);
+      setChinadelivery(res.data.prices.chinadelivery);
     });
   }, []);
 
@@ -40,7 +40,7 @@ export default function CommisionForm() {
 
   const { mutate } = useMutation({
     mutationFn: (formPayload) => {
-      return axios.post(
+      return axios.patch(
         `https://crm-poizonstore.ru/category/price/`,
         formPayload
       );

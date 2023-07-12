@@ -53,7 +53,7 @@ export default function ProvementForm() {
       return axios.patch(`https://crm-poizonstore.ru/checklist/${product.id}`, {
         status: "payment",
         paymenttype: formPayload.paymenttype,
-        paymentprovement: formPayload.paymentprovement[0],
+        paymentprovement: formPayload.paymentprovement,
       });
     },
   });

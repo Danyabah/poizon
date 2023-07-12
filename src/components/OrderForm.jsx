@@ -39,7 +39,7 @@ export default function OrderForm() {
     axios.get(`https://crm-poizonstore.ru/category`).then((data) => {
       setCategories(data.data.categories);
       setLastDelivery(data.data.categories[0].chinarush);
-      setPrice(data.data.price);
+      setPrice(data.data.prices);
     });
     axios.get(`https://crm-poizonstore.ru/currency/`).then((res) => {
       setCurrency(res.data.currency);
@@ -50,7 +50,7 @@ export default function OrderForm() {
   }, []);
 
   const initialValues = {
-    managerid: userInfo.managerid || "",
+    managerid: userInfo.id || "",
     link: product?.link || "",
     category: categories[0]?.category,
     subcategory:
@@ -58,13 +58,13 @@ export default function OrderForm() {
     brand: product?.brand || "",
     model: product?.model || "",
     size: product?.size || "",
-    Image: product?.Image || [],
+    image: product?.image || [],
     currency: currency || 0,
     curencycurency2: "",
     currency3: 0,
-    chinadelivery: price.chinadelivery || 0,
+    chinadelivery: price?.chinadelivery || 0,
     chinadelivery2: categories[0]?.chinarush, //в заивисимости от категории chinarush,
-    commission: price.commission || 0,
+    commission: price?.comission || 0,
     promo: "",
     fullprice: 0,
     comment: "",
@@ -96,7 +96,7 @@ export default function OrderForm() {
     curencycurency2: Yup.number()
       .min(1, "Необходимо указать цену")
       .required("Необходимо указать цену"),
-    Image: Yup.array()
+    image: Yup.array()
       .min(1, "Добавьте изображения")
       .required("Добавьте изображения"),
   });
@@ -105,23 +105,22 @@ export default function OrderForm() {
     mutationFn: (formPayload) => {
       if (window.confirm("Вы уверены?")) {
         formPayload.curencycurency2 = +formPayload.curencycurency2;
-        formPayload.Image = imagesUrl; //потом почистить массив изображений
-
+        formPayload.image = imagesUrl; //потом почистить массив изображений
+        formPayload.status  = "neworder"
         formPayload.brand =
           formPayload.brand[0].toUpperCase() + formPayload.brand.slice(1);
         formPayload.model =
           formPayload.model[0].toUpperCase() + formPayload.model.slice(1);
-        if (formPayload.promo && formPayload?.promo.trim() === "") {
+        if (formPayload?.promo.trim() === "") {
           delete formPayload.promo;
+        } else {
+          formPayload.promo = JSON.parse(formPayload.promo).name;
         }
         if (formPayload.comment && formPayload.comment.trim() === "") {
           delete formPayload.comment;
         }
 
-        return axios.post(
-          `https://crm-poizonstore.ru/checklist/neworder`,
-          formPayload
-        );
+        return axios.post(`https://crm-poizonstore.ru/checklist/`, formPayload);
       }
     },
   });
@@ -276,11 +275,11 @@ export default function OrderForm() {
               <div className="text-label">Изображение товара</div>
               <div className="push20 hidden-xss"></div>
               <div className="image__list">
-                {values.Image.length !== 0 && (
+                {values.image.length !== 0 && (
                   <PreviewImage
-                    name="Image"
+                    name="image"
                     setField={setFieldValue}
-                    file={values.Image}
+                    file={values.image}
                   />
                 )}
               </div>
@@ -293,13 +292,13 @@ export default function OrderForm() {
                     ref={fileRef}
                     type="file"
                     hidden
-                    id="Image"
+                    id="image"
                     multiple="multiple"
                     accept="image/jpeg,image/png,image/gif"
-                    name="Image"
+                    name="image"
                     onChange={(e) => {
                       console.log(Array.from(e.target.files));
-                      setFieldValue("Image", Array.from(e.target.files));
+                      setFieldValue("image", Array.from(e.target.files));
                     }}
                   />
                   <label
@@ -344,7 +343,7 @@ export default function OrderForm() {
             <div className="push50 hidden-xss"></div>
             <ErrorMessage
               style={{ color: "red" }}
-              name="Image"
+              name="image"
               component="span"
               className="form-control"
             />
@@ -387,6 +386,7 @@ export default function OrderForm() {
                     values.chinadelivery +
                     values.chinadelivery2 +
                     values.commission;
+                  console.log(values.commission);
                   setLastPrice(fullprice);
                   setFieldValue("fullprice", fullprice);
                 }}
@@ -459,12 +459,12 @@ export default function OrderForm() {
                 onChange={(e) => {
                   if (e.target.value !== "") {
                     setFieldValue("fullprice", lastPrice);
-                    setFieldValue("commission", price.commission);
+                    setFieldValue("commission", price.comission);
                     setFieldValue("chinadelivery2", lastDelivery);
 
                     let obj = JSON.parse(e.target.value);
 
-                    if (obj.discount && obj.nocommission) {
+                    if (obj.discount && obj.nocomission) {
                       let r = lastPrice - values.commission;
                       let s = obj.discount * r;
                       let price = r - s / 100;
@@ -478,7 +478,7 @@ export default function OrderForm() {
                       let s = obj.discount * lastPrice;
                       let price = lastPrice - s / 100;
                       setFieldValue("fullprice", Math.round(price, 2));
-                    } else if (obj.nocommission) {
+                    } else if (obj.nocomission) {
                       setFieldValue(
                         "fullprice",
                         Math.round(lastPrice - values.commission, 2)
@@ -489,7 +489,7 @@ export default function OrderForm() {
                         Math.round(lastPrice - values.chinadelivery2, 2)
                       );
                     }
-                    if (obj.nocommission) {
+                    if (obj.nocomission) {
                       setFieldValue("commission", 0);
                     }
                     if (obj.freedelivery) {
@@ -497,7 +497,7 @@ export default function OrderForm() {
                     }
                   } else {
                     setFieldValue("fullprice", lastPrice);
-                    setFieldValue("commission", price.commission);
+                    setFieldValue("commission", price.comission);
                     setFieldValue("chinadelivery2", lastDelivery);
                   }
 
@@ -505,11 +505,14 @@ export default function OrderForm() {
                 }}
               >
                 <option value="">Не указано</option>
-                {promo?.map((prom) => (
-                  <option key={prom.name} value={JSON.stringify(prom)}>
-                    {prom.name}
-                  </option>
-                ))}
+                {promo?.map(
+                  (prom) =>
+                    prom.is_active && (
+                      <option key={prom.name} value={JSON.stringify(prom)}>
+                        {prom.name}
+                      </option>
+                    )
+                )}
               </Field>
             </div>
             <div className="form-group">
