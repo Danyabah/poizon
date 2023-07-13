@@ -3,11 +3,15 @@ import React, { useEffect, useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { useMutation } from "@tanstack/react-query";
+import { useSelector } from "react-redux";
 
 export default function Ralf() {
   const [ralfInfo, setRalfInfo] = useState({});
+  const token = useSelector((state)=>state.user.token)
   useEffect(() => {
-    axios.get(`https://crm-poizonstore.ru/payment/`).then((res) => {
+    axios.get(`https://crm-poizonstore.ru/payment/`,{ headers:{
+      "Authorization": `Token ${token}`
+    }}).then((res) => {
       setRalfInfo(res.data.ralf);
     });
   }, []);
@@ -56,7 +60,9 @@ export default function Ralf() {
   const { mutate } = useMutation({
     mutationFn: (formPayload) => {
       formPayload.type = "ralf";
-      return axios.patch(`https://crm-poizonstore.ru/payment/`, formPayload);
+      return axios.patch(`https://crm-poizonstore.ru/payment/`, formPayload,{ headers:{
+        "Authorization": `Token ${token}`
+      }});
     },
   });
   return (

@@ -10,6 +10,7 @@ import { addToDraft } from "../utils/utils";
 export default function ChinaForm({ id }) {
   const chinaProduct = useSelector((state) => state.admin.chinaProduct);
   const reload = useSelector((state) => state.admin.reload);
+  const token = useSelector((state) => state.user.token);
   const initialValues = {
     trackid: "",
   };
@@ -40,7 +41,9 @@ export default function ChinaForm({ id }) {
         return axios.patch(`https://crm-poizonstore.ru/checklist/${id}`, {
           status: "china",
           trackid: formPayload.trackid,
-        });
+        }, { headers:{
+          "Authorization": `Token ${token}`
+        }});
       }
     },
   });
@@ -78,7 +81,7 @@ export default function ChinaForm({ id }) {
             </button>
             <div
               className="button button-new no-icon draft-btn"
-              onClick={() => addToDraft(chinaProduct)}
+              onClick={() => addToDraft(chinaProduct,token)}
             >
               Отменить заказ
             </div>

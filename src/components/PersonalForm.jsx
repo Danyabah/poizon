@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setUserInfo } from "../redux/slices/userReducer";
 export default function PersonalForm() {
   const userInfo = useSelector((state) => state.user.userInfo);
+  const token = useSelector((state) => state.user.token);
   const dispatch = useDispatch();
 
   const initialValues = {
@@ -36,8 +37,12 @@ export default function PersonalForm() {
     mutationFn: (formPayload) => {
       formPayload.managerid = userInfo.managerid;
       return axios.patch(
-        `https://crm-poizonstore.ru/users/${userInfo.id}`,
-        formPayload
+        `https://crm-poizonstore.ru/users/${userInfo.id}/`,
+        formPayload,{
+          headers:{
+            "Authorization": `Token ${token}`
+          }
+        }
       );
     },
   });

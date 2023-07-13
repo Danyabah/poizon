@@ -17,6 +17,7 @@ export default function OrderForm() {
   const [lastDelivery, setLastDelivery] = useState(categories[0]?.chinarush);
 
   const userInfo = useSelector((state) => state.user.userInfo);
+  const token = useSelector((state) => state.user.token);
   const imagesUrl = useSelector((state) => state.admin.images);
   const [currency, setCurrency] = useState("");
   const [promo, setPromo] = useState([]);
@@ -36,15 +37,21 @@ export default function OrderForm() {
   }, [id]);
   console.log(product);
   useEffect(() => {
-    axios.get(`https://crm-poizonstore.ru/category`).then((data) => {
+    axios.get(`https://crm-poizonstore.ru/category`,{ headers:{
+      "Authorization": `Token ${token}`
+    }}).then((data) => {
       setCategories(data.data.categories);
       setLastDelivery(data.data.categories[0].chinarush);
       setPrice(data.data.prices);
     });
-    axios.get(`https://crm-poizonstore.ru/currency/`).then((res) => {
+    axios.get(`https://crm-poizonstore.ru/currency/`,{ headers:{
+      "Authorization": `Token ${token}`
+    }}).then((res) => {
       setCurrency(res.data.currency);
     });
-    axios.get(`https://crm-poizonstore.ru/promo/`).then((res) => {
+    axios.get(`https://crm-poizonstore.ru/promo/`,{ headers:{
+      "Authorization": `Token ${token}`
+    }}).then((res) => {
       setPromo(res.data.promo);
     });
   }, []);
@@ -64,7 +71,7 @@ export default function OrderForm() {
     currency3: 0,
     chinadelivery: price?.chinadelivery || 0,
     chinadelivery2: categories[0]?.chinarush, //в заивисимости от категории chinarush,
-    commission: price?.comission || 0,
+    commission: price?.commission || 0,
     promo: "",
     fullprice: 0,
     comment: "",
@@ -120,7 +127,9 @@ export default function OrderForm() {
           delete formPayload.comment;
         }
 
-        return axios.post(`https://crm-poizonstore.ru/checklist/`, formPayload);
+        return axios.post(`https://crm-poizonstore.ru/checklist/`, formPayload,{ headers:{
+          "Authorization": `Token ${token}`
+        }});
       }
     },
   });
@@ -459,7 +468,7 @@ export default function OrderForm() {
                 onChange={(e) => {
                   if (e.target.value !== "") {
                     setFieldValue("fullprice", lastPrice);
-                    setFieldValue("commission", price.comission);
+                    setFieldValue("commission", price.commission);
                     setFieldValue("chinadelivery2", lastDelivery);
 
                     let obj = JSON.parse(e.target.value);
@@ -497,7 +506,7 @@ export default function OrderForm() {
                     }
                   } else {
                     setFieldValue("fullprice", lastPrice);
-                    setFieldValue("commission", price.comission);
+                    setFieldValue("commission", price.commission);
                     setFieldValue("chinadelivery2", lastDelivery);
                   }
 
@@ -542,7 +551,20 @@ export default function OrderForm() {
             <button className="button no-icon">Сохранить</button>
             <div
               className="button no-icon draft-btn"
-              onClick={() => addToDraft(values)}
+              onClick={() => {
+                if (window.confirm("Вы уверены что хотите добавить в черновик?")) {
+               
+                  // copy.status = "draft";
+                  axios.post(`https://crm-poizonstore.ru/checklist/`,{...values,status:"draft"},{ headers:{
+                    "Authorization": `Token ${token}`
+                  }}).then((res) => {
+                    if (res.status === 201) {
+                      alert("добавлено в черновик");
+                    }
+                    console.log(res);
+                  });
+                }
+              }}
             >
               В Черновик
             </div>

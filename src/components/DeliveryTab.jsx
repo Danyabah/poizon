@@ -53,7 +53,7 @@ export default function DeliveryTab() {
             className="form-control"
             id="sum"
             disabled
-            value={`${product?.delivery}`}
+            value={`${product?.delivery_display}`}
           />
         </div>
 

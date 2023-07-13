@@ -10,6 +10,7 @@ import { setOrderProduct, setReload } from "../redux/slices/adminReducer";
 export default function PurchaseForm({ setCateg }) {
   const product = useSelector((state) => state.admin.orderProduct);
   const reload = useSelector((state) => state.admin.reload);
+  const token = useSelector((state) => state.user.token);
   const dispatch = useDispatch();
 
   const initialValues = {
@@ -50,7 +51,10 @@ export default function PurchaseForm({ setCateg }) {
             status: "bought",
             realprice: formPayload.realprice,
             checkphoto: formPayload.checkphoto[0],
-          }
+          },
+          { headers:{
+            "Authorization": `Token ${token}`
+          }}
         );
       }
     },

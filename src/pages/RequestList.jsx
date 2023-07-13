@@ -2,18 +2,21 @@ import React, { useEffect, useState } from "react";
 import Header from "../components/Header";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 export default function RequestList() {
   const [products, setProducts] = useState([]);
   const [page, setPage] = useState(1);
   const [categ, setCateg] = useState("bought");
-
+  const token = useSelector((state)=>state.user.token)
   const [totalPage, setTotalPage] = useState(1);
 
   function getProducts() {
     axios
       .get(
-        `https://crm-poizonstore.ru/checklist/?page=${page}&limit=10&previewimage=no&status=${categ}`
+        `https://crm-poizonstore.ru/checklist/?page=${page}&limit=10&status=${categ}`,{ headers:{
+          "Authorization": `Token ${token}`
+        }}
       )
       .then((data) => {
         setProducts(data.data.data);

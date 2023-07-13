@@ -22,6 +22,7 @@ export default function PersonalAreaNew() {
   const chinaProduct = useSelector((state) => state.admin.chinaProduct);
   const chinarushProduct = useSelector((state) => state.admin.chinarushProduct);
   const reload = useSelector((state) => state.admin.reload);
+  const token = useSelector((state) => state.user.token);
   const [totalPage, setTotalPage] = useState(1);
   const [search, setSearch] = useState("");
 
@@ -30,7 +31,9 @@ export default function PersonalAreaNew() {
   function getProducts() {
     axios
       .get(
-        `https://crm-poizonstore.ru/checklist/?page=${page}&limit=10&previewimage=no&status=${categ}&search=${search}`
+        `https://crm-poizonstore.ru/checklist/?page=${page}&limit=10&status=${categ}&search=${search}`,{ headers:{
+          "Authorization": `Token ${token}`
+        }}
       )
       .then((data) => {
         setProducts(data.data.data);
@@ -170,7 +173,7 @@ export default function PersonalAreaNew() {
                   </button>
                   <div
                     className="button button-new no-icon draft-btn"
-                    onClick={() => addToDraft(product)}
+                    onClick={() => addToDraft(product,token)}
                   >
                     Отменить заказ
                   </div>

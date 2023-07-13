@@ -1,4 +1,5 @@
 import axios from "axios";
+import { useSelector } from "react-redux";
 
 export const subcategory = {
   shoes: [
@@ -133,12 +134,17 @@ export const translate = {
   foodndrinks: "Еда и напитки",
   different: "Другое",
 };
-export function addToDraft(values) {
+export function addToDraft(values,token) {
+
   if (window.confirm("Вы уверены что хотите отменить заказ?")) {
     let copy = { ...values };
     // copy.status = "draft";
     delete copy.status;
-    axios.post(`https://crm-poizonstore.ru/checklist/`, copy).then((res) => {
+    axios.patch(`https://crm-poizonstore.ru/checklist/${copy.id}`, {
+      status:"draft"
+    },{ headers:{
+      "Authorization": `Token ${token}`
+    }}).then((res) => {
       if (res.status === 200) {
         alert("добавлено в черновик");
       }

@@ -1,11 +1,15 @@
 import React, { useEffect, useState } from "react";
 import Header from "../components/Header";
 import axios from "axios";
+import { useSelector } from "react-redux";
 
 export default function StatisticApplication() {
   const [statistic, setStatistic] = useState({});
+  const token = useSelector((state)=>state.user.token)
   useEffect(() => {
-    axios.get(`https://crm-poizonstore.ru/statistics/orders`).then((data) => {
+    axios.get(`https://crm-poizonstore.ru/statistics/orders`,{ headers:{
+      "Authorization": `Token ${token}`
+    }}).then((data) => {
       setStatistic(data.data);
     });
   }, []);

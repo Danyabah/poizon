@@ -13,11 +13,14 @@ export default function PersonalAreaCheckPay() {
   const [totalPage, setTotalPage] = useState(1);
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
+  const token = useSelector((state)=>state.user.token)
 
   function getProducts() {
     axios
       .get(
-        `https://crm-poizonstore.ru/checklist/?page=${page}&limit=10&previewimage=no&status=${categ}&search=${search}`
+        `https://crm-poizonstore.ru/checklist/?page=${page}&limit=10&status=${categ}&search=${search}`,{ headers:{
+          "Authorization": `Token ${token}`
+        }}
       )
       .then((data) => {
         console.log(data.data.data);
@@ -34,7 +37,9 @@ export default function PersonalAreaCheckPay() {
     mutationFn: (values) => {
       return axios.patch(`https://crm-poizonstore.ru/checklist/${values.id}`, {
         status: values.status,
-      });
+      },{ headers:{
+        "Authorization": `Token ${token}`
+      }});
     },
   });
 
@@ -54,7 +59,9 @@ export default function PersonalAreaCheckPay() {
 
   const onDelete = (id) => {
     if (window?.confirm("Вы уверены что хотите удалить товар?")) {
-      axios.delete(`https://crm-poizonstore.ru/checklist/${id}`).then((res) => {
+      axios.delete(`https://crm-poizonstore.ru/checklist/${id}`,{ headers:{
+        "Authorization": `Token ${token}`
+      }}).then((res) => {
         if (res.data.status === "success") {
           alert("Товар успешно удален");
           getProducts();
@@ -213,7 +220,7 @@ export default function PersonalAreaCheckPay() {
                     : ""}
                 </div>
                 <div className="table-td" style={{ position: "relative" }}>
-                  {obj?.delivery}{" "}
+                  {obj?.delivery_display}{" "}
                   {obj?.status === "payment" ? (
                     <div className="flex-i">
                       <i
@@ -227,14 +234,8 @@ export default function PersonalAreaCheckPay() {
                   ) : (
                     categ === "draft" && (
                       <span
-                        style={{
-                          position: "absolute",
-                          right: "-35%",
-                          top: "35%",
-                          fontSize: "35px",
-                          color: "#428bca",
-                          cursor: "pointer",
-                        }}
+                      className="trash"
+                       
                       >
                         <i
                           className="uil uil-trash-alt"

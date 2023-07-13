@@ -115,7 +115,7 @@ export default function ManagerPersonalAccount() {
                   Заказы
                 </Link>
               </li>
-              {userInfo.job === "product manager" ||
+              {userInfo.job === "productmanager" ||
               userInfo.job === "admin" ? (
                 <li>
                   <Link

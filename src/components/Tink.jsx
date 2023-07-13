@@ -3,11 +3,15 @@ import React, { useEffect, useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { useMutation } from "@tanstack/react-query";
+import { useSelector } from "react-redux";
 
 export default function Tink() {
   const [tinkInfo, setTinkInfo] = useState({});
+  const token = useSelector((state)=>state.user.token);
   useEffect(() => {
-    axios.get(`https://crm-poizonstore.ru/payment/`).then((res) => {
+    axios.get(`https://crm-poizonstore.ru/payment/`,{ headers:{
+      "Authorization": `Token ${token}`
+    }}).then((res) => {
       setTinkInfo(res.data.tink);
     });
   }, []);
@@ -56,7 +60,9 @@ export default function Tink() {
   const { mutate } = useMutation({
     mutationFn: (formPayload) => {
       formPayload.type = "tink";
-      return axios.patch(`https://crm-poizonstore.ru/payment/`, formPayload);
+      return axios.patch(`https://crm-poizonstore.ru/payment/`, formPayload,{ headers:{
+        "Authorization": `Token ${token}`
+      }});
     },
   });
 

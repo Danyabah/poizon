@@ -9,7 +9,7 @@ import { setChinarushProduct, setReload } from "../redux/slices/adminReducer";
 export default function ChinarushForm({ id }) {
   const dispatch = useDispatch();
   const reload = useSelector((state) => state.admin.reload);
-
+  const token = useSelector((state) => state.user.token);
   const onSubmit = (values) => {
     mutate(values, {
       onSuccess: (response) => {
@@ -28,7 +28,9 @@ export default function ChinarushForm({ id }) {
       if (window.confirm("Вы уверены?")) {
         return axios.patch(`https://crm-poizonstore.ru/checklist/${id}`, {
           status: "chinarush",
-        });
+        },{ headers:{
+          "Authorization": `Token ${token}`
+        }});
       }
     },
   });

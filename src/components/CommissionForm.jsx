@@ -3,14 +3,19 @@ import axios from "axios";
 import { useMutation } from "@tanstack/react-query";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
+import { useSelector } from "react-redux";
 
 export default function CommisionForm() {
   const [commission, setCommission] = useState(0);
   const [chinadelivery, setChinadelivery] = useState(0);
+  const token = useSelector((state)=>state.user.token)
 
   useEffect(() => {
-    axios.get(`https://crm-poizonstore.ru/category/`).then((res) => {
-      setCommission(res.data.prices.comission);
+    axios.get(`https://crm-poizonstore.ru/category/`,{ headers:{
+      "Authorization": `Token ${token}`
+    }}).then((res) => {
+
+      setCommission(res.data.prices.commission);
       setChinadelivery(res.data.prices.chinadelivery);
     });
   }, []);
@@ -42,7 +47,9 @@ export default function CommisionForm() {
     mutationFn: (formPayload) => {
       return axios.patch(
         `https://crm-poizonstore.ru/category/price/`,
-        formPayload
+        formPayload,{ headers:{
+          "Authorization": `Token ${token}`
+        }}
       );
     },
   });

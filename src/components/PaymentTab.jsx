@@ -10,13 +10,17 @@ export default function PaymentTab() {
   const product = useSelector((state) => state.admin.selectedProduct);
   const reload = useSelector((state) => state.admin.reload);
   const dispatch = useDispatch();
+  const token = useSelector((state)=>state.user.token)
+
 
   const { mutate } = useMutation({
     mutationFn: (values) => {
       if (window.confirm("вы уверены?")) {
         return axios.patch(
           `https://crm-poizonstore.ru/checklist/${id}`,
-          values
+          values,{ headers:{
+            "Authorization": `Token ${token}`
+          }}
         );
       }
     },
@@ -57,7 +61,7 @@ export default function PaymentTab() {
             </button>
             <button
               className="button no-icon"
-              onClick={() => addToDraft(product)}
+              onClick={() => addToDraft(product,token)}
             >
               Отклонить оплату
             </button>

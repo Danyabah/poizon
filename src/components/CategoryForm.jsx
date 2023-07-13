@@ -3,9 +3,11 @@ import axios from "axios";
 import { useMutation } from "@tanstack/react-query";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
+import { useSelector } from "react-redux";
 
 export default function CategoryForm() {
   const [categories, setCategories] = useState([]);
+  const token = useSelector((state)=>state.user.token)
 
   const [initialValues, setInitialValues] = useState({
     category: "",
@@ -13,7 +15,9 @@ export default function CategoryForm() {
   });
 
   useEffect(() => {
-    axios.get(`https://crm-poizonstore.ru/category`).then((data) => {
+    axios.get(`https://crm-poizonstore.ru/category`,{ headers:{
+      "Authorization": `Token ${token}`
+    }}).then((data) => {
       setCategories(data.data);
     });
   }, []);
@@ -39,7 +43,9 @@ export default function CategoryForm() {
 
   const { mutate } = useMutation({
     mutationFn: (formPayload) => {
-      return axios.patch(`https://crm-poizonstore.ru/category/`, formPayload);
+      return axios.patch(`https://crm-poizonstore.ru/category/`, formPayload,{ headers:{
+        "Authorization": `Token ${token}`
+      }});
     },
   });
 

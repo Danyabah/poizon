@@ -180,13 +180,13 @@ export default function OrderTab() {
         <div className="img-wrapper">
           <div class="item-img">
             <a
-              href={`data:image/jpg;base64,${byteString}`}
+              href={byteString}
               className="absolute fancybox"
               target="_blank"
             ></a>
             <img
               style={{ objectFit: "contain" }}
-              src={`data:image/jpg;base64,${byteString}`}
+              src={byteString}
               alt=""
             />
           </div>

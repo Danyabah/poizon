@@ -6,19 +6,19 @@ import * as Yup from "yup";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { useDispatch } from "react-redux";
-import { setUserInfo } from "../redux/slices/userReducer";
+import { setToken, setUserInfo } from "../redux/slices/userReducer";
 
 export default function AuthorizationWork() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const signInSchema = Yup.object().shape({
-    login: Yup.string().email().required("Необходимо указать почту"),
+    email: Yup.string().email().required("Необходимо указать почту"),
     password: Yup.string().required("Необходимо указать пароль"),
   });
 
   const initialValues = {
-    login: "",
+    email: "",
     password: "",
   };
 
@@ -27,8 +27,16 @@ export default function AuthorizationWork() {
       onSuccess: (response) => {
         if (!response.data.error) {
           console.log(response);
-          dispatch(setUserInfo(response.data));
+          dispatch(setToken(response.data.auth_token))
+          axios.get("https://crm-poizonstore.ru/users/me",{
+            headers:{
+              "Authorization": `Token ${response.data.auth_token}`
+            }
+          }).then((res)=>{
+           dispatch(setUserInfo(res.data));
           navigate("/managerpersonalaccount");
+          })
+         
         } else {
           alert("Пользователь не найден");
         }
@@ -44,7 +52,7 @@ export default function AuthorizationWork() {
 
   const { mutate } = useMutation({
     mutationFn: (formPayload) => {
-      return axios.post("https://crm-poizonstore.ru/login/", formPayload);
+      return axios.post("https://crm-poizonstore.ru/auth/token/login/", formPayload);
     },
   });
 
@@ -76,14 +84,14 @@ export default function AuthorizationWork() {
                         Логин
                       </label>
                       <Field
-                        name="login"
+                        name="email"
                         type="email"
                         className="form-control"
-                        id="login"
+                        id="email"
                       />
                       <ErrorMessage
                         style={{ color: "red" }}
-                        name="login"
+                        name="email"
                         component="span"
                         className="form-control"
                       />

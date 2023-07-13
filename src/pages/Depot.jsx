@@ -2,17 +2,21 @@ import React, { useEffect, useState } from "react";
 import Header from "../components/Header";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 export default function Depot() {
   const [products, setProducts] = useState([]);
   const [page, setPage] = useState(1);
   const [totalPage, setTotalPage] = useState(1);
   const [search, setSearch] = useState("");
+  const token = useSelector((state)=>state.user.token)
 
   function renderProducts() {
     axios
       .get(
-        `https://crm-poizonstore.ru/checklist/?page=${page}&limit=10&previewimage=no&status=rush&search=${search}`
+        `https://crm-poizonstore.ru/checklist/?page=${page}&limit=10&status=rush&search=${search}`,{ headers:{
+          "Authorization": `Token ${token}`
+        }}
       )
       .then((data) => {
         setProducts(data.data.data);
@@ -30,7 +34,9 @@ export default function Depot() {
         axios
           .patch(`https://crm-poizonstore.ru/checklist/${id}`, {
             status: "completed",
-          })
+          },{ headers:{
+            "Authorization": `Token ${token}`
+          }})
           .then(() => {
             alert("Заказ Доставлен!");
             renderProducts();
@@ -94,12 +100,12 @@ export default function Depot() {
                   {product.currentDate?.slice(0, 10)}
                 </div>
                 <div className="table-td">
-                  {product.delivery && product?.delivery?.slice(0, 9) + "..."}
+                  {product.delivery_display && product?.delivery_display?.slice(0, 9) + "..."}
                 </div>
                 <div className="table-td">{product?.buyerphone}</div>
                 <div className="table-td" style={{ position: "relative" }}>
                   {product?.buyername}
-                  {product?.delivery === "Самовывоз из шоурума" && (
+                  {product?.delivery_display === "Самовывоз из шоурума" && (
                     <div className="flex-i-2">
                       {" "}
                       <i

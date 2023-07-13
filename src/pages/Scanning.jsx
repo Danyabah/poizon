@@ -11,13 +11,16 @@ export default function Scanning() {
   const reload = useSelector((state) => state.admin.reload);
   const [totalPage, setTotalPage] = useState(1);
   const [search, setSearch] = useState("");
+  const token = useSelector((state)=>state.user.token)
 
   const dispatch = useDispatch();
 
   useEffect(() => {
     axios
       .get(
-        `https://crm-poizonstore.ru/checklist/?page=${page}&limit=10&previewimage=no&status=chinarush&search=${search}`
+        `https://crm-poizonstore.ru/checklist/?page=${page}&limit=10&status=chinarush&search=${search}`,{ headers:{
+          "Authorization": `Token ${token}`
+        }}
       )
       .then((data) => {
         console.log(data.data);
@@ -32,7 +35,9 @@ export default function Scanning() {
         axios
           .patch(`https://crm-poizonstore.ru/checklist/${product?.id}`, {
             status: "rush",
-          })
+          },{ headers:{
+            "Authorization": `Token ${token}`
+          }})
           .then(() => {
             setProduct({});
 
@@ -125,7 +130,7 @@ export default function Scanning() {
                   {product.currentDate?.slice(0, 10)}
                 </div>
                 <div className="table-td">
-                  {product.delivery && product?.delivery?.slice(0, 9) + "..."}
+                  {product.delivery_display && product?.delivery_display?.slice(0, 9) + "..."}
                 </div>
                 <div className="table-td">{product?.buyerphone}</div>
                 <div className="table-td">{product?.buyername}</div>

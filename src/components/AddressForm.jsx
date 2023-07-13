@@ -5,10 +5,11 @@ import { useMutation } from "@tanstack/react-query";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { setAddress, setPaymentCurrency } from "../redux/slices/adminReducer";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function AddressForma() {
   const [pickup, setPickup] = useState("");
+  const token = useSelector((state)=>state.user.token)
   const dispatch = useDispatch();
   useEffect(() => {
     axios.get(`https://crm-poizonstore.ru/pickup`).then((res) => {
@@ -39,7 +40,9 @@ export default function AddressForma() {
 
   const { mutate } = useMutation({
     mutationFn: (formPayload) => {
-      return axios.patch(`https://crm-poizonstore.ru/pickup/`, formPayload);
+      return axios.patch(`https://crm-poizonstore.ru/pickup/`, formPayload,{ headers:{
+        "Authorization": `Token ${token}`
+      }});
     },
   });
   return (
