@@ -102,7 +102,7 @@ export default function OrderPage() {
                       </tr>
                       <tr>
                         <th>Комиссия сервиса</th>
-                        <td>{product?.comission?.toLocaleString()} ₽</td>
+                        <td>{product?.commission?.toLocaleString()} ₽</td>
                       </tr>
                     </tbody>
                   </table>
@@ -136,7 +136,7 @@ export default function OrderPage() {
                   style={{ gridGap: "10px" }}
                   className="button no-icon"
                 >
-                  Оплатить <span>19 214 ₽</span>
+                  Оплатить <span>{product?.fullprice} ₽</span>
                 </Link>
               </div>
             </section>

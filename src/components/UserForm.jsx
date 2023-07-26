@@ -65,6 +65,15 @@ export default function UserForm() {
 
   const { mutate } = useMutation({
     mutationFn: (formPayload) => {
+      if(!formPayload.tg){
+        formPayload.tg = null
+      }
+      if(!formPayload.recievername){
+        formPayload.recievername = null
+      }
+      if(!formPayload.recieverphone){
+        formPayload.recieverphone = null
+      }
       return axios.patch(
         `https://crm-poizonstore.ru/checklist/${product.id}`,
         formPayload

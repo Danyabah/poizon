@@ -19,6 +19,7 @@ export default function Pvz() {
 
   useEffect(() => {
     window.getCdek();
+
   }, [id]);
 
   useEffect(() => {
@@ -58,6 +59,10 @@ export default function Pvz() {
       },
     });
   };
+
+  useEffect(()=>{
+    console.log('fff');
+  },[  ])
   // минимум 2 слова !
   const validSchema = Yup.object().shape({
     buyername: Yup.string().required("Необходимо указать имя"),
@@ -233,7 +238,7 @@ export default function Pvz() {
                     />
 
                     <div className="text">
-                      <b>Выберете Пункт Выдачи Заказов СДЭК</b>
+                      <b>Выберите Пункт Выдачи Заказов СДЭК</b>
                     </div>
                     <div className="push20 hidden-xss"></div>
                     <div id="forpvz" style={{ height: "500px" }}></div>
@@ -268,6 +273,7 @@ export default function Pvz() {
                       ПВЗ к вам, который доставляет заказы интернет-магазинов.
                     </div>
                     <div className="push20 hidden-xss"></div>
+                    
                     <button className="button" type="submit">
                       Сохранить
                     </button>

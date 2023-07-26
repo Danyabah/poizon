@@ -3,6 +3,7 @@ import Header from "../components/Header";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { setReload } from "../redux/slices/adminReducer";
+import { useLocation } from "react-router-dom";
 
 export default function Scanning() {
   const [products, setProducts] = useState([]);
@@ -12,6 +13,7 @@ export default function Scanning() {
   const [totalPage, setTotalPage] = useState(1);
   const [search, setSearch] = useState("");
   const token = useSelector((state)=>state.user.token)
+  const location = useLocation();
 
   const dispatch = useDispatch();
 
@@ -24,10 +26,19 @@ export default function Scanning() {
       )
       .then((data) => {
         console.log(data.data);
+        
         setProducts(data.data.data);
         setTotalPage(data.data.total_pages);
       });
   }, [page, reload, search]);
+
+  useEffect(()=>{
+
+    if(location.search.slice(13)){
+      setSearch(location.search.slice(13))
+    }
+    
+  },[location.search])
 
   function onSubmit() {
     if (window.confirm("Вы уверены?")) {
@@ -95,7 +106,10 @@ export default function Scanning() {
                 type="text"
                 className="form-control"
                 id="searchTrack"
-                onChange={(e) => setSearch(e.target.value)}
+                onChange={(e) =>{ 
+          
+                  e.preventDefault();
+                  setSearch(e.target.value)}}
               />
             </div>
             <div className="push10 hidden-xss"></div>

@@ -74,6 +74,11 @@ export default function DeliveryTab() {
             />
           </div>
         )}
+         {product?.cdek_barcode_pdf && (
+          <div className="form-group">
+            <a href={product.cdek_barcode_pdf} className="track button" target="_blank" rel="noreferrer">Распечатать штрихкод</a>
+          </div>
+        )}
 
         <div className="push20 hidden-xss"></div>
         <div className="push10 visible-xss"></div>

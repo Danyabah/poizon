@@ -48,14 +48,14 @@ export default function RequestList() {
                   className={categ === "bought" ? "current" : ""}
                   onClick={() => setCateg("bought")}
                 >
-                  <span>Оплачено</span>
+                  <span>Выкуплено</span>
                 </li>
 
                 <li
                   className={categ === "buying" ? "current" : ""}
                   onClick={() => setCateg("buying")}
                 >
-                  <span>Ожидает оплаты</span>
+                  <span>Ожидает выкупа</span>
                 </li>
               </ul>
             </div>

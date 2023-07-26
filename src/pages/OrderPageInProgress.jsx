@@ -20,7 +20,8 @@ export default function OrderPageInProgress() {
   const [date, setDate] = useState(0);
   const [pickup, setPickup] = useState("");
   const [sdekStatus, setSdekStatus] = useState("");
-
+  const [delCost, setDelCost] = useState("");
+  const [linksub, setLinksub] = useState("");
   const { id } = useParams();
 
   useEffect(() => {
@@ -38,6 +39,8 @@ export default function OrderPageInProgress() {
       .get(`https://crm-poizonstore.ru/cdek/orders/?im_number=${id}`)
       .then((res) => {
         console.log(res);
+        setLinksub(res.data.entity.cdek_number)
+        setDelCost(res.data.entity.delivery_recipient_cost.value)
         setSdekStatus(
           res.data.entity.statuses[res.data.entity.statuses.length - 1].code
         );
@@ -134,13 +137,15 @@ export default function OrderPageInProgress() {
             </div>
             <div className="push10 hidden-xss"></div>
             <div className="push5 visible-xss"></div>
+        
             <a
               className="text"
               href={product?.link}
               rel="noreferrer"
               target="_blank"
             >
-              Товар
+              <b>  Ссылка на товар</b>
+            
             </a>
             <div className="push20 hidden-xss"></div>
             <div className="push10 visible-xss"></div>
@@ -151,7 +156,7 @@ export default function OrderPageInProgress() {
             <div className="push15 visible-xss"></div>
             <div
               onClick={() => setVisible((prev) => !prev)}
-              className="more-wrapper"
+              className={visible ? `more-wrapper more-wrapper-active` : `more-wrapper`}
               style={{ cursor: "pointer" }}
             >
               Подробности расчета
@@ -160,7 +165,7 @@ export default function OrderPageInProgress() {
               <div className="push30 hidden-xss"></div>
               <div className="table-wrapper">
                 {visible && (
-                  <table>
+                  <table style={{marginTop:"20px"}}>
                     <tbody>
                       <tr>
                         <th>Цена в CNY</th>
@@ -194,6 +199,10 @@ export default function OrderPageInProgress() {
             <div className="push30 hidden-xss"></div>
             <div className="push15 visible-xss"></div>
             <div className="text">Способ доставки: {product?.delivery_display}</div>
+           { delCost && <b>Стоимость доставки: {delCost} ₽</b>}
+           <div className="push30 hidden-xss"></div>
+            <div className="push15 visible-xss"></div>
+           {linksub && <div><b><a rel={"noreferrer"} target="_blank" href={`https://www.cdek.ru/ru/tracking?order_id=${linksub}`}>Отследить заказ в CDEK</a></b></div>}
             <div className="push20 hidden-xss"></div>
             <div className="push5 visible-xss"></div>
             {product?.delivery === "Самовывоз из шоурума" && (

@@ -1,6 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Formik, Form } from "formik";
 
 import { useDispatch, useSelector } from "react-redux";
@@ -10,6 +10,17 @@ export default function ChinarushForm({ id }) {
   const dispatch = useDispatch();
   const reload = useSelector((state) => state.admin.reload);
   const token = useSelector((state) => state.user.token);
+  const [linksub,setLinksub] = useState("")
+
+  useEffect(()=>{
+    axios
+    .get(`https://crm-poizonstore.ru/cdek/orders/?im_number=${id}`)
+    .then((res) => {
+      console.log(res);
+      setLinksub(res.data.entity.cdek_number)
+
+    });
+  },[id])
   const onSubmit = (values) => {
     mutate(values, {
       onSuccess: (response) => {
@@ -26,11 +37,21 @@ export default function ChinarushForm({ id }) {
   const { mutate } = useMutation({
     mutationFn: () => {
       if (window.confirm("Вы уверены?")) {
-        return axios.patch(`https://crm-poizonstore.ru/checklist/${id}`, {
-          status: "chinarush",
-        },{ headers:{
-          "Authorization": `Token ${token}`
-        }});
+        if(linksub){
+          return axios.patch(`https://crm-poizonstore.ru/checklist/${id}`, {
+            status: "chinarush",
+            cdek_tracking:linksub
+          },{ headers:{
+            "Authorization": `Token ${token}`
+          }});
+        }else{
+          return axios.patch(`https://crm-poizonstore.ru/checklist/${id}`, {
+            status: "chinarush",
+          },{ headers:{
+            "Authorization": `Token ${token}`
+          }});
+        }
+       
       }
     },
   });
