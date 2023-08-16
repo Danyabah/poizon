@@ -34,7 +34,7 @@ export default function ProvementForm() {
       onSuccess: (response) => {
         console.log(response);
         dispatch(setCurrentProductInfo(response.data));
-        navigate("/order");
+        navigate(`/order/${response.data.id}`);
       },
       onError: (response) => {
         alert("Произошла ошибка");

@@ -33,6 +33,7 @@ export default function PurchaseForm({ setCateg }) {
     });
   };
 
+
   const validSchema = Yup.object().shape({
     realprice: Yup.number()
       .min(1, "Необходимо указать фактическую цену")
@@ -74,6 +75,21 @@ export default function PurchaseForm({ setCateg }) {
             <div className="title">
               {product?.brand} {product?.model}
             </div>
+            <div className="img-preview">
+                      <a
+                        href={product.previewimage}
+                        className=""
+                        target="_blank"
+                      >
+                        <img
+                          style={{ objectFit: "contain" }}
+                          src={product.previewimage}
+                          alt=""
+                        />
+                      </a>
+                    </div>
+              <div className="label"><strong>Указанная цена в ¥: {product.curencycurency2}</strong></div>
+            
             <a
               className="text"
               href={product?.link}

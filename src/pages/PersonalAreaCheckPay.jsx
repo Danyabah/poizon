@@ -5,6 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import logo from "../utils/logo.PNG";
 import { useMutation } from "@tanstack/react-query";
 import { useSelector } from "react-redux";
+import { deliveryName } from "../utils/utils";
 
 export default function PersonalAreaCheckPay() {
   const [categ, setCateg] = useState("payment");
@@ -62,7 +63,8 @@ export default function PersonalAreaCheckPay() {
       axios.delete(`https://crm-poizonstore.ru/checklist/${id}`,{ headers:{
         "Authorization": `Token ${token}`
       }}).then((res) => {
-        if (res.data.status === "success") {
+        console.log(res);
+        if (res.status === 204) {
           alert("Товар успешно удален");
           getProducts();
         }
@@ -220,7 +222,7 @@ export default function PersonalAreaCheckPay() {
                     : ""}
                 </div>
                 <div className="table-td" style={{ position: "relative" }}>
-                  {obj?.delivery_display}{" "}
+                  {deliveryName[obj?.delivery_display]}{" "}
                   {obj?.status === "payment" ? (
                     <div className="flex-i">
                       <i

@@ -6,7 +6,11 @@ import axios from "axios";
 import { useDispatch } from "react-redux";
 import { setCurrentProductInfo } from "../redux/slices/userReducer";
 import { stage } from "../utils/utils";
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Navigation} from 'swiper';
 
+import "swiper/css";
+import "swiper/css/navigation";
 export default function OrderPage() {
   const { id } = useParams();
   const [product, setProduct] = useState({});
@@ -74,9 +78,34 @@ export default function OrderPage() {
             <div className="push20 visible-xss"></div>
             <section>
               <div className="order-img-wrap">
-                <div className="img-wrapper">
-                  <img src={product?.image?.[0]} alt="" />
-                </div>
+        
+                <Swiper
+              navigation={true}
+              modules={[Navigation]}
+              className="mySwiper"
+            >
+              {product?.image?.length !== 0 && (
+                <>
+                  <SwiperSlide key={0}>
+                    <img
+                      src={product?.previewimage}
+                      alt=""
+                    />
+                  </SwiperSlide>
+                  {product?.image?.map((img, index) => {
+                    if (index > 0) {
+                      return (
+                        <SwiperSlide key={index}>
+                          <img src={img} alt="" />
+                        </SwiperSlide>
+                      );
+                    }
+                  })}
+                </>
+              )}
+            </Swiper>
+                 
+          
                 <div className="table-wrapper">
                   <table>
                     <tbody>
@@ -90,7 +119,7 @@ export default function OrderPage() {
                       </tr>
                       <tr>
                         <th>Цена в RUB</th>
-                        <td>{product?.currency3?.toLocaleString()} ₽</td>
+                        <td style={{whiteSpace:"nowrap"}}>{product?.currency3?.toLocaleString()} ₽</td>
                       </tr>
                       <tr>
                         <th>Доставка по Китаю</th>

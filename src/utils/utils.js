@@ -80,7 +80,7 @@ export const subcategory = {
     "Ноутбук",
     "Приставка",
     "Фен",
-    "Скайлер",
+    "Стайлер",
     "Пылесос",
     "Увлажнитель",
     "Бытовая техника",
@@ -134,6 +134,13 @@ export const translate = {
   foodndrinks: "Еда и напитки",
   different: "Другое",
 };
+
+export const deliveryName = {
+  "Курьерская доставка CDEK": "Курьер СДЭК",
+  "Пункт выдачи заказов CDEK": "ПВЗ СДЭК",
+  "Самовывоз из шоурума":"Самовывоз",
+}
+
 export function addToDraft(values,token) {
 
   if (window.confirm("Вы уверены что хотите отменить заказ?")) {
@@ -151,4 +158,20 @@ export function addToDraft(values,token) {
       console.log(res);
     });
   }
+}
+
+export const monthArray = ["January","February","March","April","May","June","July","August","September","October", "November", "December"]
+export const monthRU = {
+  "January": "Январь",
+  "February": "Февраль",
+  "March": "Март",
+  "April": "Апрель",
+  "May":"Май",
+  "June":"Июнь",
+  "July":"Июль",
+  "August":"Август",
+  "September":"Сентябрь",
+  "October": "Октябрь",
+  "November":"Ноябрь",
+  "December":"Декабрь"
 }

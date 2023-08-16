@@ -3,6 +3,7 @@ import Header from "../components/Header";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { deliveryName } from "../utils/utils";
 
 export default function Depot() {
   const [products, setProducts] = useState([]);
@@ -46,6 +47,20 @@ export default function Depot() {
       }
     }
   }
+
+  const onDelete = (id) => {
+    if (window?.confirm("Вы уверены что хотите удалить товар?")) {
+      axios.delete(`https://crm-poizonstore.ru/checklist/${id}`,{ headers:{
+        "Authorization": `Token ${token}`
+      }}).then((res) => {
+        console.log(res);
+        if (res.status === 204) {
+          alert("Товар успешно удален");
+          renderProducts();
+        }
+      });
+    }
+  };
   return (
     <>
       <Header />
@@ -100,7 +115,7 @@ export default function Depot() {
                   {product.currentDate?.slice(0, 10)}
                 </div>
                 <div className="table-td">
-                  {product.delivery_display && product?.delivery_display?.slice(0, 9) + "..."}
+                  {deliveryName[product.delivery_display]}
                 </div>
                 <div className="table-td">{product?.buyerphone}</div>
                 <div className="table-td" style={{ position: "relative" }}>
@@ -114,6 +129,15 @@ export default function Depot() {
                       ></i>
                     </div>
                   )}
+                   <span
+                      className="trash"
+                       
+                      >
+                        <i
+                          className="uil uil-trash-alt"
+                          onClick={() => onDelete(product?.id)}
+                        ></i>
+                      </span>
                 </div>
               </div>
             ))}

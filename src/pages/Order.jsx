@@ -1,10 +1,21 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Header from "../components/Header";
 import { useSelector } from "react-redux";
 import UserForm from "../components/UserForm";
+import { useParams } from "react-router-dom";
+import axios from "axios";
 
 export default function Order() {
-  const product = useSelector((state) => state.user.currentProductInfo);
+
+  const [product,setProduct] = useState({})
+
+  const {id} = useParams()
+  
+  useEffect(()=>{
+    axios.get(`https://crm-poizonstore.ru/checklist/${id}`).then((res) => {
+      setProduct(res.data);
+    });
+  },[id])
 
   return (
     <>

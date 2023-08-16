@@ -7,6 +7,9 @@ import logo from "../utils/logo.PNG";
 export default function PersonalAreaOrder() {
   const publicLink = useSelector((state) => state.admin.publicLink);
   const previewimage = useSelector((state) => state.admin.previewimage);
+  const arr = publicLink?.split("/")
+  const id = arr?.[arr.length-1];
+
   const inp = useRef(null);
   return (
     <>
@@ -57,7 +60,7 @@ export default function PersonalAreaOrder() {
       <section className="main-section">
         <div className="container">
           <div className="main-inner">
-            <div className="title">Заказ #___</div>
+            <div className="title">Заказ #{id || "___"}</div>
             <div className="push20 hidden-xss"></div>
             <div className="push10 visible-xss"></div>
             <div className="text">Статус Расчет</div>

@@ -21,14 +21,13 @@ export default function Statistics() {
               Статистика по заявкам
             </Link>
             <Link to={"/statisticcategories"} className="item">
-              Статистика с категориями
+            Статистика по категориям
             </Link>
             {/* <Link to={"/statisticbrand"} className="item">
               Статистика с брендами
             </Link> */}
             <Link to={"/statisticnumber"} className="item">
-              Статистика с количеством людей, сделавших более определенного
-              количества заказов
+            Статистика по клиентам
             </Link>
           </div>
         </div>

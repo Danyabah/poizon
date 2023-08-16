@@ -25,7 +25,7 @@ export default function PersonalAreaNew() {
   const token = useSelector((state) => state.user.token);
   const [totalPage, setTotalPage] = useState(1);
   const [search, setSearch] = useState("");
-
+const navigate = useNavigate();
   const dispatch = useDispatch();
 
   function getProducts() {
@@ -62,6 +62,7 @@ export default function PersonalAreaNew() {
   }
 
   console.log(categ);
+  console.log(product);
   console.log(chinarushProduct);
   console.log(products);
   return (
@@ -219,11 +220,11 @@ export default function PersonalAreaNew() {
               {products?.map((obj) => (
                 <div key={obj?.id}>
                   <div className="container">
-                    <div className="table-row">
+                    <div className="table-row"  onClick={() => changeProduct(obj)}>
                       <div
                         className="table-td"
                         style={{ cursor: "pointer" }}
-                        onClick={() => changeProduct(obj)}
+                       onClick={()=>navigate(`/personalareapay/${obj.id}`)}
                       >
                         {obj?.id}
                       </div>

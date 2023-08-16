@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { setReload } from "../redux/slices/adminReducer";
 import { useLocation } from "react-router-dom";
+import { deliveryName } from "../utils/utils";
 
 export default function Scanning() {
   const [products, setProducts] = useState([]);
@@ -72,8 +73,24 @@ export default function Scanning() {
             {JSON.stringify(product) !== "{}" && (
               <>
                 <div className="text">
-                  Заказ #{product?.id}; телефон: {product?.buyerphone}; tg:{" "}
-                  {product?.tg}
+                  <div className="title">
+                       Заказ #{product?.id}
+                  </div>
+                  <div className="img-preview">
+                      <a
+                        href={product.previewimage}
+                        className=""
+                        target="_blank"
+                      >
+                        <img
+                          style={{ objectFit: "contain" }}
+                          src={product.previewimage}
+                          alt=""
+                        />
+                      </a>
+                    </div>
+              <div className="label"><strong>Дата заказа: {product.startDate?.slice(0, 10)}</strong></div>
+              <div className="label"><strong>Трек номер из Китая: {product.trackid}</strong></div>
                 </div>
                 <div className="push20 hidden-xss"></div>
                 <div className="push10 visible-xss"></div>
@@ -144,7 +161,7 @@ export default function Scanning() {
                   {product.currentDate?.slice(0, 10)}
                 </div>
                 <div className="table-td">
-                  {product.delivery_display && product?.delivery_display?.slice(0, 9) + "..."}
+                  {deliveryName[product.delivery_display]}
                 </div>
                 <div className="table-td">{product?.buyerphone}</div>
                 <div className="table-td">{product?.buyername}</div>

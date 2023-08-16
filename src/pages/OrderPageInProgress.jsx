@@ -5,11 +5,12 @@ import { Link, useParams } from "react-router-dom";
 import { stage, status } from "../utils/utils";
 import axios from "axios";
 import { setCurrentProductInfo } from "../redux/slices/userReducer";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation } from "swiper";
+
 // Import Swiper styles
 import "swiper/css";
 import "swiper/css/navigation";
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Navigation} from 'swiper';
 
 // import required modules
 
@@ -23,6 +24,7 @@ export default function OrderPageInProgress() {
   const [delCost, setDelCost] = useState("");
   const [linksub, setLinksub] = useState("");
   const { id } = useParams();
+
 
   useEffect(() => {
     axios.get(`https://crm-poizonstore.ru/checklist/${id}`).then((res) => {
@@ -202,7 +204,7 @@ export default function OrderPageInProgress() {
            { delCost && <b>Стоимость доставки: {delCost} ₽</b>}
            <div className="push30 hidden-xss"></div>
             <div className="push15 visible-xss"></div>
-           {linksub && <div><b><a rel={"noreferrer"} target="_blank" href={`https://www.cdek.ru/ru/tracking?order_id=${linksub}`}>Отследить заказ в CDEK</a></b></div>}
+           {linksub && <div><b><a rel={"noreferrer"} className="cdek__track" target="_blank" href={`https://www.cdek.ru/ru/tracking?order_id=${linksub}`}>Отследить заказ в СДЭК</a></b></div>}
             <div className="push20 hidden-xss"></div>
             <div className="push5 visible-xss"></div>
             {product?.delivery === "Самовывоз из шоурума" && (

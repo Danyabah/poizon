@@ -8,18 +8,33 @@ import {
   setCurrentProductInfo,
   setUserInfo,
 } from "../redux/slices/userReducer";
+import {  Map, Placemark } from '@pbe/react-yandex-maps';
 import { useNavigate } from "react-router-dom";
 export default function UserForm() {
   const dispatch = useDispatch();
   const product = useSelector((state) => state.user.currentProductInfo);
   const navigate = useNavigate();
   const [pickup, setPickup] = useState("");
+  const [width,setWidth] = useState("320px");
+  const [height,setHeight] = useState("240px")
+  const [isActive,setIsActive] = useState(true)
 
   useEffect(() => {
     axios.get(`https://crm-poizonstore.ru/pickup`).then((res) => {
       setPickup(res.data.pickup);
     });
+
+    if(window.innerWidth > 1200){
+      setWidth("550px")
+      setHeight("350px")
+    }else if (window.innerWidth > 630){
+      setWidth("400px")
+      setHeight("250px")
+    }
   }, []);
+
+ 
+
   console.log(pickup);
 
   const initialValues = {
@@ -89,6 +104,7 @@ export default function UserForm() {
       onSubmit={onSubmit}
     >
       {(formik) => {
+        const {setFieldValue} = formik
         return (
           <Form className="order">
             <div className="form-group">
@@ -145,19 +161,36 @@ export default function UserForm() {
               <label className="label" htmlFor="delivery">
                 <span>*</span>Тип доставки
               </label>
+                
+             {isActive && <>
               <label className="label" htmlFor="delivery">
                 <b>Адрес самовывоза:</b> {pickup}
-              </label>
+              </label>  
+              <div className="map">
+                 <Map style={{ width: width, height: height }} defaultState={{ center: [59.923725, 30.297219], zoom: 15 }} >
+              <Placemark geometry={[59.923725, 30.297219]} />
+              </Map>
+              </div>
+             </>}
+             
               <Field
                 as="select"
                 name="delivery"
                 required
                 className="select-styler form-control required"
                 id="delivery"
+                onChange={(e)=>{
+                  if(e.target.value === 'pickup'){
+                    setIsActive(true)
+                  }else{
+                    setIsActive(false)
+                  }
+                  setFieldValue("delivery", e.target.value);
+                }}
               >
                 <option value="pickup">Самовывоз из шоурума</option>
-                <option value="cdek">Пункт выдачи заказов CDEK</option>
-                <option value="cdek_courier">Курьерская доставка CDEK</option>
+                <option value="cdek" >Пункт выдачи заказов СДЭК</option>
+                <option value="cdek_courier" >Курьерская доставка СДЭК</option>
               </Field>
             </div>
             <div className="form-group">

@@ -203,7 +203,7 @@ export default function Crrcdek() {
                     <div className="push20 hidden-xss"></div>
                     <div className="text">
                       Подтвердите ваши данные и укажите адрес для Курьерской
-                      доставки CDEK
+                      доставки СДЭК
                     </div>
                     <div className="push40 hidden-xss"></div>
                     <div className="push10 visible-xss"></div>

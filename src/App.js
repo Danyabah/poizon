@@ -77,7 +77,7 @@ function App() {
           element={<OrderPageInProgress />}
         />
         <Route path="/orderpage/:id" element={<OrderPage />} />
-        <Route path="/order" element={<Order />} />
+        <Route path="/order/:id" element={<Order />} />
         <Route path="/pay" element={<Pay />} />
         <Route path="/crrcdek/:id" element={<Crrcdek />} />
 

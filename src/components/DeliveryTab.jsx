@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
-import { stage, status } from "../utils/utils";
+import { deliveryName, stage, status } from "../utils/utils";
 import { useMutation } from "@tanstack/react-query";
 import { useSelector } from "react-redux";
 
@@ -53,7 +53,7 @@ export default function DeliveryTab() {
             className="form-control"
             id="sum"
             disabled
-            value={`${product?.delivery_display}`}
+            value={`${deliveryName[product?.delivery_display]}`}
           />
         </div>
 
