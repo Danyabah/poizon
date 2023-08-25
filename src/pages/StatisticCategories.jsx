@@ -36,11 +36,11 @@ export default function StatisticCategories() {
           <div className="main-inner">
             <div className="title">Статистика с категориями</div>
           </div>
-          <div>
+          <div className="filter__list">
             <fieldset>
               <legend>Месяца:</legend>
               {monthArray.map((el) => (
-                <div>
+                <div className="filter__item">
                   <input
                     type="checkbox"
                     id={el}
@@ -61,7 +61,7 @@ export default function StatisticCategories() {
             <fieldset>
               <legend>Категории:</legend>
               {Object.values(translate).map((el) => (
-                <div>
+                <div className="filter__item">
                   <input
                     type="checkbox"
                     id={el}

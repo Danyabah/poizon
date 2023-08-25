@@ -33,7 +33,6 @@ export default function PurchaseForm({ setCateg }) {
     });
   };
 
-
   const validSchema = Yup.object().shape({
     realprice: Yup.number()
       .min(1, "Необходимо указать фактическую цену")
@@ -53,9 +52,11 @@ export default function PurchaseForm({ setCateg }) {
             realprice: formPayload.realprice,
             checkphoto: formPayload.checkphoto[0],
           },
-          { headers:{
-            "Authorization": `Token ${token}`
-          }}
+          {
+            headers: {
+              Authorization: `Token ${token}`,
+            },
+          }
         );
       }
     },
@@ -76,20 +77,18 @@ export default function PurchaseForm({ setCateg }) {
               {product?.brand} {product?.model}
             </div>
             <div className="img-preview">
-                      <a
-                        href={product.previewimage}
-                        className=""
-                        target="_blank"
-                      >
-                        <img
-                          style={{ objectFit: "contain" }}
-                          src={product.previewimage}
-                          alt=""
-                        />
-                      </a>
-                    </div>
-              <div className="label"><strong>Указанная цена в ¥: {product.curencycurency2}</strong></div>
-            
+              <a href={product.previewimage} className="" target="_blank">
+                <img
+                  style={{ objectFit: "contain" }}
+                  src={product.previewimage}
+                  alt=""
+                />
+              </a>
+            </div>
+            <div className="label">
+              <strong>Указанная цена в ¥: {product.curencycurency2}</strong>
+            </div>
+
             <a
               className="text"
               href={product?.link}
@@ -145,6 +144,7 @@ export default function PurchaseForm({ setCateg }) {
                     id="checkphoto"
                     accept="image/jpeg,image/png,image/gif"
                     name="checkphoto"
+                    disabled={values.checkphoto.length !== 0}
                   />
 
                   <div className="images-wrapper">
@@ -157,7 +157,12 @@ export default function PurchaseForm({ setCateg }) {
                     )}
                   </div>
 
-                  <label htmlFor="checkphoto" className="button">
+                  <label
+                    htmlFor="checkphoto"
+                    className={`button ${
+                      values.checkphoto.length !== 0 ? "dark" : ""
+                    }`}
+                  >
                     <svg
                       width="24"
                       height="24"

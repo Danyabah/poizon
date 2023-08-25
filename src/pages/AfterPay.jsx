@@ -1,16 +1,25 @@
 import React, { useEffect, useRef, useState } from "react";
 import Header from "../components/Header";
-import {  useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { Link, useParams } from "react-router-dom";
 import ProvementForm from "../components/ProvementForm";
+import axios from "axios";
+import Timer from "../components/Timer";
 
 export default function AfterPay() {
-  const product = useSelector((state) => state.user.currentProductInfo);
   const paymentmethod = useSelector((state) => state.user.payMethod);
-
+  const [product, setProduct] = useState({});
+  const split = useSelector((state) => state.user.split);
+  const { id } = useParams();
+  useEffect(() => {
+    axios.get(`https://crm-poizonstore.ru/checklist/${id}`).then((res) => {
+      setProduct(res.data);
+    });
+  }, []);
   return (
     <>
       <Header />
+      <Timer />
       <div className="line"></div>
       <div className="push40 hidden-xss"></div>
       <div className="push20 visible-xss"></div>
@@ -35,9 +44,15 @@ export default function AfterPay() {
             <div className="title">Сумма оплаты</div>
             <div className="push20 hidden-xss"></div>
             <div className="push10 visible-xss"></div>
-            <div className="price">
-              {product?.fullprice?.toLocaleString()} ₽
-            </div>
+            {split ? (
+              <div className="price">
+                {Math.round(product?.fullprice / 2)?.toLocaleString()} ₽
+              </div>
+            ) : (
+              <div className="price">
+                {product?.fullprice?.toLocaleString()} ₽
+              </div>
+            )}
             <div className="push40 hidden-xss"></div>
             <div className="push15 visible-xss"></div>
             <div className="pay-wrap">
@@ -67,7 +82,7 @@ export default function AfterPay() {
         <div className="push20 visible-xss"></div>
         <div className="container">
           <div className="main-inner pay">
-            <ProvementForm />
+            <ProvementForm product={product} />
             <div className="push70"></div>
           </div>
         </div>

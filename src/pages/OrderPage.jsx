@@ -4,18 +4,20 @@ import { Link, Navigate, useParams } from "react-router-dom";
 import { useEffect } from "react";
 import axios from "axios";
 import { useDispatch } from "react-redux";
-import { setCurrentProductInfo } from "../redux/slices/userReducer";
+import { setCurrentProductInfo, setSplit } from "../redux/slices/userReducer";
 import { stage } from "../utils/utils";
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation} from 'swiper';
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation } from "swiper";
 
 import "swiper/css";
 import "swiper/css/navigation";
+import Timer from "../components/Timer";
 export default function OrderPage() {
   const { id } = useParams();
   const [product, setProduct] = useState({});
   const [promo, setPromo] = useState("");
   const dispatch = useDispatch();
+  const [visible, setVisible] = useState(false);
 
   useEffect(() => {
     axios.get(`https://crm-poizonstore.ru/checklist/${id}`).then((res) => {
@@ -25,14 +27,16 @@ export default function OrderPage() {
       setPromo(res.data?.promo);
     });
   }, [id]);
-  if (stage[product?.status] > 1) {
+
+  if (stage[product?.status] >= 1) {
     return <Navigate to={`/orderpageinprogress/${id}`} />;
   }
   console.log(product);
-  console.log(promo);
+
   return (
     <>
       <Header />
+      <Timer />
       <div className="line"></div>
       <div className="push60 hidden-xss"></div>
       <div className="push20 visible-xss"></div>
@@ -78,64 +82,110 @@ export default function OrderPage() {
             <div className="push20 visible-xss"></div>
             <section>
               <div className="order-img-wrap">
-        
                 <Swiper
-              navigation={true}
-              modules={[Navigation]}
-              className="mySwiper"
-            >
-              {product?.image?.length !== 0 && (
-                <>
-                  <SwiperSlide key={0}>
-                    <img
-                      src={product?.previewimage}
-                      alt=""
-                    />
-                  </SwiperSlide>
-                  {product?.image?.map((img, index) => {
-                    if (index > 0) {
-                      return (
-                        <SwiperSlide key={index}>
-                          <img src={img} alt="" />
-                        </SwiperSlide>
-                      );
-                    }
-                  })}
-                </>
-              )}
-            </Swiper>
-                 
-          
-                <div className="table-wrapper">
+                  navigation={true}
+                  modules={[Navigation]}
+                  className="mySwiper"
+                >
+                  {product?.image?.length !== 0 && (
+                    <>
+                      <SwiperSlide key={0}>
+                        <img src={product?.previewimage} alt="" />
+                      </SwiperSlide>
+                      {product?.image?.map((img, index) => {
+                        if (index > 0) {
+                          return (
+                            <SwiperSlide key={index}>
+                              <img src={img} alt="" />
+                            </SwiperSlide>
+                          );
+                        }
+                      })}
+                    </>
+                  )}
+                </Swiper>
+
+                <div
+                  className="table-wrapper"
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "flex-start",
+                    alignItems: "flex-start",
+                  }}
+                >
                   <table>
-                    <tbody>
-                      <tr>
-                        <th>Цена в CNY</th>
-                        <td>{product?.curencycurency2?.toLocaleString()} ¥</td>
-                      </tr>
-                      <tr>
-                        <th>Курс обмена</th>
-                        <td>{product?.currency?.toLocaleString()} ₽</td>
-                      </tr>
-                      <tr>
-                        <th>Цена в RUB</th>
-                        <td style={{whiteSpace:"nowrap"}}>{product?.currency3?.toLocaleString()} ₽</td>
-                      </tr>
-                      <tr>
-                        <th>Доставка по Китаю</th>
-                        <td>{product?.chinadelivery?.toLocaleString()} ₽</td>
-                      </tr>
-                      <tr>
-                        <th>Доставка в РФ</th>
-                        <td>{product?.chinadelivery2?.toLocaleString()} ₽</td>
-                      </tr>
-                      <tr>
-                        <th>Комиссия сервиса</th>
-                        <td>{product?.commission?.toLocaleString()} ₽</td>
-                      </tr>
-                    </tbody>
+                    <div
+                      onClick={() => setVisible((prev) => !prev)}
+                      className={
+                        visible
+                          ? `more-wrapper more-wrapper-active`
+                          : `more-wrapper`
+                      }
+                      style={{ cursor: "pointer", marginBottom: "20px" }}
+                    >
+                      <strong>Подробности расчета</strong>
+                    </div>
+                    {visible && (
+                      <tbody>
+                        <tr>
+                          <th>Цена в CNY</th>
+                          <td>
+                            {product?.curencycurency2?.toLocaleString()} ¥
+                          </td>
+                        </tr>
+                        <tr>
+                          <th>Курс обмена</th>
+                          <td>{product?.currency?.toLocaleString()} ₽</td>
+                        </tr>
+                        <tr>
+                          <th>Цена в RUB</th>
+                          <td style={{ whiteSpace: "nowrap" }}>
+                            {product?.currency3?.toLocaleString()} ₽
+                          </td>
+                        </tr>
+                        <tr>
+                          <th>Доставка по Китаю</th>
+                          <td>{product?.chinadelivery?.toLocaleString()} ₽</td>
+                        </tr>
+                        <tr>
+                          <th>Доставка в РФ</th>
+                          <td>{product?.chinadelivery2?.toLocaleString()} ₽</td>
+                        </tr>
+                        <tr>
+                          <th>Комиссия сервиса</th>
+                          <td>{product?.commission?.toLocaleString()} ₽</td>
+                        </tr>
+                      </tbody>
+                    )}
                   </table>
                 </div>
+              </div>
+              <Link
+                to={`/pay/${id}`}
+                style={{ gridGap: "10px" }}
+                className="button no-icon green-btn"
+                onClick={() => dispatch(setSplit(false))}
+              >
+                Оплатить <span>{product?.fullprice} ₽</span>
+              </Link>
+              <div style={{ marginTop: "20px" }}>
+                <Link
+                  to={`/pay/${id}`}
+                  style={{ gridGap: "10px" }}
+                  className="button no-icon split-btn"
+                  onClick={() => dispatch(setSplit(true))}
+                >
+                  <span style={{ display: "block" }}>
+                    <strong>Оплатить Долями</strong>
+                  </span>
+                  <span style={{ display: "block" }}>
+                    <strong>
+                      {Math.round(product?.fullprice / 2)} ₽ |{" "}
+                      {Math.round(product?.fullprice / 2)} ₽
+                    </strong>
+                  </span>
+                </Link>
               </div>
               <div className="push60 hidden-xss"></div>
               <div className="push25 visible-xss"></div>
@@ -160,13 +210,6 @@ export default function OrderPage() {
                   <li className="text">Доставляется</li>
                   <li className="text">Завершен</li>
                 </ul>
-                <Link
-                  to="/pay"
-                  style={{ gridGap: "10px" }}
-                  className="button no-icon"
-                >
-                  Оплатить <span>{product?.fullprice} ₽</span>
-                </Link>
               </div>
             </section>
             <div className="push100"></div>

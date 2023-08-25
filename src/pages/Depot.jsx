@@ -10,14 +10,26 @@ export default function Depot() {
   const [page, setPage] = useState(1);
   const [totalPage, setTotalPage] = useState(1);
   const [search, setSearch] = useState("");
-  const token = useSelector((state)=>state.user.token)
+  const token = useSelector((state) => state.user.token);
+
+  const splitStyle = {
+    backgroundColor: "#FFFF99",
+    cursor: "pointer",
+  };
+  const notSplitStyle = {
+    backgroundColor: "#b1ff9a",
+    cursor: "pointer",
+  };
 
   function renderProducts() {
     axios
       .get(
-        `https://crm-poizonstore.ru/checklist/?page=${page}&limit=10&status=rush&search=${search}`,{ headers:{
-          "Authorization": `Token ${token}`
-        }}
+        `https://crm-poizonstore.ru/checklist/?page=${page}&limit=10&status=rush&search=${search}`,
+        {
+          headers: {
+            Authorization: `Token ${token}`,
+          },
+        }
       )
       .then((data) => {
         setProducts(data.data.data);
@@ -33,11 +45,17 @@ export default function Depot() {
     if (window.confirm("Вы уверены?")) {
       try {
         axios
-          .patch(`https://crm-poizonstore.ru/checklist/${id}`, {
-            status: "completed",
-          },{ headers:{
-            "Authorization": `Token ${token}`
-          }})
+          .patch(
+            `https://crm-poizonstore.ru/checklist/${id}`,
+            {
+              status: "completed",
+            },
+            {
+              headers: {
+                Authorization: `Token ${token}`,
+              },
+            }
+          )
           .then(() => {
             alert("Заказ Доставлен!");
             renderProducts();
@@ -50,15 +68,19 @@ export default function Depot() {
 
   const onDelete = (id) => {
     if (window?.confirm("Вы уверены что хотите удалить товар?")) {
-      axios.delete(`https://crm-poizonstore.ru/checklist/${id}`,{ headers:{
-        "Authorization": `Token ${token}`
-      }}).then((res) => {
-        console.log(res);
-        if (res.status === 204) {
-          alert("Товар успешно удален");
-          renderProducts();
-        }
-      });
+      axios
+        .delete(`https://crm-poizonstore.ru/checklist/${id}`, {
+          headers: {
+            Authorization: `Token ${token}`,
+          },
+        })
+        .then((res) => {
+          console.log(res);
+          if (res.status === 204) {
+            alert("Товар успешно удален");
+            renderProducts();
+          }
+        });
     }
   };
   return (
@@ -94,17 +116,35 @@ export default function Depot() {
         <div className="container">
           <div className="check-table depot table">
             <div className="table-row">
-              <div className="table-td">Номер заказа</div>
-              <div className="table-td">Дата заказа</div>
-              <div className="table-td">Дата приемки</div>
-              <div className="table-td">Способ доставки</div>
-              <div className="table-td">Телефон</div>
-              <div className="table-td">Имя</div>
+              <div className="table-td" style={{ fontWeight: "bold" }}>
+                Номер заказа
+              </div>
+              <div className="table-td" style={{ fontWeight: "bold" }}>
+                Дата заказа
+              </div>
+              <div className="table-td" style={{ fontWeight: "bold" }}>
+                Дата приемки
+              </div>
+              <div className="table-td" style={{ fontWeight: "bold" }}>
+                Способ доставки
+              </div>
+              <div className="table-td" style={{ fontWeight: "bold" }}>
+                Телефон
+              </div>
+              <div className="table-td" style={{ fontWeight: "bold" }}>
+                Имя
+              </div>
             </div>
             {products?.map((product) => (
               <div key={product?.id} className="table-row">
-                <div style={{ cursor: "pointer" }} className="table-td">
-                  <Link to={`/personalareapay/${product?.id}`}>
+                <div
+                  style={product.split ? splitStyle : notSplitStyle}
+                  className="table-td"
+                >
+                  <Link
+                    to={`/personalareapay/${product?.id}`}
+                    style={{ color: "black" }}
+                  >
                     {product?.id.slice(0, 8) + "..."}
                   </Link>
                 </div>
@@ -129,15 +169,12 @@ export default function Depot() {
                       ></i>
                     </div>
                   )}
-                   <span
-                      className="trash"
-                       
-                      >
-                        <i
-                          className="uil uil-trash-alt"
-                          onClick={() => onDelete(product?.id)}
-                        ></i>
-                      </span>
+                  <span className="trash">
+                    <i
+                      className="uil uil-trash-alt"
+                      onClick={() => onDelete(product?.id)}
+                    ></i>
+                  </span>
                 </div>
               </div>
             ))}

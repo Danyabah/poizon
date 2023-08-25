@@ -37,23 +37,35 @@ export default function OrderForm() {
   }, [id]);
   console.log(product);
   useEffect(() => {
-    axios.get(`https://crm-poizonstore.ru/category`,{ headers:{
-      "Authorization": `Token ${token}`
-    }}).then((data) => {
-      setCategories(data.data.categories);
-      setLastDelivery(data.data.categories[0].chinarush);
-      setPrice(data.data.prices);
-    });
-    axios.get(`https://crm-poizonstore.ru/currency/`,{ headers:{
-      "Authorization": `Token ${token}`
-    }}).then((res) => {
-      setCurrency(res.data.currency);
-    });
-    axios.get(`https://crm-poizonstore.ru/promo/`,{ headers:{
-      "Authorization": `Token ${token}`
-    }}).then((res) => {
-      setPromo(res.data.promo);
-    });
+    axios
+      .get(`https://crm-poizonstore.ru/category`, {
+        headers: {
+          Authorization: `Token ${token}`,
+        },
+      })
+      .then((data) => {
+        setCategories(data.data.categories);
+        setLastDelivery(data.data.categories[0].chinarush);
+        setPrice(data.data.prices);
+      });
+    axios
+      .get(`https://crm-poizonstore.ru/currency/`, {
+        headers: {
+          Authorization: `Token ${token}`,
+        },
+      })
+      .then((res) => {
+        setCurrency(res.data.currency);
+      });
+    axios
+      .get(`https://crm-poizonstore.ru/promo/`, {
+        headers: {
+          Authorization: `Token ${token}`,
+        },
+      })
+      .then((res) => {
+        setPromo(res.data.promo);
+      });
   }, []);
 
   const initialValues = {
@@ -113,7 +125,7 @@ export default function OrderForm() {
       if (window.confirm("Вы уверены?")) {
         formPayload.curencycurency2 = +formPayload.curencycurency2;
         formPayload.image = imagesUrl; //потом почистить массив изображений
-        formPayload.status  = "neworder"
+        formPayload.status = "neworder";
         formPayload.brand =
           formPayload.brand[0].toUpperCase() + formPayload.brand.slice(1);
         formPayload.model =
@@ -127,9 +139,15 @@ export default function OrderForm() {
           delete formPayload.comment;
         }
 
-        return axios.post(`https://crm-poizonstore.ru/checklist/`, formPayload,{ headers:{
-          "Authorization": `Token ${token}`
-        }});
+        return axios.post(
+          `https://crm-poizonstore.ru/checklist/`,
+          formPayload,
+          {
+            headers: {
+              Authorization: `Token ${token}`,
+            },
+          }
+        );
       }
     },
   });
@@ -475,17 +493,16 @@ export default function OrderForm() {
 
                     if (obj.discount && obj.nocomission) {
                       let r = lastPrice - values.commission;
-                      let s = obj.discount * r;
-                      let price = r - s / 100;
+
+                      let price = r - obj.discount;
                       setFieldValue("fullprice", Math.round(price, 2));
                     } else if (obj.discount && obj.freedelivery) {
                       let r = lastPrice - values.chinadelivery2;
-                      let s = obj.discount * r;
-                      let price = r - s / 100;
+
+                      let price = r - obj.discount;
                       setFieldValue("fullprice", Math.round(price, 2));
                     } else if (obj.discount) {
-                      let s = obj.discount * lastPrice;
-                      let price = lastPrice - s / 100;
+                      let price = lastPrice - obj.discount;
                       setFieldValue("fullprice", Math.round(price, 2));
                     } else if (obj.nocomission) {
                       setFieldValue(
@@ -552,17 +569,26 @@ export default function OrderForm() {
             <div
               className="button no-icon draft-btn"
               onClick={() => {
-                if (window.confirm("Вы уверены что хотите добавить в черновик?")) {
-               
+                if (
+                  window.confirm("Вы уверены что хотите добавить в черновик?")
+                ) {
                   // copy.status = "draft";
-                  axios.post(`https://crm-poizonstore.ru/checklist/`,{...values,status:"draft"},{ headers:{
-                    "Authorization": `Token ${token}`
-                  }}).then((res) => {
-                    if (res.status === 201) {
-                      alert("добавлено в черновик");
-                    }
-                    console.log(res);
-                  });
+                  axios
+                    .post(
+                      `https://crm-poizonstore.ru/checklist/`,
+                      { ...values, status: "draft" },
+                      {
+                        headers: {
+                          Authorization: `Token ${token}`,
+                        },
+                      }
+                    )
+                    .then((res) => {
+                      if (res.status === 201) {
+                        alert("добавлено в черновик");
+                      }
+                      console.log(res);
+                    });
                 }
               }}
             >

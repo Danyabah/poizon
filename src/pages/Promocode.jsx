@@ -2,14 +2,22 @@ import React, { useEffect, useState } from "react";
 import Header from "../components/Header";
 import axios from "axios";
 import PromoForm from "../components/PromoForm";
+import { useSelector } from "react-redux";
 
 export default function Promocode() {
   const [promo, setPromo] = useState([]);
   const [open, setOpen] = useState(false);
+  const token = useSelector((state) => state.user.token);
   useEffect(() => {
-    axios.get(`https://crm-poizonstore.ru/promo/`).then((res) => {
-      setPromo(res.data.promo);
-    });
+    axios
+      .get(`https://crm-poizonstore.ru/promo/`, {
+        headers: {
+          Authorization: `Token ${token}`,
+        },
+      })
+      .then((res) => {
+        setPromo(res.data.promo);
+      });
   }, [open]);
 
   function tryDelete(e, name) {

@@ -10,17 +10,19 @@ export default function PaymentTab() {
   const product = useSelector((state) => state.admin.selectedProduct);
   const reload = useSelector((state) => state.admin.reload);
   const dispatch = useDispatch();
-  const token = useSelector((state)=>state.user.token)
-
+  const token = useSelector((state) => state.user.token);
 
   const { mutate } = useMutation({
     mutationFn: (values) => {
       if (window.confirm("вы уверены?")) {
         return axios.patch(
           `https://crm-poizonstore.ru/checklist/${id}`,
-          values,{ headers:{
-            "Authorization": `Token ${token}`
-          }}
+          values,
+          {
+            headers: {
+              Authorization: `Token ${token}`,
+            },
+          }
         );
       }
     },
@@ -61,7 +63,7 @@ export default function PaymentTab() {
             </button>
             <button
               className="button no-icon"
-              onClick={() => addToDraft(product,token)}
+              onClick={() => addToDraft(product, token)}
             >
               Отклонить оплату
             </button>
@@ -74,7 +76,8 @@ export default function PaymentTab() {
       <form>
         <div className="form-group">
           <label className="label" htmlFor="sum">
-            Сумма к оплате
+            Сумма к оплате{" "}
+            {product.split ? <strong>(ОПЛАТА СПЛИТОМ)</strong> : <></>}
           </label>
           <input
             name="sum"
@@ -82,7 +85,11 @@ export default function PaymentTab() {
             className="form-control"
             id="sum"
             disabled
-            value={product?.fullprice?.toLocaleString()}
+            value={
+              product.split
+                ? Math.round(product?.fullprice / 2).toLocaleString()
+                : product?.fullprice?.toLocaleString()
+            }
           />
         </div>
         <div className="form-group">

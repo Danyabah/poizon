@@ -8,7 +8,7 @@ import {
   setCurrentProductInfo,
   setUserInfo,
 } from "../redux/slices/userReducer";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import Header from "./Header";
 
 export default function Crrcdek() {
@@ -16,9 +16,14 @@ export default function Crrcdek() {
   const [delivery, setDelivery] = useState(0);
   const navigate = useNavigate();
   const { id } = useParams();
+  const location = useLocation();
   const [product, setProduct] = useState({});
- 
+
   const [isLoading, setIsLoading] = useState(true);
+
+  const [userName, setUserName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [userLocation, setUserLocation] = useState({});
 
   useEffect(() => {
     axios.get(`https://crm-poizonstore.ru/checklist/${id}`).then((res) => {
@@ -28,43 +33,57 @@ export default function Crrcdek() {
       }
     });
 
+    if (location.hash === "#edit") {
+      axios
+        .get(`https://crm-poizonstore.ru/cdek/orders/?im_number=${id}`)
+        .then((res) => {
+          console.log(res);
+          setUserName(res.data.entity.recipient.name);
+          setPhone(res.data.entity.recipient.phones[0].number);
+          setUserLocation(res.data.entity.to_location);
+        });
+    }
   }, [id]);
 
   const initialValues = {
-    buyername: "",
-    buyersurname: "",
-    buyerphone: product.buyerphone || "",
-    city: "",
-    street: "",
-    house: "",
-    flat: "",
+    buyername: location.hash === "#edit" ? userName.split(" ")[0] : "",
+    buyersurname: location.hash === "#edit" ? userName.split(" ")[1] : "",
+    buyerphone: location.hash === "#edit" ? phone : product.buyerphone || "",
+    city: location.hash === "#edit" ? userLocation?.city : "",
+    street:
+      location.hash === "#edit" ? userLocation?.address?.split(", ")[1] : "",
+    house:
+      location.hash === "#edit"
+        ? userLocation?.address?.split(", ")[2].replace("д. ", "")
+        : "",
+    flat:
+      location.hash === "#edit"
+        ? userLocation?.address?.split(", ")[3].replace("кв. ", "")
+        : "",
   };
 
   function countDelivery(values) {
     axios
-      .post(
-        `https://crm-poizonstore.ru/cdek/calculator/tariff/`,
-        {
-          type: "1",
-          currency: "1",
-          lang: "rus",
-          tariff_code: "137",
-          from_location: {
-            code: 137,
+      .post(`https://crm-poizonstore.ru/cdek/calculator/tariff/`, {
+        type: "1",
+        currency: "1",
+        lang: "rus",
+        tariff_code: "137",
+        from_location: {
+          code: 137,
+        },
+        to_location: {
+          address: `г. ${values.city}, ${values.street}, д. ${values.house}, кв. ${values.flat}`,
+        },
+        packages: [
+          {
+            weight: 1200,
+            length: 35,
+            width: 26,
+            height: 14,
           },
-          to_location: {
-            address: `г. ${values.city}, ${values.street}, д. ${values.house}, кв. ${values.flat}`,
-          },
-          packages: [
-            {
-              weight: 1200,
-              length: 35,
-              width: 26,
-              height: 14,
-            },
-          ],
-        }
-      )
+        ],
+      })
       .then((res) => {
         console.log(res);
         setDelivery(res.data.delivery_sum);
@@ -157,7 +176,12 @@ export default function Crrcdek() {
           address: `г. ${city}, ${street}, д. ${house}, кв. ${flat}`,
         },
       };
-      return axios.post(`https://crm-poizonstore.ru/cdek/orders/`, newObj);
+      if (location.hash === "#edit") {
+        // ПРИ РЕДАКТИРОВАНИИ
+        return axios.post(`https://crm-poizonstore.ru/cdek/orders/`, newObj);
+      } else {
+        return axios.post(`https://crm-poizonstore.ru/cdek/orders/`, newObj);
+      }
     },
   });
 

@@ -95,7 +95,8 @@ export const subcategory = {
 };
 
 export const status = {
-  neworder:"Новый заказ",
+  draft: "Черновик",
+  neworder: "Новый заказ",
   payment: "Проверка оплаты",
   //  buying: 'Оплачен',
   buying: "На закупке",
@@ -138,40 +139,63 @@ export const translate = {
 export const deliveryName = {
   "Курьерская доставка CDEK": "Курьер СДЭК",
   "Пункт выдачи заказов CDEK": "ПВЗ СДЭК",
-  "Самовывоз из шоурума":"Самовывоз",
-}
+  "Самовывоз из шоурума": "Самовывоз",
+};
 
-export function addToDraft(values,token) {
-
+export function addToDraft(values, token) {
   if (window.confirm("Вы уверены что хотите отменить заказ?")) {
     let copy = { ...values };
     // copy.status = "draft";
     delete copy.status;
-    axios.patch(`https://crm-poizonstore.ru/checklist/${copy.id}`, {
-      status:"draft"
-    },{ headers:{
-      "Authorization": `Token ${token}`
-    }}).then((res) => {
-      if (res.status === 200) {
-        alert("добавлено в черновик");
-      }
-      console.log(res);
-    });
+    axios
+      .patch(
+        `https://crm-poizonstore.ru/checklist/${copy.id}`,
+        {
+          status: "draft",
+        },
+        {
+          headers: {
+            Authorization: `Token ${token}`,
+          },
+        }
+      )
+      .then((res) => {
+        if (res.status === 200) {
+          alert("добавлено в черновик");
+        }
+        console.log(res);
+      });
   }
 }
 
-export const monthArray = ["January","February","March","April","May","June","July","August","September","October", "November", "December"]
+export const monthArray = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
 export const monthRU = {
-  "January": "Январь",
-  "February": "Февраль",
-  "March": "Март",
-  "April": "Апрель",
-  "May":"Май",
-  "June":"Июнь",
-  "July":"Июль",
-  "August":"Август",
-  "September":"Сентябрь",
-  "October": "Октябрь",
-  "November":"Ноябрь",
-  "December":"Декабрь"
-}
+  January: "Январь",
+  February: "Февраль",
+  March: "Март",
+  April: "Апрель",
+  May: "Май",
+  June: "Июнь",
+  July: "Июль",
+  August: "Август",
+  September: "Сентябрь",
+  October: "Октябрь",
+  November: "Ноябрь",
+  December: "Декабрь",
+};
+
+export const parseSeconds = (timer) =>
+  new Date(timer * 1000).toISOString().slice(11, 19);

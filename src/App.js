@@ -42,7 +42,7 @@ function App() {
         <Route path="/" index element={<Authorization />} />
         <Route path="/client" element={<Client />} />
         <Route path="/work" element={<AuthorizationWork />} />
-        <Route path="/afterpay" element={<AfterPay />} />
+        <Route path="/afterpay/:id" element={<AfterPay />} />
         <Route
           path="/curs"
           element={
@@ -78,7 +78,7 @@ function App() {
         />
         <Route path="/orderpage/:id" element={<OrderPage />} />
         <Route path="/order/:id" element={<Order />} />
-        <Route path="/pay" element={<Pay />} />
+        <Route path="/pay/:id" element={<Pay />} />
         <Route path="/crrcdek/:id" element={<Crrcdek />} />
 
         <Route

@@ -3,6 +3,7 @@ import React from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { useMutation } from "@tanstack/react-query";
+import { useSelector } from "react-redux";
 export default function PromoForm({ setOpen }) {
   const initialValues = {
     name: "",
@@ -10,6 +11,7 @@ export default function PromoForm({ setOpen }) {
     freedelivery: false,
     nocomission: false,
   };
+  const token = useSelector((state) => state.user.token);
 
   const onSubmit = (values) => {
     mutate(values, {
@@ -26,12 +28,16 @@ export default function PromoForm({ setOpen }) {
 
   const validSchema = Yup.object().shape({
     name: Yup.string().required("Необходимо указать название промокода"),
-    discount: Yup.string().required("Укажите % скидки"),
+    discount: Yup.string().required("Укажите размер скидки в рублях"),
   });
 
   const { mutate } = useMutation({
     mutationFn: (formPayload) => {
-      return axios.post(`https://crm-poizonstore.ru/promo/`, formPayload);
+      return axios.post(`https://crm-poizonstore.ru/promo/`, formPayload, {
+        headers: {
+          Authorization: `Token ${token}`,
+        },
+      });
     },
   });
 
@@ -64,7 +70,7 @@ export default function PromoForm({ setOpen }) {
             </div>
             <div className="form-group">
               <label className="label" htmlFor="discount">
-                % Скидки
+                Размер скидки в рублях
               </label>
               <Field
                 type="text"

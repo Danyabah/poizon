@@ -9,8 +9,9 @@ import { setCurrentProductInfo } from "../redux/slices/userReducer";
 // Import Swiper styles
 import "swiper/css";
 import "swiper/css/navigation";
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation} from 'swiper';
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation } from "swiper";
+import SplitPayment from "../components/SplitPayment";
 
 // import required modules
 
@@ -24,7 +25,6 @@ export default function OrderPageInProgress() {
   const [delCost, setDelCost] = useState("");
   const [linksub, setLinksub] = useState("");
   const { id } = useParams();
-
 
   useEffect(() => {
     axios.get(`https://crm-poizonstore.ru/checklist/${id}`).then((res) => {
@@ -41,8 +41,8 @@ export default function OrderPageInProgress() {
       .get(`https://crm-poizonstore.ru/cdek/orders/?im_number=${id}`)
       .then((res) => {
         console.log(res);
-        setLinksub(res.data.entity.cdek_number)
-        setDelCost(res.data.entity.delivery_recipient_cost.value)
+        setLinksub(res.data.entity.cdek_number);
+        setDelCost(res.data.entity.delivery_recipient_cost.value);
         setSdekStatus(
           res.data.entity.statuses[res.data.entity.statuses.length - 1].code
         );
@@ -94,6 +94,7 @@ export default function OrderPageInProgress() {
   return (
     <>
       <Header />
+      <SplitPayment />
       <div className="line"></div>
       <div className="push60 hidden-xss"></div>
       <div className="push20 visible-xss"></div>
@@ -110,10 +111,7 @@ export default function OrderPageInProgress() {
               {product?.image?.length !== 0 && (
                 <>
                   <SwiperSlide key={0}>
-                    <img
-                      src={product?.previewimage}
-                      alt=""
-                    />
+                    <img src={product?.previewimage} alt="" />
                   </SwiperSlide>
                   {product?.image?.map((img, index) => {
                     if (index > 0) {
@@ -139,15 +137,14 @@ export default function OrderPageInProgress() {
             </div>
             <div className="push10 hidden-xss"></div>
             <div className="push5 visible-xss"></div>
-        
+
             <a
               className="text"
               href={product?.link}
               rel="noreferrer"
               target="_blank"
             >
-              <b>  Ссылка на товар</b>
-            
+              <b> Ссылка на товар</b>
             </a>
             <div className="push20 hidden-xss"></div>
             <div className="push10 visible-xss"></div>
@@ -158,7 +155,9 @@ export default function OrderPageInProgress() {
             <div className="push15 visible-xss"></div>
             <div
               onClick={() => setVisible((prev) => !prev)}
-              className={visible ? `more-wrapper more-wrapper-active` : `more-wrapper`}
+              className={
+                visible ? `more-wrapper more-wrapper-active` : `more-wrapper`
+              }
               style={{ cursor: "pointer" }}
             >
               Подробности расчета
@@ -167,7 +166,7 @@ export default function OrderPageInProgress() {
               <div className="push30 hidden-xss"></div>
               <div className="table-wrapper">
                 {visible && (
-                  <table style={{marginTop:"20px"}}>
+                  <table style={{ marginTop: "20px" }}>
                     <tbody>
                       <tr>
                         <th>Цена в CNY</th>
@@ -200,24 +199,49 @@ export default function OrderPageInProgress() {
             </div>
             <div className="push30 hidden-xss"></div>
             <div className="push15 visible-xss"></div>
-            <div className="text">Способ доставки: {product?.delivery_display}</div>
-           { delCost && <b>Стоимость доставки: {delCost} ₽</b>}
-           <div className="push30 hidden-xss"></div>
+            <div className="text">
+              Способ доставки: {product?.delivery_display}
+            </div>
+            {delCost && <b>Стоимость доставки: {delCost} ₽</b>}
+            <div className="push30 hidden-xss"></div>
             <div className="push15 visible-xss"></div>
-           {linksub && <div><b><a rel={"noreferrer"} className="cdek__track" target="_blank" href={`https://www.cdek.ru/ru/tracking?order_id=${linksub}`}>Отследить заказ в СДЭК</a></b></div>}
+            {linksub && (
+              <div>
+                <b>
+                  <a
+                    rel={"noreferrer"}
+                    className="cdek__track"
+                    target="_blank"
+                    href={`https://www.cdek.ru/ru/tracking?order_id=${linksub}`}
+                  >
+                    Отследить заказ в СДЭК
+                  </a>
+                </b>
+              </div>
+            )}
             <div className="push20 hidden-xss"></div>
             <div className="push5 visible-xss"></div>
-            {product?.delivery === "Самовывоз из шоурума" && (
+            {product?.delivery === "pickup" && (
               <div className="text">Адрес самовывоза: {pickup}</div>
             )}
             <div className="push35 hidden-xss"></div>
             <div className="push15 visible-xss"></div>
-            {stage[product?.status] < 6 &&
-              product?.delivery === "Самовывоз из шоурума" && (
-                <Link to={"/order"} className="change">
-                  Изменить данные доставки
-                </Link>
-              )}
+            {stage[product?.status] < 6 && product?.delivery === "pickup" ? (
+              <Link to={"/order"} className="change">
+                Изменить данные доставки
+              </Link>
+            ) : product?.delivery === "cdek" ? (
+              <Link to={`/pvz/${product?.id}#edit`} className="change">
+                Изменить адрес ПВЗ
+              </Link>
+            ) : product?.delivery === "cdek_courier" ? (
+              <Link to={`/crrcdek/${product?.id}#edit`} className="change">
+                Изменить адрес доставки
+              </Link>
+            ) : (
+              <></>
+            )}
+
             <div className="push40 hidden-xss"></div>
             <div className="push25 visible-xss"></div>
             <section>

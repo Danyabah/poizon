@@ -8,18 +8,22 @@ import {
   setCurrentProductInfo,
   setUserInfo,
 } from "../redux/slices/userReducer";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import Header from "./Header";
 
 export default function Pvz() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { id } = useParams();
+  const location = useLocation();
+
   const [product, setProduct] = useState({});
+
+  const [userName, setUserName] = useState("");
+  const [phone, setPhone] = useState("");
 
   useEffect(() => {
     window.getCdek();
-
   }, [id]);
 
   useEffect(() => {
@@ -29,16 +33,25 @@ export default function Pvz() {
         setProduct(res.data);
       }
     });
+
+    if (location.hash === "#edit") {
+      axios
+        .get(`https://crm-poizonstore.ru/cdek/orders/?im_number=${id}`)
+        .then((res) => {
+          console.log(res);
+          setUserName(res.data.entity.recipient.name);
+          setPhone(res.data.entity.recipient.phones[0].number);
+        });
+    }
   }, [id]);
 
   const initialValues = {
-    buyername: "",
-    buyersurname: "",
-    buyerphone: product.buyerphone || "",
+    buyername: location.hash === "#edit" ? userName.split(" ")[0] : "",
+    buyersurname: location.hash === "#edit" ? userName.split(" ")[1] : "",
+    buyerphone: location.hash === "#edit" ? phone : product.buyerphone || "",
   };
 
   const onSubmit = (values) => {
-    console.log(values);
     let pvz = document.querySelector("#pvz").value;
 
     if (pvz.trim() === "") {
@@ -60,9 +73,6 @@ export default function Pvz() {
     });
   };
 
-  useEffect(()=>{
-    console.log('fff');
-  },[  ])
   // минимум 2 слова !
   const validSchema = Yup.object().shape({
     buyername: Yup.string().required("Необходимо указать имя"),
@@ -129,7 +139,12 @@ export default function Pvz() {
           },
         ],
       };
-      return axios.post(`https://crm-poizonstore.ru/cdek/orders/`, newObj);
+      if (location.hash === "#edit") {
+        // на редактирование
+        return axios.post(`https://crm-poizonstore.ru/cdek/orders/`, newObj);
+      } else {
+        return axios.post(`https://crm-poizonstore.ru/cdek/orders/`, newObj);
+      }
     },
   });
 
@@ -273,7 +288,7 @@ export default function Pvz() {
                       ПВЗ к вам, который доставляет заказы интернет-магазинов.
                     </div>
                     <div className="push20 hidden-xss"></div>
-                    
+
                     <button className="button" type="submit">
                       Сохранить
                     </button>

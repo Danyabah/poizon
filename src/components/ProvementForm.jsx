@@ -5,16 +5,46 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
 import PreviewImage from "./PreviewImage";
-import { setCurrentProductInfo } from "../redux/slices/userReducer";
-import { useNavigate } from "react-router-dom";
+import { setCurrentProductInfo, setSplit } from "../redux/slices/userReducer";
+import { useLocation, useNavigate } from "react-router-dom";
 
-export default function ProvementForm() {
+export default function ProvementForm({ product }) {
   const paymentmethod = useSelector((state) => state.user.payMethod);
-  const product = useSelector((state) => state.user.currentProductInfo);
+
+  const split = useSelector((state) => state.user.split);
   const inp = useRef(null);
   const dispatch = useDispatch();
   const [card, setCard] = useState({});
   const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.hash === "#split") {
+      let url = product?.paymentprovement?.[0];
+
+      async function imageUrlToBase64(url) {
+        try {
+          const response = await fetch(url);
+
+          const blob = await response.arrayBuffer();
+
+          const contentType = response.headers.get("content-type");
+
+          const base64String = `data:${contentType};base64,${Buffer.from(
+            blob
+          ).toString("base64")}`;
+
+          return base64String;
+        } catch (err) {
+          console.log(err);
+        }
+      }
+
+      imageUrlToBase64(url).then((base64String) => {
+        console.log(base64String);
+      });
+    }
+  }, [product]);
 
   useEffect(() => {
     axios.get(`https://crm-poizonstore.ru/payment/`).then((res) => {
@@ -34,7 +64,11 @@ export default function ProvementForm() {
       onSuccess: (response) => {
         console.log(response);
         dispatch(setCurrentProductInfo(response.data));
-        navigate(`/order/${response.data.id}`);
+        if (location.hash === "#split") {
+          navigate(`/orderpageinprogress/${response.data.id}`);
+        } else {
+          navigate(`/order/${response.data.id}`);
+        }
       },
       onError: (response) => {
         alert("Произошла ошибка");
@@ -50,11 +84,25 @@ export default function ProvementForm() {
 
   const { mutate } = useMutation({
     mutationFn: (formPayload) => {
-      return axios.patch(`https://crm-poizonstore.ru/checklist/${product.id}`, {
-        status: "payment",
-        paymenttype: formPayload.paymenttype,
-        paymentprovement: formPayload.paymentprovement,
-      });
+      if (location.hash === "#split") {
+        return axios.patch(
+          `https://crm-poizonstore.ru/checklist/${product.id}`,
+          {
+            paymenttype: formPayload.paymenttype,
+            paymentprovement: formPayload.paymentprovement,
+          }
+        );
+      } else {
+        return axios.patch(
+          `https://crm-poizonstore.ru/checklist/${product.id}`,
+          {
+            status: "payment",
+            paymenttype: formPayload.paymenttype,
+            paymentprovement: formPayload.paymentprovement,
+            split: split,
+          }
+        );
+      }
     },
   });
 

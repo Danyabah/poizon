@@ -4,7 +4,8 @@ const initialState = {
   userInfo: {},
   currentProductInfo: {},
   payMethod: "",
-  token:""
+  token: "",
+  split: false,
 };
 
 export const userSlice = createSlice({
@@ -23,8 +24,11 @@ export const userSlice = createSlice({
     setPayMethod: (state, action) => {
       state.payMethod = action.payload;
     },
-    setToken:(state, action) => {
+    setToken: (state, action) => {
       state.token = action.payload;
+    },
+    setSplit: (state, action) => {
+      state.split = action.payload;
     },
   },
 });
@@ -34,7 +38,8 @@ export const {
   clearUserInfo,
   setCurrentProductInfo,
   setPayMethod,
-  setToken
+  setToken,
+  setSplit,
 } = userSlice.actions;
 
 export default userSlice.reducer;

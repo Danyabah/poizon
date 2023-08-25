@@ -8,20 +8,23 @@ import { useSelector } from "react-redux";
 import { deliveryName } from "../utils/utils";
 
 export default function PersonalAreaCheckPay() {
-  const [categ, setCateg] = useState("payment");
+  const [categ, setCateg] = useState("");
   const [products, setProducts] = useState([]);
   const [page, setPage] = useState(1);
   const [totalPage, setTotalPage] = useState(1);
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
-  const token = useSelector((state)=>state.user.token)
+  const token = useSelector((state) => state.user.token);
 
   function getProducts() {
     axios
       .get(
-        `https://crm-poizonstore.ru/checklist/?page=${page}&limit=10&status=${categ}&search=${search}`,{ headers:{
-          "Authorization": `Token ${token}`
-        }}
+        `https://crm-poizonstore.ru/checklist/?page=${page}&limit=10&status=${categ}&search=${search}`,
+        {
+          headers: {
+            Authorization: `Token ${token}`,
+          },
+        }
       )
       .then((data) => {
         console.log(data.data.data);
@@ -36,11 +39,17 @@ export default function PersonalAreaCheckPay() {
 
   const { mutate } = useMutation({
     mutationFn: (values) => {
-      return axios.patch(`https://crm-poizonstore.ru/checklist/${values.id}`, {
-        status: values.status,
-      },{ headers:{
-        "Authorization": `Token ${token}`
-      }});
+      return axios.patch(
+        `https://crm-poizonstore.ru/checklist/${values.id}`,
+        {
+          status: values.status,
+        },
+        {
+          headers: {
+            Authorization: `Token ${token}`,
+          },
+        }
+      );
     },
   });
 
@@ -60,15 +69,19 @@ export default function PersonalAreaCheckPay() {
 
   const onDelete = (id) => {
     if (window?.confirm("Вы уверены что хотите удалить товар?")) {
-      axios.delete(`https://crm-poizonstore.ru/checklist/${id}`,{ headers:{
-        "Authorization": `Token ${token}`
-      }}).then((res) => {
-        console.log(res);
-        if (res.status === 204) {
-          alert("Товар успешно удален");
-          getProducts();
-        }
-      });
+      axios
+        .delete(`https://crm-poizonstore.ru/checklist/${id}`, {
+          headers: {
+            Authorization: `Token ${token}`,
+          },
+        })
+        .then((res) => {
+          console.log(res);
+          if (res.status === 204) {
+            alert("Товар успешно удален");
+            getProducts();
+          }
+        });
     }
   };
   return (
@@ -146,6 +159,12 @@ export default function PersonalAreaCheckPay() {
                 onClick={() => setCateg("draft")}
               >
                 <span>Черновик</span>
+              </li>
+              <li
+                className={categ === "" ? "current" : ""}
+                onClick={() => setCateg("")}
+              >
+                <span>Все заказы</span>
               </li>
               <li
                 className={categ === "neworder" ? "current" : ""}
@@ -235,10 +254,7 @@ export default function PersonalAreaCheckPay() {
                     </div>
                   ) : (
                     categ === "draft" && (
-                      <span
-                      className="trash"
-                       
-                      >
+                      <span className="trash">
                         <i
                           className="uil uil-trash-alt"
                           onClick={() => onDelete(obj?.id)}

@@ -25,15 +25,18 @@ export default function PersonalAreaNew() {
   const token = useSelector((state) => state.user.token);
   const [totalPage, setTotalPage] = useState(1);
   const [search, setSearch] = useState("");
-const navigate = useNavigate();
+  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   function getProducts() {
     axios
       .get(
-        `https://crm-poizonstore.ru/checklist/?page=${page}&limit=10&status=${categ}&search=${search}`,{ headers:{
-          "Authorization": `Token ${token}`
-        }}
+        `https://crm-poizonstore.ru/checklist/?page=${page}&limit=10&status=${categ}&search=${search}`,
+        {
+          headers: {
+            Authorization: `Token ${token}`,
+          },
+        }
       )
       .then((data) => {
         setProducts(data.data.data);
@@ -130,7 +133,7 @@ const navigate = useNavigate();
                 className={categ === "china" ? "current" : ""}
                 onClick={() => setCateg("china")}
               >
-                <span>На складе в китае</span>
+                <span>На складе в Китае</span>
               </li>
             </ul>
           </div>
@@ -174,7 +177,7 @@ const navigate = useNavigate();
                   </button>
                   <div
                     className="button button-new no-icon draft-btn"
-                    onClick={() => addToDraft(product,token)}
+                    onClick={() => addToDraft(product, token)}
                   >
                     Отменить заказ
                   </div>
@@ -220,11 +223,14 @@ const navigate = useNavigate();
               {products?.map((obj) => (
                 <div key={obj?.id}>
                   <div className="container">
-                    <div className="table-row"  onClick={() => changeProduct(obj)}>
+                    <div
+                      className="table-row"
+                      onClick={() => changeProduct(obj)}
+                    >
                       <div
                         className="table-td"
                         style={{ cursor: "pointer" }}
-                       onClick={()=>navigate(`/personalareapay/${obj.id}`)}
+                        onClick={() => navigate(`/personalareapay/${obj.id}`)}
                       >
                         {obj?.id}
                       </div>

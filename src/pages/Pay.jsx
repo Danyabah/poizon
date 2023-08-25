@@ -1,30 +1,43 @@
 import React, { useEffect, useState } from "react";
 import Header from "../components/Header";
 import { useDispatch, useSelector } from "react-redux";
-import { setPayMethod } from "../redux/slices/userReducer";
-import { Link } from "react-router-dom";
+import { setPayMethod, setSplit } from "../redux/slices/userReducer";
+import { Link, useLocation, useParams } from "react-router-dom";
 import axios from "axios";
+import Timer from "../components/Timer";
 const raifImg = require("../utils/raif.png");
 
 export default function Pay() {
-  const product = useSelector((state) => state.user.currentProductInfo);
   const dispatch = useDispatch();
+  const { id } = useParams();
 
   const [ralf, setRalfInfo] = useState({});
   const [alfa, setAlfaInfo] = useState({});
   const [tink, setTinkInfo] = useState({});
+  const [product, setProduct] = useState({});
+  const split = useSelector((state) => state.user.split);
+  const location = useLocation();
 
   useEffect(() => {
+    axios.get(`https://crm-poizonstore.ru/checklist/${id}`).then((res) => {
+      setProduct(res.data);
+    });
+
     axios.get(`https://crm-poizonstore.ru/payment/`).then((res) => {
       setRalfInfo(res.data.ralf);
       setAlfaInfo(res.data.alfa);
       setTinkInfo(res.data.tink);
     });
+
+    if (location.hash === "#split") {
+      dispatch(setSplit(true));
+    }
   }, []);
-  console.log(product);
+
   return (
     <>
       <Header />
+      <Timer />
       <div className="line"></div>
       <div className="push60 hidden-xss"></div>
       <div className="push20 visible-xss"></div>
@@ -49,9 +62,15 @@ export default function Pay() {
             <div className="title">Сумма оплаты</div>
             <div className="push20 hidden-xss"></div>
             <div className="push10 visible-xss"></div>
-            <div className="price">
-              {product?.fullprice?.toLocaleString()} ₽
-            </div>
+            {split ? (
+              <div className="price">
+                {Math.round(product?.fullprice / 2)?.toLocaleString()} ₽
+              </div>
+            ) : (
+              <div className="price">
+                {product?.fullprice?.toLocaleString()} ₽
+              </div>
+            )}
             <div className="push40"></div>
             <div className="pay-wrap">
               <div className="title">Способ оплаты</div>
@@ -60,7 +79,9 @@ export default function Pay() {
               <div className="pay-inner">
                 {ralf.cardnumber !== 0 && (
                   <Link
-                    to="/afterpay"
+                    to={`/afterpay/${id}${
+                      location.hash === "#split" ? "#split" : ""
+                    }`}
                     onClick={() => dispatch(setPayMethod("ralf"))}
                     className="item ralf"
                   >
@@ -79,7 +100,9 @@ export default function Pay() {
                 {/* viewBox="0 0 64 64" */}
                 {tink.cardnumber !== 0 && (
                   <Link
-                    to="/afterpay"
+                    to={`/afterpay/${id}${
+                      location.hash === "#split" ? "#split" : ""
+                    }`}
                     onClick={() => dispatch(setPayMethod("tink"))}
                     className="item tink"
                   >
@@ -104,7 +127,9 @@ export default function Pay() {
                 )}
                 {alfa.cardnumber !== 0 && (
                   <Link
-                    to="/afterpay"
+                    to={`/afterpay/${id}${
+                      location.hash === "#split" ? "#split" : ""
+                    }`}
                     className="item alfa"
                     onClick={() => dispatch(setPayMethod("alfa"))}
                   >

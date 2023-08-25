@@ -10,17 +10,16 @@ export default function ChinarushForm({ id }) {
   const dispatch = useDispatch();
   const reload = useSelector((state) => state.admin.reload);
   const token = useSelector((state) => state.user.token);
-  const [linksub,setLinksub] = useState("")
+  const [linksub, setLinksub] = useState("");
 
-  useEffect(()=>{
+  useEffect(() => {
     axios
-    .get(`https://crm-poizonstore.ru/cdek/orders/?im_number=${id}`)
-    .then((res) => {
-      console.log(res);
-      setLinksub(res.data.entity.cdek_number)
-
-    });
-  },[id])
+      .get(`https://crm-poizonstore.ru/cdek/orders/?im_number=${id}`)
+      .then((res) => {
+        console.log(res);
+        setLinksub(res.data.entity.cdek_number);
+      });
+  }, [id]);
   const onSubmit = (values) => {
     mutate(values, {
       onSuccess: (response) => {
@@ -37,28 +36,39 @@ export default function ChinarushForm({ id }) {
   const { mutate } = useMutation({
     mutationFn: () => {
       if (window.confirm("Вы уверены?")) {
-        if(linksub){
-          return axios.patch(`https://crm-poizonstore.ru/checklist/${id}`, {
-            status: "chinarush",
-            cdek_tracking:linksub
-          },{ headers:{
-            "Authorization": `Token ${token}`
-          }});
-        }else{
-          return axios.patch(`https://crm-poizonstore.ru/checklist/${id}`, {
-            status: "chinarush",
-          },{ headers:{
-            "Authorization": `Token ${token}`
-          }});
+        if (linksub) {
+          return axios.patch(
+            `https://crm-poizonstore.ru/checklist/${id}`,
+            {
+              status: "chinarush",
+              cdek_tracking: linksub,
+            },
+            {
+              headers: {
+                Authorization: `Token ${token}`,
+              },
+            }
+          );
+        } else {
+          return axios.patch(
+            `https://crm-poizonstore.ru/checklist/${id}`,
+            {
+              status: "chinarush",
+            },
+            {
+              headers: {
+                Authorization: `Token ${token}`,
+              },
+            }
+          );
         }
-       
       }
     },
   });
 
   return (
     <button className="button button-new no-icon" onClick={onSubmit}>
-      Доставляется в рф
+      Доставляется в РФ
     </button>
   );
 }
