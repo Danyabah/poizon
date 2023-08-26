@@ -163,7 +163,7 @@ export default function OrderPage() {
               </div>
               <Link
                 to={`/pay/${id}`}
-                style={{ gridGap: "10px" }}
+                style={{ gridGap: "10px", marginTop: "20px" }}
                 className="button no-icon green-btn"
                 onClick={() => dispatch(setSplit(false))}
               >

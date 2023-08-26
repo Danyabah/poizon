@@ -10,7 +10,7 @@ export default function Timer() {
   const location = useLocation();
   useEffect(() => {
     axios.get(`https://crm-poizonstore.ru/checklist/${id}`).then((res) => {
-      setTimer(10);
+      setTimer(res.data.buy_time_remaining);
       setStateInterval(
         setInterval(() => {
           setTimer((prev) => prev - 1);

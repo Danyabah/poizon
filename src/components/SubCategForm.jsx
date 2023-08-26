@@ -5,30 +5,29 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { useSelector } from "react-redux";
 
-export default function CommisionForm() {
-  const [commission, setCommission] = useState(0);
-  const [chinadelivery, setChinadelivery] = useState(0);
+export default function SubCategForm() {
+  const [categories, setCategories] = useState([]);
   const token = useSelector((state) => state.user.token);
+
+  const initialValues = {
+    category: 0,
+    chinarush: 0,
+  };
 
   useEffect(() => {
     axios
-      .get(`https://crm-poizonstore.ru/settings/`, {
+      .get(`https://crm-poizonstore.ru/category`, {
         headers: {
           Authorization: `Token ${token}`,
         },
       })
-      .then((res) => {
-        console.log(res);
-        setCommission(res.data.commission);
-        setChinadelivery(res.data.chinadelivery);
+      .then((data) => {
+        console.log(data.data);
+        setCategories(data.data);
       });
   }, []);
 
-  const initialValues = {
-    commission: commission || 0,
-    chinadelivery: chinadelivery || 0,
-  };
-
+  // console.log(chinarush);
   const onSubmit = (values) => {
     mutate(values, {
       onSuccess: (response) => {
@@ -41,21 +40,26 @@ export default function CommisionForm() {
   };
 
   const validSchema = Yup.object().shape({
-    commission: Yup.number().required("Необходимо указать комиссию"),
-    chinadelivery: Yup.number().required(
+    category: Yup.string().required("Необходимо указать категорию"),
+    chinarush: Yup.number().required(
       "Необходимо указать условия доставки из Китая"
     ),
   });
 
   const { mutate } = useMutation({
     mutationFn: (formPayload) => {
-      return axios.patch(`https://crm-poizonstore.ru/settings/`, formPayload, {
-        headers: {
-          Authorization: `Token ${token}`,
-        },
-      });
+      return axios.patch(
+        `https://crm-poizonstore.ru/category/${formPayload.category}`,
+        formPayload,
+        {
+          headers: {
+            Authorization: `Token ${token}`,
+          },
+        }
+      );
     },
   });
+
   return (
     <Formik
       enableReinitialize={true}
@@ -64,47 +68,66 @@ export default function CommisionForm() {
       onSubmit={onSubmit}
     >
       {(formik) => {
+        const { values, setFieldValue } = formik;
+
         return (
           <Form className="main-inner">
-            <div className="title">Комиссия и Стоимость доставки в Китае</div>
+            <div className="title">Подкатегории Техники</div>
             <div className="push40 hidden-xss"></div>
             <div className="push10 visible-xss"></div>
             <div className="form-group">
-              <label className="label" htmlFor="commission">
-                Комиссия
+              <label className="label" htmlFor="category">
+                Подкатегории
               </label>
               <div className="push10 visible-xss"></div>
               <Field
-                name="commission"
+                as="select"
+                name="category"
                 type="number"
                 className="form-control"
-                id="commission"
-              />
+                id="category"
+                onChange={(e) => {
+                  let price = categories[6]?.children.find(
+                    (obj) => obj.id == e.target.value
+                  );
+
+                  setFieldValue("chinarush", price?.chinarush);
+                  setFieldValue("category", e.target.value);
+                }}
+              >
+                <option value={0}>Не указано</option>
+                {categories[6]?.children?.map((categ) => (
+                  <option key={categ.id} value={categ.id}>
+                    {categ.name}
+                  </option>
+                ))}
+              </Field>
               <ErrorMessage
                 style={{ color: "red" }}
-                name="commission"
+                name="category"
                 component="span"
                 className="form-control"
               />
             </div>
             <div className="form-group">
-              <label className="label" htmlFor="chinadelivery">
-                Стоимость доставки POIZON-Склад в Китае
+              <label className="label" htmlFor="chinarush">
+                Стоимость доставки Склад в Китае-РФ
               </label>
               <div className="push10 visible-xss"></div>
               <Field
-                name="chinadelivery"
+                name="chinarush"
                 type="number"
                 className="form-control"
-                id="chinadelivery"
+                id="chinarush"
               />
               <ErrorMessage
                 style={{ color: "red" }}
-                name="chinadelivery"
+                name="chinarush"
                 component="span"
                 className="form-control"
               />
             </div>
+
             <div className="push30 visible-xss"></div>
             <button className="button curs" type="submit">
               Сохранить

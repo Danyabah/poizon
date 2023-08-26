@@ -33,21 +33,34 @@ export default function OrderPageInProgress() {
       dispatch(setCurrentProductInfo(res.data));
     });
 
-    axios.get(`https://crm-poizonstore.ru/pickup`).then((res) => {
+    axios.get(`https://crm-poizonstore.ru/settings`).then((res) => {
       setPickup(res.data.pickup);
     });
+  }, [id]);
 
+  useEffect(() => {
     axios
       .get(`https://crm-poizonstore.ru/cdek/orders/?im_number=${id}`)
       .then((res) => {
         console.log(res);
         setLinksub(res.data.entity.cdek_number);
         setDelCost(res.data.entity.delivery_recipient_cost.value);
-        setSdekStatus(
-          res.data.entity.statuses[res.data.entity.statuses.length - 1].code
-        );
+        console.log(product?.status);
+        if (stage[product.status] <= 6) {
+          setSdekStatus(
+            res.data.entity.statuses.find(
+              (el) => el.code === "READY_FOR_SHIPMENT_IN_SENDER_CITY"
+            )?.code
+          );
+          console.log(sdekStatus);
+        } else {
+          console.log(sdekStatus);
+          setSdekStatus(
+            res.data.entity.statuses.find((el) => el.code === "DELIVERED")?.code
+          );
+        }
       });
-  }, [id]);
+  }, [product]);
 
   useEffect(() => {
     if (product.startDate && product.currentDate) {
@@ -133,7 +146,7 @@ export default function OrderPageInProgress() {
             <div className="push20 hidden-xss"></div>
             <div className="push10 visible-xss"></div>
             <div className="text">
-              {product?.subcategory}, размер {product?.size}
+              {product?.category?.name}, размер {product?.size}
             </div>
             <div className="push10 hidden-xss"></div>
             <div className="push5 visible-xss"></div>
@@ -348,7 +361,7 @@ export default function OrderPageInProgress() {
                   </li>
                   <li
                     className={`text ${
-                      stage[product?.status] === 6
+                      stage[product?.status] === 6 && stage[sdekStatus] !== 7
                         ? "current"
                         : stage[product?.status] > 5
                         ? "ready"

@@ -178,7 +178,7 @@ export default function Crrcdek() {
       };
       if (location.hash === "#edit") {
         // ПРИ РЕДАКТИРОВАНИИ
-        return axios.post(`https://crm-poizonstore.ru/cdek/orders/`, newObj);
+        return axios.patch(`https://crm-poizonstore.ru/cdek/orders/`, newObj);
       } else {
         return axios.post(`https://crm-poizonstore.ru/cdek/orders/`, newObj);
       }

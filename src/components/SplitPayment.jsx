@@ -13,7 +13,9 @@ export default function SplitPayment() {
       setProduct(res.data);
     });
   }, []);
-  return stage[product.status] === 6 && product.split ? (
+  return stage[product.status] === 6 &&
+    product.split &&
+    !product.split_payment_proof ? (
     <div className="split__payment">
       <div className="split__text">
         Вам необходимо оплатить вторую часть суммы заказа

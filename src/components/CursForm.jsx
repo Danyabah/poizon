@@ -9,15 +9,19 @@ import { useDispatch, useSelector } from "react-redux";
 
 export default function CursForm() {
   const [currency, setCurrency] = useState("");
-  const token = useSelector((state)=>state.user.token)
+  const token = useSelector((state) => state.user.token);
   const dispatch = useDispatch();
   useEffect(() => {
-    axios.get(`https://crm-poizonstore.ru/currency/`,{ headers:{
-      "Authorization": `Token ${token}`
-    }}).then((res) => {
-      setCurrency(res.data.currency);
-      dispatch(setPaymentCurrency(res.data.currency));
-    });
+    axios
+      .get(`https://crm-poizonstore.ru/settings/`, {
+        headers: {
+          Authorization: `Token ${token}`,
+        },
+      })
+      .then((res) => {
+        setCurrency(res.data.currency);
+        dispatch(setPaymentCurrency(res.data.currency));
+      });
   }, []);
 
   const initialValues = {
@@ -42,9 +46,11 @@ export default function CursForm() {
 
   const { mutate } = useMutation({
     mutationFn: (formPayload) => {
-      return axios.patch(`https://crm-poizonstore.ru/currency/`, formPayload,{ headers:{
-        "Authorization": `Token ${token}`
-      }});
+      return axios.patch(`https://crm-poizonstore.ru/settings/`, formPayload, {
+        headers: {
+          Authorization: `Token ${token}`,
+        },
+      });
     },
   });
   return (

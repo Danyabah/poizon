@@ -9,11 +9,12 @@ import { useDispatch, useSelector } from "react-redux";
 
 export default function AddressForma() {
   const [pickup, setPickup] = useState("");
-  const token = useSelector((state)=>state.user.token)
+  const token = useSelector((state) => state.user.token);
   const dispatch = useDispatch();
   useEffect(() => {
-    axios.get(`https://crm-poizonstore.ru/pickup`).then((res) => {
+    axios.get(`https://crm-poizonstore.ru/settings`).then((res) => {
       setPickup(res.data.pickup);
+
       dispatch(setAddress(res.data.pickup));
     });
   }, []);
@@ -40,9 +41,11 @@ export default function AddressForma() {
 
   const { mutate } = useMutation({
     mutationFn: (formPayload) => {
-      return axios.patch(`https://crm-poizonstore.ru/pickup/`, formPayload,{ headers:{
-        "Authorization": `Token ${token}`
-      }});
+      return axios.patch(`https://crm-poizonstore.ru/settings/`, formPayload, {
+        headers: {
+          Authorization: `Token ${token}`,
+        },
+      });
     },
   });
   return (

@@ -3,6 +3,7 @@ import Header from "../components/Header";
 import CursForm from "../components/CursForm";
 import CommisionForm from "../components/CommissionForm";
 import CategoryForm from "../components/CategoryForm";
+import SubCategForm from "../components/SubCategForm";
 
 export default function Curs() {
   return (
@@ -20,6 +21,9 @@ export default function Curs() {
           <div className="push60 hidden-xss"></div>
           <div className="push20 visible-xss"></div>
           <CategoryForm />
+          <div className="push60 hidden-xss"></div>
+          <div className="push20 visible-xss"></div>
+          <SubCategForm />
         </div>
         <div className="push80"></div>
       </section>

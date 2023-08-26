@@ -141,7 +141,7 @@ export default function Pvz() {
       };
       if (location.hash === "#edit") {
         // на редактирование
-        return axios.post(`https://crm-poizonstore.ru/cdek/orders/`, newObj);
+        return axios.patch(`https://crm-poizonstore.ru/cdek/orders/`, newObj);
       } else {
         return axios.post(`https://crm-poizonstore.ru/cdek/orders/`, newObj);
       }

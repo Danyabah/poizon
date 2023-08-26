@@ -20,7 +20,7 @@ export default function ProvementForm({ product }) {
 
   useEffect(() => {
     if (location.hash === "#split") {
-      let url = product?.paymentprovement?.[0];
+      let url = product?.paymentprovement;
 
       async function imageUrlToBase64(url) {
         try {
@@ -56,7 +56,7 @@ export default function ProvementForm({ product }) {
 
   const initialValues = {
     paymenttype: paymentmethod || "",
-    paymentprovement: [],
+    paymentprovement: "",
   };
 
   const onSubmit = (values) => {
@@ -89,7 +89,7 @@ export default function ProvementForm({ product }) {
           `https://crm-poizonstore.ru/checklist/${product.id}`,
           {
             paymenttype: formPayload.paymenttype,
-            paymentprovement: formPayload.paymentprovement,
+            split_payment_proof: formPayload.paymentprovement[0],
           }
         );
       } else {
@@ -98,7 +98,7 @@ export default function ProvementForm({ product }) {
           {
             status: "payment",
             paymenttype: formPayload.paymenttype,
-            paymentprovement: formPayload.paymentprovement,
+            paymentprovement: formPayload.paymentprovement[0],
             split: split,
           }
         );
@@ -135,7 +135,7 @@ export default function ProvementForm({ product }) {
                   }}
                 />
 
-                {values.paymentprovement.length === 0 && (
+                {values.paymentprovement === "" && (
                   <label htmlFor="paymentprovement">
                     <svg
                       width="28"
@@ -163,7 +163,7 @@ export default function ProvementForm({ product }) {
                 className="form-control"
               />
               <div className="images-wrapper">
-                {values.paymentprovement.length !== 0 && (
+                {values.paymentprovement !== "" && (
                   <PreviewImage
                     name="paymentprovement"
                     setField={setFieldValue}

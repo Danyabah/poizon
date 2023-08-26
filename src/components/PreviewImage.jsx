@@ -8,7 +8,7 @@ export default function PreviewImage({ name, file, setField }) {
   let arr = [];
   console.log(file);
   useEffect(() => {
-    file.forEach((element) => {
+    [...file].forEach((element) => {
       if (element && typeof element == "object") {
         const reader = new FileReader();
         reader.readAsDataURL(element);

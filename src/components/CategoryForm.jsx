@@ -7,19 +7,25 @@ import { useSelector } from "react-redux";
 
 export default function CategoryForm() {
   const [categories, setCategories] = useState([]);
-  const token = useSelector((state)=>state.user.token)
+  const token = useSelector((state) => state.user.token);
 
-  const [initialValues, setInitialValues] = useState({
-    category: "",
+  const initialValues = {
+    category: 0,
     chinarush: 0,
-  });
+    commission: 0,
+  };
 
   useEffect(() => {
-    axios.get(`https://crm-poizonstore.ru/category`,{ headers:{
-      "Authorization": `Token ${token}`
-    }}).then((data) => {
-      setCategories(data.data);
-    });
+    axios
+      .get(`https://crm-poizonstore.ru/category`, {
+        headers: {
+          Authorization: `Token ${token}`,
+        },
+      })
+      .then((data) => {
+        console.log(data.data);
+        setCategories(data.data);
+      });
   }, []);
 
   // console.log(chinarush);
@@ -43,9 +49,15 @@ export default function CategoryForm() {
 
   const { mutate } = useMutation({
     mutationFn: (formPayload) => {
-      return axios.patch(`https://crm-poizonstore.ru/category/`, formPayload,{ headers:{
-        "Authorization": `Token ${token}`
-      }});
+      return axios.patch(
+        `https://crm-poizonstore.ru/category/${formPayload.category}`,
+        formPayload,
+        {
+          headers: {
+            Authorization: `Token ${token}`,
+          },
+        }
+      );
     },
   });
 
@@ -57,15 +69,7 @@ export default function CategoryForm() {
       onSubmit={onSubmit}
     >
       {(formik) => {
-        const { values } = formik;
-
-        let chinarushObj = categories?.categories?.find(
-          (obj) => obj.category === values.category
-        );
-
-        if (chinarushObj) {
-          setInitialValues(chinarushObj);
-        }
+        const { values, setFieldValue } = formik;
 
         return (
           <Form className="main-inner">
@@ -83,11 +87,19 @@ export default function CategoryForm() {
                 type="number"
                 className="form-control"
                 id="category"
+                onChange={(e) => {
+                  let price = categories.find(
+                    (obj) => obj.id == e.target.value
+                  );
+
+                  setFieldValue("chinarush", price?.chinarush);
+                  setFieldValue("category", e.target.value);
+                }}
               >
-                <option value="">Не указано</option>
-                {categories?.categories?.map((categ) => (
-                  <option key={categ.category} value={categ.category}>
-                    {categ.category}
+                <option value={0}>Не указано</option>
+                {categories?.map((categ) => (
+                  <option key={categ.id} value={categ.id}>
+                    {categ.name}
                   </option>
                 ))}
               </Field>
@@ -116,6 +128,25 @@ export default function CategoryForm() {
                 className="form-control"
               />
             </div>
+            <div className="form-group">
+              <label className="label" htmlFor="commission">
+                Комиссия
+              </label>
+              <div className="push10 visible-xss"></div>
+              <Field
+                name="commission"
+                type="number"
+                className="form-control"
+                id="commission"
+              />
+              <ErrorMessage
+                style={{ color: "red" }}
+                name="commission"
+                component="span"
+                className="form-control"
+              />
+            </div>
+
             <div className="push30 visible-xss"></div>
             <button className="button curs" type="submit">
               Сохранить

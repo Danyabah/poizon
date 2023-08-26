@@ -142,7 +142,7 @@ export default function Depot() {
                   className="table-td"
                 >
                   <Link
-                    to={`/personalareapay/${product?.id}`}
+                    to={`/personalareapay/${product?.id}/#split`}
                     style={{ color: "black" }}
                   >
                     {product?.id.slice(0, 8) + "..."}

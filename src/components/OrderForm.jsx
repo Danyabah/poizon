@@ -35,7 +35,7 @@ export default function OrderForm() {
       }
     });
   }, [id]);
-  console.log(product);
+
   useEffect(() => {
     axios
       .get(`https://crm-poizonstore.ru/category`, {
@@ -44,17 +44,19 @@ export default function OrderForm() {
         },
       })
       .then((data) => {
-        setCategories(data.data.categories);
-        setLastDelivery(data.data.categories[0].chinarush);
-        setPrice(data.data.prices);
+        console.log(data);
+        setCategories(data.data);
+        setLastDelivery(data.data[0].chinarush);
       });
     axios
-      .get(`https://crm-poizonstore.ru/currency/`, {
+      .get(`https://crm-poizonstore.ru/settings/`, {
         headers: {
           Authorization: `Token ${token}`,
         },
       })
       .then((res) => {
+        setPrice(res.data);
+
         setCurrency(res.data.currency);
       });
     axios
@@ -71,9 +73,8 @@ export default function OrderForm() {
   const initialValues = {
     managerid: userInfo.id || "",
     link: product?.link || "",
-    category: categories[0]?.category,
-    subcategory:
-      categories[0]?.category && subcategory[categories[0]?.category][0],
+    category: categories[0]?.id,
+    subcategory: categories[0]?.children[0].id,
     brand: product?.brand || "",
     model: product?.model || "",
     size: product?.size || "",
@@ -196,23 +197,24 @@ export default function OrderForm() {
                 id="category"
                 onChange={(e) => {
                   setFieldValue("category", e.target.value);
-                  setLastDelivery(categories[e.target.selectedIndex].chinarush);
+                  setLastDelivery(categories[+e.target.value + 1].chinarush);
                   setFieldValue(
                     "chinadelivery2",
-                    categories[e.target.selectedIndex].chinarush
+                    categories[+e.target.value + 1].chinarush
                   );
+
                   let fullprice =
                     values.currency3 +
                     values.chinadelivery +
-                    categories[e.target.selectedIndex].chinarush +
+                    categories[+e.target.value + 1].chinarush +
                     values.commission;
                   setLastPrice(fullprice);
                   setFieldValue("fullprice", fullprice);
                 }}
               >
                 {categories?.map((categ) => (
-                  <option key={categ.category} value={categ.category}>
-                    {translate[categ.category]}
+                  <option key={categ.id} value={categ.id}>
+                    {categ.name}
                   </option>
                 ))}
               </Field>
@@ -233,9 +235,9 @@ export default function OrderForm() {
                 className="form-control select-styler"
                 id="subcategory"
               >
-                {subcategory[values.category]?.map((categ) => (
-                  <option key={categ} value={categ}>
-                    {categ}
+                {categories[+values.category + 1]?.children?.map((categ) => (
+                  <option key={categ.id} value={categ.id}>
+                    {categ.name}
                   </option>
                 ))}
               </Field>

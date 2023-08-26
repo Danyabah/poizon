@@ -1,15 +1,17 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { addToDraft, stage, status } from "../utils/utils";
+import { useLocation, useParams } from "react-router-dom";
+import { addToDraft, stage, status, translatePay } from "../utils/utils";
 import { useMutation } from "@tanstack/react-query";
 import { useDispatch, useSelector } from "react-redux";
+import waiting from "../utils/wait.png";
 
 export default function PaymentTab() {
   const { id } = useParams();
   const product = useSelector((state) => state.admin.selectedProduct);
   const reload = useSelector((state) => state.admin.reload);
   const dispatch = useDispatch();
+  const location = useLocation();
   const token = useSelector((state) => state.user.token);
 
   const { mutate } = useMutation({
@@ -42,7 +44,10 @@ export default function PaymentTab() {
   };
   return (
     <div className="box visible">
-      {stage[product?.status] > 1 ? (
+      {(stage[product?.status] > 1 && !product.split) ||
+      (stage[product?.status] > 1 &&
+        stage[product?.status] < 5 &&
+        product.split) ? (
         <div className="button-wrapper">
           <button
             style={{ backgroundColor: "#eee", border: "none" }}
@@ -53,11 +58,16 @@ export default function PaymentTab() {
           </button>
         </div>
       ) : (
-        product.status === "payment" && (
+        (product.status === "payment" ||
+          (product.status === "rush" && product.split)) && (
           <div className="button-wrapper">
             <button
               className="button no-icon"
-              onClick={() => onSubmit({ status: "buying" })}
+              onClick={() =>
+                product.split && location.hash === "#split"
+                  ? onSubmit({ split: false })
+                  : onSubmit({ status: "buying" })
+              }
             >
               Принять оплату
             </button>
@@ -101,7 +111,7 @@ export default function PaymentTab() {
             disabled
             type="text"
             className="form-control"
-            value={product?.paymenttype}
+            value={translatePay[product?.paymenttype]}
             id="type"
           />
         </div>
@@ -113,11 +123,23 @@ export default function PaymentTab() {
         <div className="img-wrapper">
           <div className="item-img">
             <a
-              href={product?.paymentprovement}
+              href={
+                product?.split && product?.status !== "payment"
+                  ? product?.split_payment_proof
+                  : product?.paymentprovement
+              }
               className="absolute fancybox"
               target="_blank"
             ></a>
-            <img src={product?.paymentprovement} />
+            <img
+              src={
+                product?.split && product?.split_payment_proof
+                  ? product?.split_payment_proof
+                  : product?.split && product?.status !== "payment"
+                  ? waiting
+                  : product?.paymentprovement
+              }
+            />
           </div>
         </div>
         <div className="push90"></div>

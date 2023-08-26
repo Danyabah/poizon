@@ -136,6 +136,12 @@ export const translate = {
   different: "Другое",
 };
 
+export const translatePay = {
+  tink: "Тинькофф",
+  alfa: "Альфабанк",
+  ralf: "Райффайзенбанк",
+};
+
 export const deliveryName = {
   "Курьерская доставка CDEK": "Курьер СДЭК",
   "Пункт выдачи заказов CDEK": "ПВЗ СДЭК",
