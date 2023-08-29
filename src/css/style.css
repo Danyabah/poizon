@@ -2773,3 +2773,67 @@ option {
     right: -50%;
   }
 }
+.pzn__statuses {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+}
+.pzn__status {
+  border-left: 1px solid black;
+  height: 60px;
+  padding-left: 40px;
+  position: relative;
+  font-size: 24px;
+}
+
+.pzn__status.ready {
+  border-left: 1px solid #34a5ca;
+}
+.pzn__status span {
+  position: absolute;
+  bottom: -5px;
+}
+.pzn__status::before {
+  content: "";
+  width: 16px;
+  height: 16px;
+  display: block;
+  position: absolute;
+  border: 1px solid #000;
+  left: 0px;
+  bottom: 0px;
+  transform: translate(-50%, 0);
+  border-radius: 100%;
+  z-index: 1;
+  background: #fff;
+}
+.pzn__status.current {
+  border-left: 1px solid #34a5ca;
+}
+.pzn__status.current::before {
+  content: "";
+  background-image: url("../utils/poizonbox.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  display: block;
+  border: none;
+  /* display: inline-block; */
+  background-color: transparent;
+  width: 60px;
+  height: 60px;
+  position: absolute;
+  left: 0px;
+  bottom: 0px;
+  transform: translate(-50%, 50%);
+  z-index: 1;
+  border-radius: 0;
+}
+.pzn__status.ready::before {
+  border: 3px solid #34a5ca;
+}
+.pzn__status:first-child {
+  border-left: none;
+}
+.pzn__status-text::before {
+  all: inherit;
+}

@@ -12,7 +12,7 @@ export default function CategoryForm() {
   const initialValues = {
     category: 0,
     chinarush: 0,
-    commission: 0,
+    commission: categories[6]?.commission,
   };
 
   useEffect(() => {
@@ -49,6 +49,9 @@ export default function CategoryForm() {
 
   const { mutate } = useMutation({
     mutationFn: (formPayload) => {
+      if (formPayload.category !== "7") {
+        delete formPayload.commission;
+      }
       return axios.patch(
         `https://crm-poizonstore.ru/category/${formPayload.category}`,
         formPayload,
@@ -70,7 +73,7 @@ export default function CategoryForm() {
     >
       {(formik) => {
         const { values, setFieldValue } = formik;
-
+        console.log(values.category);
         return (
           <Form className="main-inner">
             <div className="title">Категории</div>
@@ -128,24 +131,26 @@ export default function CategoryForm() {
                 className="form-control"
               />
             </div>
-            <div className="form-group">
-              <label className="label" htmlFor="commission">
-                Комиссия
-              </label>
-              <div className="push10 visible-xss"></div>
-              <Field
-                name="commission"
-                type="number"
-                className="form-control"
-                id="commission"
-              />
-              <ErrorMessage
-                style={{ color: "red" }}
-                name="commission"
-                component="span"
-                className="form-control"
-              />
-            </div>
+            {values.category === "7" && (
+              <div className="form-group">
+                <label className="label" htmlFor="commission">
+                  Комиссия на технику в %
+                </label>
+                <div className="push10 visible-xss"></div>
+                <Field
+                  name="commission"
+                  type="number"
+                  className="form-control"
+                  id="commission"
+                />
+                <ErrorMessage
+                  style={{ color: "red" }}
+                  name="commission"
+                  component="span"
+                  className="form-control"
+                />
+              </div>
+            )}
 
             <div className="push30 visible-xss"></div>
             <button className="button curs" type="submit">

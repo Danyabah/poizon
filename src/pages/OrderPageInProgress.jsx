@@ -164,6 +164,7 @@ export default function OrderPageInProgress() {
             <div className="price">
               {product?.fullprice?.toLocaleString()} ₽
             </div>
+            {product?.split && <b>Оплачен в сплит</b>}
             <div className="push30 hidden-xss"></div>
             <div className="push15 visible-xss"></div>
             <div

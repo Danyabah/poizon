@@ -125,6 +125,7 @@ export default function OrderForm() {
     mutationFn: (formPayload) => {
       if (window.confirm("Вы уверены?")) {
         formPayload.curencycurency2 = +formPayload.curencycurency2;
+        console.log(imagesUrl);
         formPayload.image = imagesUrl; //потом почистить массив изображений
         formPayload.status = "neworder";
         formPayload.brand =
@@ -235,7 +236,7 @@ export default function OrderForm() {
                 className="form-control select-styler"
                 id="subcategory"
               >
-                {categories[+values.category + 1]?.children?.map((categ) => (
+                {categories[+values.category - 1]?.children?.map((categ) => (
                   <option key={categ.id} value={categ.id}>
                     {categ.name}
                   </option>

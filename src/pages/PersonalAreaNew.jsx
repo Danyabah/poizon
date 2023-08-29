@@ -189,8 +189,23 @@ export default function PersonalAreaNew() {
                     Заказ #{chinaProduct?.id} на сумму{" "}
                     {chinaProduct?.curencycurency2} CNY
                   </div>
+
+                  <div className="img-preview">
+                    <a
+                      href={chinaProduct.previewimage}
+                      className=""
+                      target="_blank"
+                    >
+                      <img
+                        style={{ objectFit: "contain" }}
+                        src={chinaProduct.previewimage}
+                        alt=""
+                      />
+                    </a>
+                  </div>
                   <div className="push20 hidden-xss"></div>
                   <div className="push10 visible-xss"></div>
+
                   <ChinaForm id={chinaProduct?.id} />
                 </div>
               )}
@@ -199,6 +214,19 @@ export default function PersonalAreaNew() {
                   <div className="text">
                     Заказ #{chinarushProduct?.id} на сумму{" "}
                     {chinarushProduct?.curencycurency2} CNY
+                  </div>
+                  <div className="img-preview">
+                    <a
+                      href={chinarushProduct.previewimage}
+                      className=""
+                      target="_blank"
+                    >
+                      <img
+                        style={{ objectFit: "contain" }}
+                        src={chinarushProduct.previewimage}
+                        alt=""
+                      />
+                    </a>
                   </div>
                   <div className="push20 hidden-xss"></div>
                   <div className="push10 visible-xss"></div>
