@@ -269,9 +269,9 @@ export default function OrderPageInProgress() {
                 </div>
                 <div className="push50 hidden-xss"></div>
                 <div className="push30 visible-xss"></div>
-                <ul>
+                <ul className="pzn__statuses">
                   <li
-                    className={`text ${
+                    className={`pzn__status ${
                       stage[product?.status] === 1
                         ? "current"
                         : stage[product?.status] > 1
@@ -279,28 +279,33 @@ export default function OrderPageInProgress() {
                         : ""
                     }`}
                   >
-                    Проверка оплаты
-                    <ul>
-                      <li>
-                        <a
-                          href={product?.paymentprovement}
-                          rel="noreferrer"
-                          target="_blank"
-                        >
-                          Чек об оплате
-                        </a>
-                      </li>
-                    </ul>
+                    <span> Проверка оплаты</span>
                   </li>
                   <li
-                    className={`text ${
+                    className={`pzn__status pzn__status-text ${
                       stage[product?.status] > 1 ? "ready" : ""
                     }`}
                   >
-                    Оплачен
+                    <span>
+                      {" "}
+                      <a
+                        href={product?.paymentprovement}
+                        rel="noreferrer"
+                        target="_blank"
+                      >
+                        Чек об оплате
+                      </a>{" "}
+                    </span>
                   </li>
                   <li
-                    className={`text ${
+                    className={`pzn__status ${
+                      stage[product?.status] > 1 ? "ready" : ""
+                    }`}
+                  >
+                    <span>Оплачен</span>
+                  </li>
+                  <li
+                    className={`pzn__status ${
                       stage[product?.status] === 2
                         ? "current"
                         : stage[product?.status] > 1
@@ -308,10 +313,10 @@ export default function OrderPageInProgress() {
                         : ""
                     }`}
                   >
-                    На закупке
+                    <span> На закупке</span>
                   </li>
                   <li
-                    className={`text ${
+                    className={`pzn__status ${
                       stage[product?.status] === 3
                         ? "current"
                         : stage[product?.status] > 2
@@ -319,27 +324,34 @@ export default function OrderPageInProgress() {
                         : ""
                     }`}
                   >
-                    Закуплен
-                    <ul>
-                      <li>
-                        Цена закупки: {product?.realprice?.toLocaleString()} CNY
-                      </li>
-                      <li>
-                        <a
-                          href={product?.checkphoto}
-                          rel="noreferrer"
-                          target="_blank"
-                        >
-                          Чек закупки №1
-                        </a>
-                      </li>
-                      {/* <li>
-                        <a href="#">Чек закупки №2</a>
-                      </li> */}
-                    </ul>
+                    <span>Закуплен</span>
                   </li>
                   <li
-                    className={`text ${
+                    className={`pzn__status pzn__status-text ${
+                      stage[product?.status] > 2 ? "ready" : ""
+                    }`}
+                  >
+                    <span>
+                      Цена закупки: {product?.realprice?.toLocaleString()} CNY
+                    </span>
+                  </li>
+                  <li
+                    className={`pzn__status pzn__status-text ${
+                      stage[product?.status] > 2 ? "ready" : ""
+                    }`}
+                  >
+                    <span>
+                      <a
+                        href={product?.checkphoto}
+                        rel="noreferrer"
+                        target="_blank"
+                      >
+                        Чек закупки №1
+                      </a>
+                    </span>
+                  </li>
+                  <li
+                    className={`pzn__status ${
                       stage[product?.status] === 4
                         ? "current"
                         : stage[product?.status] > 3
@@ -347,10 +359,10 @@ export default function OrderPageInProgress() {
                         : ""
                     }`}
                   >
-                    На складе в Китае
+                    <span>На складе в Китае</span>
                   </li>
                   <li
-                    className={`text ${
+                    className={`pzn__status ${
                       stage[product?.status] === 5
                         ? "current"
                         : stage[product?.status] > 4
@@ -358,10 +370,10 @@ export default function OrderPageInProgress() {
                         : ""
                     }`}
                   >
-                    Отправлено на склад в РФ
+                    <span>Отправлено на склад в РФ</span>
                   </li>
                   <li
-                    className={`text ${
+                    className={`pzn__status ${
                       stage[product?.status] === 6 && stage[sdekStatus] !== 7
                         ? "current"
                         : stage[product?.status] > 5
@@ -369,11 +381,11 @@ export default function OrderPageInProgress() {
                         : ""
                     }`}
                   >
-                    На складе в РФ
+                    <span> На складе в РФ</span>
                   </li>
                   {product?.delivery !== "Самовывоз из шоурума" && (
                     <li
-                      className={`text ${
+                      className={`pzn__status ${
                         stage[product?.status] === 7 || stage[sdekStatus] === 7
                           ? "current"
                           : stage[product?.status] > 6 || stage[sdekStatus] > 6
@@ -381,11 +393,11 @@ export default function OrderPageInProgress() {
                           : ""
                       }`}
                     >
-                      Доставляется
+                      <span>Доставляется</span>
                     </li>
                   )}
                   <li
-                    className={`text ${
+                    className={`pzn__status ${
                       stage[product?.status] === 8 || stage[sdekStatus] === 8
                         ? "current"
                         : stage[product?.status] > 7 || stage[sdekStatus] > 7
@@ -393,7 +405,11 @@ export default function OrderPageInProgress() {
                         : ""
                     }`}
                   >
-                    Доставлено {product.status === "completed" && `за: ${date}`}
+                    <span>
+                      {" "}
+                      Доставлено{" "}
+                      {product.status === "completed" && `за: ${date}`}
+                    </span>
                   </li>
                 </ul>
                 {product.status === "completed" && (

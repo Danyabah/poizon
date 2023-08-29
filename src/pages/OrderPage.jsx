@@ -199,16 +199,34 @@ export default function OrderPage() {
                 </div>
                 <div className="push50 hidden-xss"></div>
                 <div className="push20 visible-xss"></div>
-                <ul>
-                  <li className="text">Проверка оплаты</li>
-                  <li className="text">Оплачен</li>
-                  <li className="text">На закупке</li>
-                  <li className="text">Закуплен</li>
-                  <li className="text">На складе в Китае</li>
-                  <li className="text">Доставка на склад РФ</li>
-                  <li className="text">На складе в РФ</li>
-                  <li className="text">Доставляется</li>
-                  <li className="text">Завершен</li>
+                <ul className="pzn__statuses">
+                  <li className="pzn__status">
+                    <span>Проверка оплаты</span>
+                  </li>
+                  <li className="pzn__status">
+                    <span>Оплачен</span>
+                  </li>
+                  <li className="pzn__status">
+                    <span>На закупке</span>
+                  </li>
+                  <li className="pzn__status">
+                    <span>Закуплен</span>
+                  </li>
+                  <li className="pzn__status">
+                    <span>На складе в Китае</span>
+                  </li>
+                  <li className="pzn__status">
+                    <span>Доставка на склад РФ</span>
+                  </li>
+                  <li className="pzn__status">
+                    <span>На складе в РФ</span>
+                  </li>
+                  <li className="pzn__status">
+                    <span>Доставляется</span>
+                  </li>
+                  <li className="pzn__status">
+                    <span>Завершен</span>
+                  </li>
                 </ul>
               </div>
             </section>
