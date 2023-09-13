@@ -83,6 +83,7 @@ export default function OrderPage() {
             <section>
               <div className="order-img-wrap">
                 <Swiper
+                  loop={true}
                   navigation={true}
                   modules={[Navigation]}
                   className="mySwiper"

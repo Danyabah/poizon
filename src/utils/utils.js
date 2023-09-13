@@ -173,7 +173,17 @@ export function addToDraft(values, token) {
       });
   }
 }
-
+export const parseTg = (tg) => {
+  if (tg.startsWith("@")) {
+    return `https://t.me/${tg.slice(1)}`;
+  } else if (tg.startsWith("t.me")) {
+    return `https://t.me/${tg.split("/")[1]}`;
+  } else if (tg.startsWith("https")) {
+    return tg;
+  } else {
+    return `https://t.me/${tg}`;
+  }
+};
 export const monthArray = [
   "January",
   "February",

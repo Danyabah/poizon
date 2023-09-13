@@ -2094,7 +2094,7 @@ option {
 .table.depot .table-row {
   border: 1px solid #e0e0e0;
   border-top: none;
-  grid-template-columns: repeat(6, 1fr);
+  grid-template-columns: repeat(5, 1fr);
 }
 .table.depot .table-td:first-child {
   justify-content: center;
@@ -2220,7 +2220,7 @@ option {
 }
 @media only screen and (max-width: 647px) {
   .table.depot .table-row {
-    grid-template-columns: 40px 1fr 1fr 1fr 1fr 1fr;
+    grid-template-columns: 40px 1fr 1fr 1fr 1fr;
     background: #e0e0e0;
   }
   .table.depot {
@@ -2841,4 +2841,44 @@ option {
 }
 .pzn__status-text::before {
   all: inherit;
+}
+.status__text {
+  font-weight: 500;
+}
+.img-text {
+  font-size: 18px;
+}
+.img-btn {
+  margin-top: 10px;
+  display: block;
+  border-radius: 16px;
+  background-color: #246fff;
+  color: white;
+  padding: 5px 10px;
+  font-size: 12px;
+  cursor: pointer;
+  text-align: center;
+}
+.img-btn-gr {
+  background-color: #00a942;
+}
+.img-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 10px;
+}
+@media (max-width: 450px) {
+  .status__text {
+    font-size: 16px;
+  }
+  .swiper-slide img {
+    height: 232px;
+  }
+  .img-preview img {
+    max-width: 250px;
+  }
+  .img-text {
+    font-size: 12px;
+  }
 }

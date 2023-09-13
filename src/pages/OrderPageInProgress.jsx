@@ -10,7 +10,7 @@ import { setCurrentProductInfo } from "../redux/slices/userReducer";
 import "swiper/css";
 import "swiper/css/navigation";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation } from "swiper";
+import { Navigation, FreeMode, A11y } from "swiper";
 import SplitPayment from "../components/SplitPayment";
 
 // import required modules
@@ -114,9 +114,12 @@ export default function OrderPageInProgress() {
       <section className="main-section">
         <div className="container">
           <div className="main-inner">
-            <div className="text">Статус: {status[product?.status]}</div>
+            <div className="text status__text">
+              Статус: {status[product?.status]}
+            </div>
             <div className="push40 hidden-xss"></div>
             <Swiper
+              loop={true}
               navigation={true}
               modules={[Navigation]}
               className="mySwiper"
@@ -140,14 +143,8 @@ export default function OrderPageInProgress() {
             </Swiper>
             <div className="push20 visible-xss"></div>
             <div className="push40 hidden-xss"></div>
-            <div className="title">
-              {product?.brand} {product?.model}
-            </div>
-            <div className="push20 hidden-xss"></div>
-            <div className="push10 visible-xss"></div>
-            <div className="text">
-              {product?.category?.name}, размер {product?.size}
-            </div>
+
+            <div className="title">{product?.category?.name}</div>
             <div className="push10 hidden-xss"></div>
             <div className="push5 visible-xss"></div>
 
@@ -218,7 +215,7 @@ export default function OrderPageInProgress() {
             </div>
             {delCost && <b>Стоимость доставки: {delCost} ₽</b>}
             <div className="push30 hidden-xss"></div>
-            <div className="push15 visible-xss"></div>
+            <div className="push5 visible-xss"></div>
             {linksub && (
               <div>
                 <b>
@@ -234,7 +231,7 @@ export default function OrderPageInProgress() {
               </div>
             )}
             <div className="push20 hidden-xss"></div>
-            <div className="push5 visible-xss"></div>
+
             {product?.delivery === "pickup" && (
               <div className="text">Адрес самовывоза: {pickup}</div>
             )}
@@ -268,7 +265,7 @@ export default function OrderPageInProgress() {
                   России заказы доходят за три недели.
                 </div>
                 <div className="push50 hidden-xss"></div>
-                <div className="push30 visible-xss"></div>
+
                 <ul className="pzn__statuses">
                   <li
                     className={`pzn__status ${
