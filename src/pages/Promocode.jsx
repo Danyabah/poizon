@@ -16,6 +16,7 @@ export default function Promocode() {
         },
       })
       .then((res) => {
+        console.log(res.data.promo);
         setPromo(res.data.promo);
       });
   }, [open]);
@@ -59,7 +60,6 @@ export default function Promocode() {
                     return (
                       pr.is_active && (
                         <div className="item" key={pr.name}>
-                          <div className="item-title">{pr.name}</div>
                           <div
                             className="del"
                             onClick={(e) => tryDelete(e, pr.name)}
@@ -78,6 +78,16 @@ export default function Promocode() {
                                 fill="black"
                               />
                             </svg>
+                          </div>
+                          <div>
+                            <div className="item-title">{pr.name}</div>
+                            <div className="item-info">
+                              <div>Скидка: {pr.discount} ₽</div>
+                              {pr.freedelivery && (
+                                <div>Бесплатная Доставка</div>
+                              )}
+                              {pr.nocomission && <div>Без Комиссии</div>}
+                            </div>
                           </div>
                         </div>
                       )

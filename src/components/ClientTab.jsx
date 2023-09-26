@@ -7,7 +7,9 @@ import { useSelector } from "react-redux";
 
 export default function ClientTab() {
   const product = useSelector((state) => state.admin.selectedProduct);
-
+  const nameRef = useRef(null);
+  const telRef = useRef(null);
+  const tgRef = useRef(null);
   return (
     <div className="box visible">
       <form>
@@ -16,11 +18,16 @@ export default function ClientTab() {
             Имя клиента
           </label>
           <input
+            ref={nameRef}
             name="sum"
             type="text"
-            className="form-control"
+            className="form-control copy-control"
             id="sum"
-            disabled
+            // disabled
+            readOnly
+            onClick={() => {
+              navigator.clipboard.writeText(nameRef?.current.value);
+            }}
             value={`${product?.buyername}`}
           />
         </div>
@@ -29,11 +36,16 @@ export default function ClientTab() {
             Телефон клиента
           </label>
           <input
+            ref={telRef}
             name="sum"
             type="text"
-            className="form-control"
+            className="form-control copy-control"
             id="sum"
-            disabled
+            readOnly
+            // disabled
+            onClick={() => {
+              navigator.clipboard.writeText(telRef?.current.value);
+            }}
             value={`${product?.buyerphone}`}
           />
         </div>
@@ -42,12 +54,17 @@ export default function ClientTab() {
             Телеграмм
           </label>
           <input
+            ref={tgRef}
             name="sum"
             type="text"
-            className="form-control"
+            className="form-control copy-control"
             id="sum"
-            disabled
+            // disabled
+            readOnly
             value={`${product?.tg}`}
+            onClick={() => {
+              navigator.clipboard.writeText(tgRef?.current.value);
+            }}
           />
         </div>
         <div className="push20 hidden-xss"></div>

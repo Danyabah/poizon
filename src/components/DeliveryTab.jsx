@@ -7,7 +7,9 @@ import { useSelector } from "react-redux";
 
 export default function DeliveryTab() {
   const product = useSelector((state) => state.admin.selectedProduct);
-
+  const nameRef = useRef(null);
+  const telRef = useRef(null);
+  const tgRef = useRef(null);
   return (
     <div className="box visible">
       <form>
@@ -17,10 +19,14 @@ export default function DeliveryTab() {
           </label>
           <input
             name="sum"
+            ref={nameRef}
             type="text"
             className="form-control"
             id="sum"
-            disabled
+            readOnly
+            onClick={() => {
+              navigator.clipboard.writeText(nameRef.current.value);
+            }}
             value={`${
               product?.recievername ? product?.recievername : product?.buyername
             }`}
@@ -35,7 +41,12 @@ export default function DeliveryTab() {
             type="text"
             className="form-control"
             id="sum"
-            disabled
+            // disabled
+            ref={telRef}
+            readOnly
+            onClick={() => {
+              navigator.clipboard.writeText(telRef.current.value);
+            }}
             value={`${
               product?.recieverphone
                 ? product?.recieverphone
@@ -52,7 +63,12 @@ export default function DeliveryTab() {
             type="text"
             className="form-control"
             id="sum"
-            disabled
+            // disabled
+            ref={tgRef}
+            readOnly
+            onClick={() => {
+              navigator.clipboard.writeText(tgRef.current.value);
+            }}
             value={`${deliveryName[product?.delivery_display]}`}
           />
         </div>
@@ -74,9 +90,16 @@ export default function DeliveryTab() {
             />
           </div>
         )}
-         {product?.cdek_barcode_pdf && (
+        {product?.cdek_barcode_pdf && (
           <div className="form-group">
-            <a href={product.cdek_barcode_pdf} className="track button" target="_blank" rel="noreferrer">Распечатать штрихкод</a>
+            <a
+              href={product.cdek_barcode_pdf}
+              className="track button"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Распечатать штрихкод
+            </a>
           </div>
         )}
 

@@ -6,16 +6,27 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { setAddress, setPaymentCurrency } from "../redux/slices/adminReducer";
 import { useDispatch, useSelector } from "react-redux";
+import { Map, Placemark } from "@pbe/react-yandex-maps";
 
 export default function AddressForma() {
   const [pickup, setPickup] = useState("");
   const token = useSelector((state) => state.user.token);
+  const [width, setWidth] = useState("320px");
+  const [height, setHeight] = useState("240px");
   const dispatch = useDispatch();
   useEffect(() => {
     axios.get(`https://crm-poizonstore.ru/settings`).then((res) => {
       setPickup(res.data.pickup);
 
       dispatch(setAddress(res.data.pickup));
+
+      if (window.innerWidth > 1200) {
+        setWidth("550px");
+        setHeight("350px");
+      } else if (window.innerWidth > 630) {
+        setWidth("400px");
+        setHeight("250px");
+      }
     });
   }, []);
 
@@ -79,6 +90,17 @@ export default function AddressForma() {
                   component="span"
                   className="form-control"
                 />
+              </div>
+              <div className="map">
+                <Map
+                  style={{ width: width, height: height }}
+                  defaultState={{
+                    center: [59.923725, 30.297219],
+                    zoom: 15,
+                  }}
+                >
+                  <Placemark geometry={[59.923725, 30.297219]} />
+                </Map>
               </div>
               <div className="push30 visible-xss"></div>
               <button className="button curs" type="submit">

@@ -63,6 +63,9 @@ export default function OrderTab() {
               type="text"
               className="form-control"
               id="sum"
+              onClick={() => {
+                navigator.clipboard.writeText(product?.comment);
+              }}
               disabled
               value={`${product?.comment}`}
             />
@@ -77,6 +80,9 @@ export default function OrderTab() {
             type="text"
             className="form-control"
             id="sum"
+            onClick={() => {
+              navigator.clipboard.writeText(product.brand);
+            }}
             disabled
             value={`${product?.brand} ${product?.model}`}
           />
@@ -184,11 +190,7 @@ export default function OrderTab() {
               className="absolute fancybox"
               target="_blank"
             ></a>
-            <img
-              style={{ objectFit: "contain" }}
-              src={byteString}
-              alt=""
-            />
+            <img style={{ objectFit: "contain" }} src={byteString} alt="" />
           </div>
         </div>
 

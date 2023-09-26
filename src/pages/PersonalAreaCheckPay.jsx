@@ -5,7 +5,13 @@ import { Link, useNavigate } from "react-router-dom";
 import logo from "../utils/logo.PNG";
 import { useMutation } from "@tanstack/react-query";
 import { useSelector } from "react-redux";
-import { deliveryName } from "../utils/utils";
+import {
+  deliveryName,
+  notSplitStyle,
+  parseTg,
+  splitStyle,
+  status,
+} from "../utils/utils";
 
 export default function PersonalAreaCheckPay() {
   const [categ, setCateg] = useState("");
@@ -15,6 +21,7 @@ export default function PersonalAreaCheckPay() {
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
   const token = useSelector((state) => state.user.token);
+  const [product, setProduct] = useState(null);
 
   function getProducts() {
     axios
@@ -156,31 +163,46 @@ export default function PersonalAreaCheckPay() {
             <ul className="tabs">
               <li
                 className={categ === "draft" ? "current" : ""}
-                onClick={() => setCateg("draft")}
+                onClick={() => {
+                  setCateg("draft");
+                  setProduct(null);
+                }}
               >
                 <span>Черновик</span>
               </li>
               <li
                 className={categ === "" ? "current" : ""}
-                onClick={() => setCateg("")}
+                onClick={() => {
+                  setCateg("");
+                  setProduct(null);
+                }}
               >
-                <span>Все заказы</span>
+                <span>Заказы</span>
               </li>
               <li
                 className={categ === "neworder" ? "current" : ""}
-                onClick={() => setCateg("neworder")}
+                onClick={() => {
+                  setCateg("neworder");
+                  setProduct(null);
+                }}
               >
                 <span>Расчет</span>
               </li>
               <li
                 className={categ === "payment" ? "current" : ""}
-                onClick={() => setCateg("payment")}
+                onClick={() => {
+                  setCateg("payment");
+                  setProduct(null);
+                }}
               >
-                <span>Проверка оплаты</span>
+                <span>Оплата</span>
               </li>
               <li
                 className={categ === "buying" ? "current" : ""}
-                onClick={() => setCateg("buying")}
+                onClick={() => {
+                  setCateg("buying");
+                  setProduct(null);
+                }}
               >
                 <span>На закупке</span>
               </li>
@@ -188,39 +210,143 @@ export default function PersonalAreaCheckPay() {
           </div>
         </div>
         <div className="line"></div>
+
         <div className="check-table table">
           <div className="container">
+            {product && categ !== "draft" ? (
+              <div className="main-inner img-container">
+                <div className="img-preview">
+                  <a href={product.previewimage} className="" target="_blank">
+                    <img
+                      style={{ objectFit: "contain" }}
+                      src={product.previewimage}
+                      alt=""
+                    />
+                  </a>
+                </div>
+                <div>
+                  <div className="push20"></div>
+                  <div className="img-text">
+                    <b>Заказ:</b> <br /> #{product?.id}
+                  </div>
+                  <div className="img-text">
+                    <b>Сплит:</b> <br /> {product?.split ? "Да" : "Нет"}
+                  </div>
+                  {categ === "" || categ === "buying" ? (
+                    <>
+                      {product?.split && product.split_payment_proof ? (
+                        <div className="img-text">
+                          <b>Оплачено полностью</b>
+                        </div>
+                      ) : !product?.split && product.paymentprovement ? (
+                        <div className="img-text">
+                          <b>Оплачено полностью</b>
+                        </div>
+                      ) : (
+                        <div className="img-text">
+                          <b>Сумма к оплате:</b>
+                          <br />
+                          {product.split
+                            ? Math.round(
+                                product?.fullprice / 2
+                              ).toLocaleString()
+                            : product?.fullprice?.toLocaleString()}{" "}
+                          ₽
+                        </div>
+                      )}
+                    </>
+                  ) : (
+                    <div className="img-text">
+                      <b>
+                        Способ оплаты:{" "}
+                        {product?.paymenttype === "tink"
+                          ? "Тинькофф"
+                          : product?.paymenttype === "ralf"
+                          ? "Райффайзен"
+                          : product?.paymenttype === "alfa"
+                          ? "Альфабанк"
+                          : ""}
+                      </b>
+                    </div>
+                  )}
+                  {product.tg && (
+                    <a
+                      href={parseTg(product.tg)}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="img-btn"
+                    >
+                      Телеграмм
+                    </a>
+                  )}
+                  {/* {product?.delivery_display === "Самовывоз из шоурума" && (
+                    <div
+                      className="img-btn img-btn-gr"
+                      onClick={() => onSubmit(product?.id)}
+                    >
+                      Доставлено
+                    </div>
+                  )}
+                  {product?.cdek_tracking && (
+                    <a
+                      href={`https://www.cdek.ru/ru/tracking?order_id=${product?.cdek_tracking}`}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="img-btn img-btn-gr"
+                    >
+                      Отследить СДЭК
+                    </a>
+                  )} */}
+                </div>
+
+                <div className="push20 hidden-xss"></div>
+                <div className="push10 visible-xss"></div>
+              </div>
+            ) : (
+              <div className="push50"></div>
+            )}
             <div className="table-row">
               <div className="table-td" style={{ justifyContent: "center" }}>
                 Номер
               </div>
               <div className="table-td">Дата</div>
               <div className="table-td">Сумма</div>
-              <div className="table-td">Способ оплаты</div>
-              <div className="table-td">Место</div>
+              {categ !== "" ? (
+                <div className="table-td">Способ оплаты</div>
+              ) : (
+                <div className="table-td">Статус</div>
+              )}
+              {categ === "payment" || categ === "buying" ? (
+                <div className="table-td">Сплит</div>
+              ) : (
+                <div className="table-td">Доставка</div>
+              )}
             </div>
           </div>
           <div className="line hidden-xss"></div>
           <div className="container">
             {products?.map((obj) => (
-              <div key={obj?.id} className="table-row">
-                {categ === "draft" ? (
-                  <div
-                    className="table-td"
-                    style={{ cursor: "pointer" }}
-                    onClick={() => navigate(`/personalareaorder/${obj?.id}`)}
-                  >
-                    {obj?.id}
-                  </div>
-                ) : (
-                  <div
-                    className="table-td"
-                    style={{ cursor: "pointer" }}
-                    onClick={() => navigate(`/personalareapay/${obj?.id}`)}
-                  >
-                    {obj?.id}
-                  </div>
-                )}
+              <div
+                key={obj?.id}
+                className="table-row"
+                onClick={() => setProduct(obj)}
+              >
+                <div
+                  style={
+                    obj.split && !obj?.split_payment_proof
+                      ? splitStyle
+                      : notSplitStyle
+                  }
+                  className="table-td"
+                  onClick={() =>
+                    categ === "draft"
+                      ? navigate(`/personalareaorder/${obj?.id}`)
+                      : navigate(`/personalareapay/${obj?.id}`)
+                  }
+                >
+                  {obj?.id}
+                </div>
+
                 <div className="table-td">
                   {obj.status === "neworder"
                     ? obj.startDate?.slice(0, 10)
@@ -229,19 +355,26 @@ export default function PersonalAreaCheckPay() {
                 <div className="table-td">
                   {obj?.fullprice?.toLocaleString()}
                 </div>
-                <div className="table-td">
-                  Перевод по номеру
-                  <br /> карты{" "}
-                  {obj?.paymenttype === "tink"
-                    ? "Тинькофф"
-                    : obj?.paymenttype === "ralf"
-                    ? "Райффайзен"
-                    : obj?.paymenttype === "alfa"
-                    ? "Альфабанк"
-                    : ""}
-                </div>
+                {categ !== "" ? (
+                  <div className="table-td">
+                    {obj?.paymenttype === "tink"
+                      ? "Тинькофф"
+                      : obj?.paymenttype === "ralf"
+                      ? "Райффайзен"
+                      : obj?.paymenttype === "alfa"
+                      ? "Альфабанк"
+                      : ""}
+                  </div>
+                ) : (
+                  <div className="table-td">{status[obj?.status]}</div>
+                )}
                 <div className="table-td" style={{ position: "relative" }}>
-                  {deliveryName[obj?.delivery_display]}{" "}
+                  {categ === "payment" || categ === "buying"
+                    ? obj?.split
+                      ? "Да"
+                      : "Нет"
+                    : deliveryName[obj?.delivery_display]}
+
                   {obj?.status === "payment" ? (
                     <div className="flex-i">
                       <i
@@ -252,15 +385,15 @@ export default function PersonalAreaCheckPay() {
                       ></i>
                       <span className="confirm-i">Принять</span>
                     </div>
+                  ) : categ === "draft" || categ === "neworder" ? (
+                    <span className="trash">
+                      <i
+                        className="uil uil-trash-alt"
+                        onClick={() => onDelete(obj?.id)}
+                      ></i>
+                    </span>
                   ) : (
-                    categ === "draft" && (
-                      <span className="trash">
-                        <i
-                          className="uil uil-trash-alt"
-                          onClick={() => onDelete(obj?.id)}
-                        ></i>
-                      </span>
-                    )
+                    <></>
                   )}
                 </div>
               </div>
@@ -268,6 +401,7 @@ export default function PersonalAreaCheckPay() {
           </div>
           <div className="line hidden-xss"></div>
         </div>
+
         <div className="push80 hidden-xss"></div>
         <div className="push55 visible-xss"></div>
         <div className="container">

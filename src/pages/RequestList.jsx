@@ -3,20 +3,25 @@ import Header from "../components/Header";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { parseTg } from "../utils/utils";
 
 export default function RequestList() {
   const [products, setProducts] = useState([]);
   const [page, setPage] = useState(1);
   const [categ, setCateg] = useState("bought");
-  const token = useSelector((state)=>state.user.token)
+  const token = useSelector((state) => state.user.token);
   const [totalPage, setTotalPage] = useState(1);
+  const [product, setProduct] = useState(null);
 
   function getProducts() {
     axios
       .get(
-        `https://crm-poizonstore.ru/checklist/?page=${page}&limit=10&status=${categ}`,{ headers:{
-          "Authorization": `Token ${token}`
-        }}
+        `https://crm-poizonstore.ru/checklist/?page=${page}&limit=10&status=${categ}`,
+        {
+          headers: {
+            Authorization: `Token ${token}`,
+          },
+        }
       )
       .then((data) => {
         setProducts(data.data.data);
@@ -46,14 +51,20 @@ export default function RequestList() {
               <ul className="tabs">
                 <li
                   className={categ === "bought" ? "current" : ""}
-                  onClick={() => setCateg("bought")}
+                  onClick={() => {
+                    setCateg("bought");
+                    setProduct(null);
+                  }}
                 >
                   <span>Выкуплено</span>
                 </li>
 
                 <li
                   className={categ === "buying" ? "current" : ""}
-                  onClick={() => setCateg("buying")}
+                  onClick={() => {
+                    setCateg("buying");
+                    setProduct(null);
+                  }}
                 >
                   <span>Ожидает выкупа</span>
                 </li>
@@ -65,30 +76,76 @@ export default function RequestList() {
           <div className="line hidden-xss"></div>
         </div>
         <div className="container">
+          {product && (
+            <div className="main-inner img-container">
+              <div className="img-preview">
+                <a href={product.previewimage} className="" target="_blank">
+                  <img
+                    style={{ objectFit: "contain" }}
+                    src={product.previewimage}
+                    alt=""
+                  />
+                </a>
+              </div>
+              <div>
+                <div className="push20"></div>
+                <div className="img-text">
+                  <b>Заказ:</b> <br /> #{product?.id}
+                </div>
+                <div className="img-text">
+                  <b>Сплит:</b> <br /> {product?.split ? "Да" : "Нет"}
+                </div>
+
+                <div className="img-text">
+                  <b>CNY:</b>
+                  <br />
+                  {product?.curencycurency2} CNY
+                </div>
+
+                {product.tg && (
+                  <a
+                    href={parseTg(product.tg)}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="img-btn"
+                  >
+                    Телеграмм
+                  </a>
+                )}
+              </div>
+
+              <div className="push20 hidden-xss"></div>
+              <div className="push10 visible-xss"></div>
+            </div>
+          )}
           <div className="check-table depot table request orders">
             <div className="table-row">
-              <div className="table-td">
-                Номер
-                <br /> заявки
-              </div>
-              <div className="table-td">
-                Дата и<br /> время
-              </div>
-              <div className="table-td">
-                Статус
-                <br /> заявки
-              </div>
+              <div className="table-td">Номер</div>
+              <div className="table-td">Дата</div>
+              <div className="table-td">CNY</div>
+              <div className="table-td">Сплит</div>
+              <div className="table-td">Товар</div>
             </div>
             {products.map((product) => (
-              <div className="table-row" key={product?.id}>
+              <div
+                className="table-row"
+                key={product?.id}
+                onClick={() => setProduct(product)}
+              >
                 <div className="table-td">
                   <Link to={`/personalareapay/${product?.id}`}>
                     {product?.id}
                   </Link>
                 </div>
-                <div className="table-td">{product.currentDate}</div>
                 <div className="table-td">
-                  {categ === "bought" ? "Оплачено" : "Ожидает оплаты"}
+                  {product?.currentDate?.slice(0, 10)}
+                </div>
+                <div className="table-td">
+                  {product?.curencycurency2?.toLocaleString()} ¥
+                </div>
+                <div className="table-td">{product?.split ? "Да" : "Нет"}</div>
+                <div className="table-td">
+                  {product?.brand} {product?.model}
                 </div>
               </div>
             ))}

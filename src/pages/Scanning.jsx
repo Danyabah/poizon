@@ -3,17 +3,22 @@ import Header from "../components/Header";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { setReload } from "../redux/slices/adminReducer";
-import { useLocation } from "react-router-dom";
-import { deliveryName } from "../utils/utils";
+import { Link, useLocation } from "react-router-dom";
+import {
+  deliveryName,
+  notSplitStyle,
+  parseTg,
+  splitStyle,
+} from "../utils/utils";
 
 export default function Scanning() {
   const [products, setProducts] = useState([]);
   const [page, setPage] = useState(1);
-  const [product, setProduct] = useState({});
+  const [product, setProduct] = useState(null);
   const reload = useSelector((state) => state.admin.reload);
   const [totalPage, setTotalPage] = useState(1);
   const [search, setSearch] = useState("");
-  const token = useSelector((state)=>state.user.token)
+  const token = useSelector((state) => state.user.token);
   const location = useLocation();
 
   const dispatch = useDispatch();
@@ -21,35 +26,42 @@ export default function Scanning() {
   useEffect(() => {
     axios
       .get(
-        `https://crm-poizonstore.ru/checklist/?page=${page}&limit=10&status=chinarush&search=${search}`,{ headers:{
-          "Authorization": `Token ${token}`
-        }}
+        `https://crm-poizonstore.ru/checklist/?page=${page}&limit=10&status=chinarush&search=${search}`,
+        {
+          headers: {
+            Authorization: `Token ${token}`,
+          },
+        }
       )
       .then((data) => {
         console.log(data.data);
-        
+
         setProducts(data.data.data);
         setTotalPage(data.data.total_pages);
       });
   }, [page, reload, search]);
 
-  useEffect(()=>{
-
-    if(location.search.slice(13)){
-      setSearch(location.search.slice(13))
+  useEffect(() => {
+    if (location.search.slice(13)) {
+      setSearch(location.search.slice(13));
     }
-    
-  },[location.search])
+  }, [location.search]);
 
   function onSubmit() {
     if (window.confirm("Вы уверены?")) {
       try {
         axios
-          .patch(`https://crm-poizonstore.ru/checklist/${product?.id}`, {
-            status: "rush",
-          },{ headers:{
-            "Authorization": `Token ${token}`
-          }})
+          .patch(
+            `https://crm-poizonstore.ru/checklist/${product?.id}`,
+            {
+              status: "rush",
+            },
+            {
+              headers: {
+                Authorization: `Token ${token}`,
+              },
+            }
+          )
           .then(() => {
             setProduct({});
 
@@ -70,36 +82,74 @@ export default function Scanning() {
           <div className="push45 hidden-xss"></div>
           <div className="push25 visible-xss"></div>
           <form className="main-inner">
-            {JSON.stringify(product) !== "{}" && (
+            {product ? (
               <>
-                <div className="text">
-                  <div className="title">
-                       Заказ #{product?.id}
-                  </div>
+                <div className="main-inner img-container">
                   <div className="img-preview">
-                      <a
-                        href={product.previewimage}
-                        className=""
-                        target="_blank"
-                      >
-                        <img
-                          style={{ objectFit: "contain" }}
-                          src={product.previewimage}
-                          alt=""
-                        />
-                      </a>
+                    <a href={product.previewimage} className="" target="_blank">
+                      <img
+                        style={{ objectFit: "contain" }}
+                        src={product.previewimage}
+                        alt=""
+                      />
+                    </a>
+                  </div>
+                  <div>
+                    <div className="push20"></div>
+                    <div className="img-text">
+                      <b>Заказ:</b> <br /> #{product?.id}
                     </div>
-              <div className="label"><strong>Дата заказа: {product.startDate?.slice(0, 10)}</strong></div>
-              <div className="label"><strong>Трек номер из Китая: {product.trackid}</strong></div>
+                    <div className="img-text">
+                      <b>Сплит:</b> <br /> {product?.split ? "Да" : "Нет"}
+                    </div>
+                    {!product?.split && product.split_payment_proof ? (
+                      <div className="img-text">
+                        <b>Оплачено полностью</b>
+                      </div>
+                    ) : !product?.split && product.paymentprovement ? (
+                      <div className="img-text">
+                        <b>Оплачено полностью</b>
+                      </div>
+                    ) : (
+                      <div className="img-text">
+                        <b>Сумма к оплате:</b>
+                        <br />
+                        {product.split
+                          ? Math.round(product?.fullprice / 2).toLocaleString()
+                          : product?.fullprice?.toLocaleString()}{" "}
+                        ₽
+                      </div>
+                    )}
+                    {product?.trackid && (
+                      <div className="img-text">
+                        <b>Трек номер Poizon:</b>
+                        <br />
+                        {product?.trackid}
+                      </div>
+                    )}
+                    {product.tg && (
+                      <a
+                        href={parseTg(product.tg)}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="img-btn"
+                      >
+                        Телеграмм
+                      </a>
+                    )}
+                  </div>
+
+                  <div className="push20 hidden-xss"></div>
+                  <div className="push10 visible-xss"></div>
                 </div>
-                <div className="push20 hidden-xss"></div>
-                <div className="push10 visible-xss"></div>
                 <div className="button no-icon scanning" onClick={onSubmit}>
                   Принять на склад
                 </div>
                 <div className="push60 hidden-xss"></div>
                 <div className="push25 visible-xss"></div>
               </>
+            ) : (
+              <div className="push50"></div>
             )}
 
             {/* <div className="form-group">
@@ -123,10 +173,10 @@ export default function Scanning() {
                 type="text"
                 className="form-control"
                 id="searchTrack"
-                onChange={(e) =>{ 
-          
+                onChange={(e) => {
                   e.preventDefault();
-                  setSearch(e.target.value)}}
+                  setSearch(e.target.value);
+                }}
               />
             </div>
             <div className="push10 hidden-xss"></div>
@@ -136,23 +186,30 @@ export default function Scanning() {
           <div className="push15 visible-xss"></div>
         </div>
         <div className="container">
-          <div className="check-table depot table">
+          <div className="check-table depot scan table">
             <div className="table-row">
               <div className="table-td">Номер заказа</div>
               <div className="table-td">Дата заказа</div>
-              <div className="table-td">Дата приемки</div>
-              <div className="table-td">Способ доставки</div>
-              <div className="table-td">Телефон</div>
-              <div className="table-td">Имя</div>
+              <div className="table-td">В Китае</div>
+              <div className="table-td">Доставка</div>
             </div>
             {products?.map((product) => (
-              <div key={product?.id} className="table-row">
+              <div
+                key={product?.id}
+                className="table-row"
+                onClick={() => setProduct(product)}
+              >
                 <div
-                  style={{ cursor: "pointer" }}
+                  style={
+                    product.split && !product?.split_payment_proof
+                      ? splitStyle
+                      : notSplitStyle
+                  }
                   className="table-td"
-                  onClick={() => setProduct(product)}
                 >
-                  {product?.id.slice(0, 8) + "..."}
+                  <Link to={`/personalareapay/${product?.id}`}>
+                    {product?.id.slice(0, 8) + "..."}
+                  </Link>
                 </div>
                 <div className="table-td">
                   {product.startDate?.slice(0, 10)}
@@ -163,8 +220,6 @@ export default function Scanning() {
                 <div className="table-td">
                   {deliveryName[product.delivery_display]}
                 </div>
-                <div className="table-td">{product?.buyerphone}</div>
-                <div className="table-td">{product?.buyername}</div>
               </div>
             ))}
           </div>

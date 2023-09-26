@@ -107,7 +107,17 @@ export const status = {
   cdek: "Доставляется СДЭК",
   completed: "Завершен",
 };
-
+export const splitStyle = {
+  backgroundColor: "#FFFF99",
+  cursor: "pointer",
+};
+export const notSplitStyle = {
+  backgroundColor: "#b1ff9a",
+  cursor: "pointer",
+};
+export const getDif = (product) => {
+  return (product?.curencycurency2 - product?.realprice) * product?.currency;
+};
 export const stage = {
   payment: 1,
   buying: 2,

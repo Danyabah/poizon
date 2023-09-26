@@ -3,7 +3,12 @@ import Header from "../components/Header";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { deliveryName, parseTg } from "../utils/utils";
+import {
+  deliveryName,
+  notSplitStyle,
+  parseTg,
+  splitStyle,
+} from "../utils/utils";
 
 export default function Depot() {
   const [products, setProducts] = useState([]);
@@ -12,15 +17,6 @@ export default function Depot() {
   const [search, setSearch] = useState("");
   const token = useSelector((state) => state.user.token);
   const [product, setProduct] = useState(null);
-
-  const splitStyle = {
-    backgroundColor: "#FFFF99",
-    cursor: "pointer",
-  };
-  const notSplitStyle = {
-    backgroundColor: "#b1ff9a",
-    cursor: "pointer",
-  };
 
   function renderProducts() {
     axios
@@ -215,7 +211,11 @@ export default function Depot() {
                 onClick={() => setProduct(product)}
               >
                 <div
-                  style={product.split ? splitStyle : notSplitStyle}
+                  style={
+                    product.split && !product?.split_payment_proof
+                      ? splitStyle
+                      : notSplitStyle
+                  }
                   className="table-td"
                 >
                   <Link
