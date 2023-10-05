@@ -175,7 +175,7 @@ export default function OrderTab() {
             className="form-control"
             id="sum"
             disabled
-            value={`${product?.chinadelivery2?.toLocaleString()} ₽`}
+            value={`${product?.commission?.toLocaleString()} ₽`}
           />
         </div>
         <div className="push20 hidden-xss"></div>

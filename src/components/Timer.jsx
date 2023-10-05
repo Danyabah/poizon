@@ -37,10 +37,11 @@ export default function Timer() {
   return timer && location.hash !== "#split" ? (
     <div className="timer" onClick={() => navigate(`/pay/${id}`)}>
       <div>
-        <b>{parseSeconds(timer)}</b>{" "}
+        <b className="timer__seconds">{parseSeconds(timer)}</b>{" "}
       </div>
+      <div>Оплатить</div>
       <div>
-        Оплатить <b>{price} ₽</b>{" "}
+        <b>{price} ₽</b>
       </div>
     </div>
   ) : (

@@ -44,22 +44,23 @@ export default function PaymentTab() {
   };
   return (
     <div className="box visible">
-      {(stage[product?.status] > 1 && !product.split) ||
-      (stage[product?.status] > 1 &&
-        stage[product?.status] < 5 &&
-        product.split) ? (
+      {(stage[product?.status] > 1 && !product.split_accepted) ||
+      (stage[product?.status] > 1 && product.split_accepted) ? (
         <div className="button-wrapper">
           <button
             style={{ backgroundColor: "#eee", border: "none" }}
             disabled
             className="button no-icon"
           >
-            Оплачено
+            {product.split && !product.split_accepted
+              ? "Оплачена первая часть"
+              : !product.split || (product.split && product.split_accepted)
+              ? "Оплачено полностью"
+              : ""}
           </button>
         </div>
       ) : (
-        (product.status === "payment" ||
-          (product.status === "rush" && product.split)) && (
+        product.status === "payment" && (
           <div className="button-wrapper">
             <button
               className="button no-icon"
@@ -145,6 +146,22 @@ export default function PaymentTab() {
                 ></a>
                 <img src={product?.split_payment_proof} />
               </div>
+            </div>
+            <div className="push90"></div>
+
+            <div className="button-wrapper">
+              <button
+                className="button no-icon"
+                onClick={() => onSubmit({ split_accepted: true })}
+              >
+                Принять оплату
+              </button>
+              <button
+                className="button no-icon"
+                onClick={() => addToDraft(product, token)}
+              >
+                Отклонить оплату
+              </button>
             </div>
             <div className="push90"></div>
           </>

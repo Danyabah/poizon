@@ -47,8 +47,8 @@ export default function OrderPage() {
               {product?.brand} {product?.model}
             </div>
             <div className="push20"></div>
-            <div className="text size">
-              Размер: {product?.size}
+            <div className="text size orderpage__flex">
+              <span>Размер: {product?.size}</span>
               <a href={product?.link} rel="noreferrer" target="_blank">
                 Открыть в Poizon
                 <svg
@@ -72,14 +72,7 @@ export default function OrderPage() {
             </div>
             <div className="push40 hidden-xss"></div>
             <div className="push20 visible-xss"></div>
-            <div className="price">
-              {product?.fullprice?.toLocaleString()} ₽{" "}
-            </div>
-            {promo && (
-              <span className="text size">Применен промокод: {promo}</span>
-            )}
-            <div className="push40 hidden-xss"></div>
-            <div className="push20 visible-xss"></div>
+
             <section>
               <div className="order-img-wrap">
                 <Swiper
@@ -105,91 +98,107 @@ export default function OrderPage() {
                     </>
                   )}
                 </Swiper>
-
-                <div
-                  className="table-wrapper"
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "flex-start",
-                    alignItems: "flex-start",
-                  }}
-                >
-                  <table>
-                    <div
-                      onClick={() => setVisible((prev) => !prev)}
-                      className={
-                        visible
-                          ? `more-wrapper more-wrapper-active`
-                          : `more-wrapper`
-                      }
-                      style={{ cursor: "pointer", marginBottom: "20px" }}
-                    >
-                      <strong>Подробности расчета</strong>
-                    </div>
-                    {visible && (
-                      <tbody>
-                        <tr>
-                          <th>Цена в CNY</th>
-                          <td>
-                            {product?.curencycurency2?.toLocaleString()} ¥
-                          </td>
-                        </tr>
-                        <tr>
-                          <th>Курс обмена</th>
-                          <td>{product?.currency?.toLocaleString()} ₽</td>
-                        </tr>
-                        <tr>
-                          <th>Цена в RUB</th>
-                          <td style={{ whiteSpace: "nowrap" }}>
-                            {product?.currency3?.toLocaleString()} ₽
-                          </td>
-                        </tr>
-                        <tr>
-                          <th>Доставка по Китаю</th>
-                          <td>{product?.chinadelivery?.toLocaleString()} ₽</td>
-                        </tr>
-                        <tr>
-                          <th>Доставка в РФ</th>
-                          <td>{product?.chinadelivery2?.toLocaleString()} ₽</td>
-                        </tr>
-                        <tr>
-                          <th>Комиссия сервиса</th>
-                          <td>{product?.commission?.toLocaleString()} ₽</td>
-                        </tr>
-                      </tbody>
-                    )}
-                  </table>
-                </div>
               </div>
-              <Link
-                to={`/pay/${id}`}
-                style={{ gridGap: "10px", marginTop: "20px" }}
-                className="button no-icon green-btn"
-                onClick={() => dispatch(setSplit(false))}
+              <div className="push40 hidden-xss"></div>
+              <div className="push20 visible-xss"></div>
+              <div className="orderpage__flex">
+                <div className="price">
+                  {product?.fullprice?.toLocaleString()} ₽{" "}
+                </div>
+                {promo && (
+                  <span className="text size">Применен промокод: {promo}</span>
+                )}
+                <Link
+                  to={`/pay/${id}`}
+                  className="button no-icon green-btn orderpage__btn"
+                  onClick={() => dispatch(setSplit(false))}
+                >
+                  Оплатить
+                </Link>
+              </div>
+
+              <div className="push40 hidden-xss"></div>
+              {/* <div className="push20 visible-xss"></div> */}
+
+              <div
+                className="orderpage__flex-row"
+                style={{ marginTop: "20px" }}
               >
-                Оплатить <span>{product?.fullprice} ₽</span>
-              </Link>
-              <div style={{ marginTop: "20px" }}>
                 <Link
                   to={`/pay/${id}`}
                   style={{ gridGap: "10px" }}
-                  className="button no-icon split-btn"
+                  className=" orderpage__split"
                   onClick={() => dispatch(setSplit(true))}
                 >
                   <span style={{ display: "block" }}>
                     <strong>Оплатить Долями</strong>
                   </span>
                   <span style={{ display: "block" }}>
-                    <strong>
-                      {Math.round(product?.fullprice / 2)} ₽ |{" "}
-                      {Math.round(product?.fullprice / 2)} ₽
+                    <strong className="orderpage__prices">
+                      <div>{Math.round(product?.fullprice / 2)} ₽</div>
+                      <div>{Math.round(product?.fullprice / 2)} ₽</div>
                     </strong>
                   </span>
                 </Link>
+                <div className="orderpage__ques">
+                  <i className="uil uil-question"></i>
+                </div>
               </div>
               <div className="push60 hidden-xss"></div>
               <div className="push25 visible-xss"></div>
+              <div
+                className="table-wrapper"
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "flex-start",
+                  alignItems: "flex-start",
+                }}
+              >
+                <table>
+                  <div
+                    onClick={() => setVisible((prev) => !prev)}
+                    className={
+                      visible
+                        ? `more-wrapper more-wrapper-active`
+                        : `more-wrapper`
+                    }
+                    style={{ cursor: "pointer", marginBottom: "20px" }}
+                  >
+                    <strong>Подробности расчета</strong>
+                  </div>
+                  {visible && (
+                    <tbody>
+                      <tr>
+                        <th>Цена в CNY</th>
+                        <td>{product?.curencycurency2?.toLocaleString()} ¥</td>
+                      </tr>
+                      <tr>
+                        <th>Курс обмена</th>
+                        <td>{product?.currency?.toLocaleString()} ₽</td>
+                      </tr>
+                      <tr>
+                        <th>Цена в RUB</th>
+                        <td style={{ whiteSpace: "nowrap" }}>
+                          {product?.currency3?.toLocaleString()} ₽
+                        </td>
+                      </tr>
+                      <tr>
+                        <th>Доставка по Китаю</th>
+                        <td>{product?.chinadelivery?.toLocaleString()} ₽</td>
+                      </tr>
+                      <tr>
+                        <th>Доставка в РФ</th>
+                        <td>{product?.chinadelivery2?.toLocaleString()} ₽</td>
+                      </tr>
+                      <tr>
+                        <th>Комиссия сервиса</th>
+                        <td>{product?.commission?.toLocaleString()} ₽</td>
+                      </tr>
+                    </tbody>
+                  )}
+                </table>
+              </div>
               <div className="history-wrap">
                 <div className="title">История заказа</div>
                 <div className="push60 hidden-xss"></div>

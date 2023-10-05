@@ -218,7 +218,7 @@ export default function OrderPageInProgress() {
             </div>
             {delCost && <b>Стоимость доставки: {delCost} ₽</b>}
             <div className="push30 hidden-xss"></div>
-            <div className="push5 visible-xss"></div>
+            <div className="push15 visible-xss"></div>
             {linksub && (
               <div>
                 <b>
@@ -238,6 +238,7 @@ export default function OrderPageInProgress() {
             {product?.delivery === "pickup" && (
               <div className="text">Адрес самовывоза: {pickup}</div>
             )}
+            <div className="push15 visible-xss"></div>
             <div className="push35 hidden-xss"></div>
             <div className="push15 visible-xss"></div>
             {stage[product?.status] < 6 && product?.delivery === "pickup" ? (

@@ -197,16 +197,16 @@ export default function OrderForm() {
                 id="category"
                 onChange={(e) => {
                   setFieldValue("category", e.target.value);
-                  setLastDelivery(categories[+e.target.value + 1].chinarush);
+                  setLastDelivery(categories[+e.target.value - 1].chinarush);
                   setFieldValue(
                     "chinadelivery2",
-                    categories[+e.target.value + 1].chinarush
+                    categories[+e.target.value - 1].chinarush
                   );
 
                   let fullprice =
                     values.currency3 +
                     values.chinadelivery +
-                    categories[+e.target.value + 1].chinarush +
+                    categories[+e.target.value - 1].chinarush +
                     values.commission;
                   setLastPrice(fullprice);
                   setFieldValue("fullprice", fullprice);

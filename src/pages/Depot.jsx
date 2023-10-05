@@ -212,7 +212,7 @@ export default function Depot() {
               >
                 <div
                   style={
-                    product.split && !product?.split_payment_proof
+                    product.split && !product?.split_accepted
                       ? splitStyle
                       : notSplitStyle
                   }
