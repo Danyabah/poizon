@@ -9,10 +9,10 @@ import { setUserInfo } from "../redux/slices/userReducer";
 export default function PasswordForm() {
   const userInfo = useSelector((state) => state.user.userInfo);
   const token = useSelector((state) => state.user.token);
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
 
   const initialValues = {
-    current_password:  "",
+    current_password: "",
     new_password: "",
   };
 
@@ -25,17 +25,18 @@ export default function PasswordForm() {
       },
       onError: (response) => {
         console.log(response);
-        if(response.response.data.current_password){
-            alert(response.response.data.current_password[0]);
+        if (response.response.data.current_password) {
+          alert(response.response.data.current_password[0]);
         }
-        
       },
     });
   };
 
   const validSchema = Yup.object().shape({
     current_password: Yup.string().required("Необходимо указать старый пароль"),
-    new_password: Yup.string().min(8,"Пароль должен содержать как минимум 8 символов").required("Необходимо указать новый пароль"),
+    new_password: Yup.string()
+      .min(8, "Пароль должен содержать как минимум 8 символов")
+      .required("Необходимо указать новый пароль"),
   });
 
   const { mutate } = useMutation({
@@ -43,10 +44,11 @@ export default function PasswordForm() {
       formPayload.managerid = userInfo.managerid;
       return axios.post(
         `https://crm-poizonstore.ru/users/set_password/`,
-        formPayload,{
-          headers:{
-            "Authorization": `Token ${token}`
-          }
+        formPayload,
+        {
+          headers: {
+            Authorization: `Token ${token}`,
+          },
         }
       );
     },
@@ -96,14 +98,12 @@ export default function PasswordForm() {
                 className="form-control"
               />
             </div>
-            
 
             <div className="push20 hidden-xss"></div>
             <div className="push10 visible-xss"></div>
             <button type="submit" className="button no-icon">
               Сохранить
             </button>
-          
           </Form>
         );
       }}
