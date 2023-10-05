@@ -45,16 +45,14 @@ export default function OrderPageInProgress() {
         console.log(res);
         setLinksub(res.data.entity.cdek_number);
         setDelCost(res.data.entity.delivery_recipient_cost.value);
-        console.log(product?.status);
-        if (stage[product.status] <= 6) {
+        console.log(stage[product.status]);
+        if (stage[product.status] < 6) {
           setSdekStatus(
             res.data.entity.statuses.find(
               (el) => el.code === "READY_FOR_SHIPMENT_IN_SENDER_CITY"
             )?.code
           );
-          console.log(sdekStatus);
         } else {
-          console.log(sdekStatus);
           setSdekStatus(
             res.data.entity.statuses.find((el) => el.code === "DELIVERED")?.code
           );
@@ -62,6 +60,7 @@ export default function OrderPageInProgress() {
       });
   }, [product]);
 
+  console.log(sdekStatus);
   useEffect(() => {
     if (product.startDate && product.currentDate) {
       let dmyStart = product.startDate?.slice(0, 10).split(".");
@@ -104,10 +103,11 @@ export default function OrderPageInProgress() {
     }
   }, [product]);
 
+  console.log(stage[sdekStatus]);
   return (
     <>
       <Header />
-      <SplitPayment />
+
       <div className="line"></div>
       <div className="push60 hidden-xss"></div>
       <div className="push20 visible-xss"></div>
@@ -161,7 +161,10 @@ export default function OrderPageInProgress() {
             <div className="price">
               {product?.fullprice?.toLocaleString()} ₽
             </div>
-            {product?.split && <b>Оплачен в сплит</b>}
+            {product?.split && (
+              <b className="split-text">Оплачено через Cплит</b>
+            )}
+            <SplitPayment />
             <div className="push30 hidden-xss"></div>
             <div className="push15 visible-xss"></div>
             <div
@@ -360,7 +363,7 @@ export default function OrderPageInProgress() {
                   </li>
                   <li
                     className={`pzn__status ${
-                      stage[product?.status] === 5
+                      stage[product?.status] === 5 && !product?.split
                         ? "current"
                         : stage[product?.status] > 4
                         ? "ready"
@@ -369,9 +372,42 @@ export default function OrderPageInProgress() {
                   >
                     <span>Отправлено на склад в РФ</span>
                   </li>
+                  {product?.split && (
+                    <li
+                      className={`pzn__status ${
+                        stage[product?.status] === 5
+                          ? "current"
+                          : stage[product?.status] > 4
+                          ? "ready"
+                          : ""
+                      }`}
+                    >
+                      <span>Оплата второй части</span>
+                    </li>
+                  )}
+
+                  {product?.split_payment_proof && (
+                    <li
+                      className={`pzn__status pzn__status-text ${
+                        stage[product?.status] > 4 ? "ready" : ""
+                      }`}
+                    >
+                      <span>
+                        <a
+                          href={product?.split_payment_proof}
+                          rel="noreferrer"
+                          target="_blank"
+                        >
+                          Чек оплаты №2
+                        </a>
+                      </span>
+                    </li>
+                  )}
                   <li
                     className={`pzn__status ${
-                      stage[product?.status] === 6 && stage[sdekStatus] !== 7
+                      stage[product?.status] === 6 &&
+                      stage[sdekStatus] !== 7 &&
+                      stage[sdekStatus] !== 8
                         ? "current"
                         : stage[product?.status] > 5
                         ? "ready"
@@ -380,6 +416,7 @@ export default function OrderPageInProgress() {
                   >
                     <span> На складе в РФ</span>
                   </li>
+
                   {product?.delivery !== "Самовывоз из шоурума" && (
                     <li
                       className={`pzn__status ${

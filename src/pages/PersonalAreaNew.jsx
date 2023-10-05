@@ -162,7 +162,7 @@ export default function PersonalAreaNew() {
           <>
             <div className="container">
               <div className="push40  hidden-xss"></div>
-              {product && categ === "buying" && (
+              {product?.id && categ === "buying" && (
                 <>
                   <div className="main-inner img-container">
                     <div className="img-preview">
@@ -224,7 +224,7 @@ export default function PersonalAreaNew() {
                   </div>
                 </>
               )}
-              {chinaProduct && categ === "bought" && (
+              {chinaProduct?.id && categ === "bought" && (
                 <>
                   <div className="main-inner img-container">
                     <div className="img-preview">
@@ -284,7 +284,7 @@ export default function PersonalAreaNew() {
                   </div>
                 </>
               )}
-              {chinarushProduct && categ === "china" && (
+              {chinarushProduct?.id && categ === "china" && (
                 <>
                   <div className="main-inner img-container">
                     <div className="img-preview">

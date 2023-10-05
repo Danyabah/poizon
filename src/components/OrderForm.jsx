@@ -5,7 +5,7 @@ import * as Yup from "yup";
 import { useMutation } from "@tanstack/react-query";
 import { useDispatch, useSelector } from "react-redux";
 import { setUserInfo } from "../redux/slices/userReducer";
-import { addToDraft, subcategory, translate } from "../utils/utils";
+import { addToDraft, allUppers, subcategory, translate } from "../utils/utils";
 import PreviewImage from "./PreviewImage";
 import { useLocation, useParams } from "react-router-dom";
 import { setPreviewimage, setPublicLink } from "../redux/slices/adminReducer";
@@ -128,10 +128,9 @@ export default function OrderForm() {
         console.log(imagesUrl);
         formPayload.image = imagesUrl; //потом почистить массив изображений
         formPayload.status = "neworder";
-        formPayload.brand =
-          formPayload.brand[0].toUpperCase() + formPayload.brand.slice(1);
-        formPayload.model =
-          formPayload.model[0].toUpperCase() + formPayload.model.slice(1);
+        formPayload.brand = allUppers(formPayload.brand);
+
+        formPayload.model = allUppers(formPayload.model);
         if (formPayload?.promo.trim() === "") {
           delete formPayload.promo;
         } else {

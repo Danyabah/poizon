@@ -225,3 +225,8 @@ export const monthRU = {
 
 export const parseSeconds = (timer) =>
   new Date(timer * 1000).toISOString().slice(11, 19);
+
+export const allUppers = (string) => {
+  let arr = string.split(" ");
+  return arr.map((e) => e[0].toUpperCase() + e.slice(1)).join(" ");
+};

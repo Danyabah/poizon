@@ -376,13 +376,13 @@ export default function PersonalAreaCheckPay() {
                     : deliveryName[obj?.delivery_display]}
 
                   {obj?.status === "payment" ? (
-                    <div className="flex-i">
-                      <i
-                        className="uil uil-check-circle"
-                        onClick={() =>
-                          onSubmit({ status: "buying", id: obj?.id })
-                        }
-                      ></i>
+                    <div
+                      className="flex-i"
+                      onClick={() =>
+                        onSubmit({ status: "buying", id: obj?.id })
+                      }
+                    >
+                      <i className="uil uil-check-circle"></i>
                       <span className="confirm-i">Принять</span>
                     </div>
                   ) : categ === "draft" || categ === "neworder" ? (

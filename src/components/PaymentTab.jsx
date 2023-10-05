@@ -117,32 +117,38 @@ export default function PaymentTab() {
         </div>
         <div className="push20 hidden-xss"></div>
         <div className="push10 visible-xss"></div>
-        <div className="title-img">Изображение чека оплаты покупателем</div>
+        <div className="title-img">Изображение чеков оплаты покупателем</div>
         <div className="push20 hidden-xss"></div>
         <div className="push10 visible-xss"></div>
+        {product?.split && <b>Чек оплаты №1</b>}
         <div className="img-wrapper">
           <div className="item-img">
             <a
-              href={
-                product?.split && product?.status !== "payment"
-                  ? product?.split_payment_proof
-                  : product?.paymentprovement
-              }
+              href={product?.paymentprovement}
               className="absolute fancybox"
               target="_blank"
             ></a>
-            <img
-              src={
-                product?.split && product?.split_payment_proof
-                  ? product?.split_payment_proof
-                  : product?.split && product?.status !== "payment"
-                  ? waiting
-                  : product?.paymentprovement
-              }
-            />
+            <img src={product?.paymentprovement} />
           </div>
         </div>
-        <div className="push90"></div>
+        <div className="push50"></div>
+
+        {product?.split_payment_proof && (
+          <>
+            <b>Чек оплаты №2</b>
+            <div className="img-wrapper">
+              <div className="item-img">
+                <a
+                  href={product?.split_payment_proof}
+                  className="absolute fancybox"
+                  target="_blank"
+                ></a>
+                <img src={product?.split_payment_proof} />
+              </div>
+            </div>
+            <div className="push90"></div>
+          </>
+        )}
       </form>
     </div>
   );
