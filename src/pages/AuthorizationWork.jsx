@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Header from "../components/Header";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import { useNavigate } from "react-router-dom";
@@ -11,6 +11,9 @@ import { setToken, setUserInfo } from "../redux/slices/userReducer";
 export default function AuthorizationWork() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [logClose, setLogClose] = useState(false);
+  const [pasClose, setPasClose] = useState(false);
+  const [visible, setVisible] = useState(false);
 
   const signInSchema = Yup.object().shape({
     email: Yup.string().email().required("Необходимо указать почту"),
@@ -27,16 +30,17 @@ export default function AuthorizationWork() {
       onSuccess: (response) => {
         if (!response.data.error) {
           console.log(response);
-          dispatch(setToken(response.data.auth_token))
-          axios.get("https://crm-poizonstore.ru/users/me",{
-            headers:{
-              "Authorization": `Token ${response.data.auth_token}`
-            }
-          }).then((res)=>{
-           dispatch(setUserInfo(res.data));
-          navigate("/managerpersonalaccount");
-          })
-         
+          dispatch(setToken(response.data.auth_token));
+          axios
+            .get("https://crm-poizonstore.ru/users/me", {
+              headers: {
+                Authorization: `Token ${response.data.auth_token}`,
+              },
+            })
+            .then((res) => {
+              dispatch(setUserInfo(res.data));
+              navigate("/managerpersonalaccount");
+            });
         } else {
           alert("Пользователь не найден");
         }
@@ -52,7 +56,10 @@ export default function AuthorizationWork() {
 
   const { mutate } = useMutation({
     mutationFn: (formPayload) => {
-      return axios.post("https://crm-poizonstore.ru/auth/token/login/", formPayload);
+      return axios.post(
+        "https://crm-poizonstore.ru/auth/token/login/",
+        formPayload
+      );
     },
   });
 
@@ -62,7 +69,7 @@ export default function AuthorizationWork() {
       validationSchema={signInSchema}
       onSubmit={onSubmit}
     >
-      {(formik) => {
+      {({ setFieldValue }) => {
         return (
           <>
             <Header />
@@ -79,7 +86,10 @@ export default function AuthorizationWork() {
               <div className="container">
                 <div className="main-inner">
                   <Form>
-                    <div className="form-group">
+                    <div
+                      className="form-group"
+                      style={{ position: "relative" }}
+                    >
                       <label className="label" htmlFor="email">
                         Логин
                       </label>
@@ -88,6 +98,14 @@ export default function AuthorizationWork() {
                         type="email"
                         className="form-control"
                         id="email"
+                        onChange={(e) => {
+                          setFieldValue("email", e.target.value);
+                          if (e.target.value !== "") {
+                            setLogClose(true);
+                          } else {
+                            setLogClose(false);
+                          }
+                        }}
                       />
                       <ErrorMessage
                         style={{ color: "red" }}
@@ -95,16 +113,38 @@ export default function AuthorizationWork() {
                         component="span"
                         className="form-control"
                       />
+                      {logClose && (
+                        <div
+                          className="login__close"
+                          onClick={() => {
+                            setLogClose(false);
+                            setFieldValue("email", "");
+                          }}
+                        >
+                          <i class="uil uil-times-square"></i>
+                        </div>
+                      )}
                     </div>
-                    <div className="form-group">
+                    <div
+                      className="form-group"
+                      style={{ position: "relative" }}
+                    >
                       <label className="label" htmlFor="password">
                         Пароль
                       </label>
                       <Field
                         name="password"
-                        type="password"
+                        type={!visible ? "password" : "text"}
                         className="form-control"
                         id="password"
+                        onChange={(e) => {
+                          setFieldValue("password", e.target.value);
+                          if (e.target.value !== "") {
+                            setPasClose(true);
+                          } else {
+                            setPasClose(false);
+                          }
+                        }}
                       />
                       <ErrorMessage
                         style={{ color: "red" }}
@@ -112,6 +152,38 @@ export default function AuthorizationWork() {
                         component="span"
                         className="form-control"
                       />
+                      {pasClose && (
+                        <div
+                          className="login__close"
+                          onClick={() => {
+                            setPasClose(false);
+                            setFieldValue("password", "");
+                          }}
+                        >
+                          <i class="uil uil-times-square"></i>
+                        </div>
+                      )}
+                      {visible ? (
+                        <div
+                          className="login__close"
+                          style={{ right: "32px" }}
+                          onClick={() => {
+                            setVisible(false);
+                          }}
+                        >
+                          <i class="uil uil-eye"></i>
+                        </div>
+                      ) : (
+                        <div
+                          style={{ right: "32px" }}
+                          className="login__close"
+                          onClick={() => {
+                            setVisible(true);
+                          }}
+                        >
+                          <i class="uil uil-eye-slash"></i>
+                        </div>
+                      )}
                     </div>
                     <div className="push15 visible-xss"></div>
                     <button type="submit" className="button no-icon enter">

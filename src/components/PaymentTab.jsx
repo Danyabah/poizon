@@ -149,20 +149,32 @@ export default function PaymentTab() {
             </div>
             <div className="push90"></div>
 
-            <div className="button-wrapper">
-              <button
-                className="button no-icon"
-                onClick={() => onSubmit({ split_accepted: true })}
-              >
-                Принять оплату
-              </button>
-              <button
-                className="button no-icon"
-                onClick={() => addToDraft(product, token)}
-              >
-                Отклонить оплату
-              </button>
-            </div>
+            {!product.split_accepted ? (
+              <div className="button-wrapper">
+                <button
+                  className="button no-icon"
+                  onClick={() => onSubmit({ split_accepted: true })}
+                >
+                  Принять оплату
+                </button>
+                <button
+                  className="button no-icon"
+                  onClick={() => addToDraft(product, token)}
+                >
+                  Отклонить оплату
+                </button>
+              </div>
+            ) : (
+              <div className="button-wrapper">
+                <button
+                  style={{ backgroundColor: "#eee", border: "none" }}
+                  disabled
+                  className="button no-icon"
+                >
+                  Оплачено
+                </button>
+              </div>
+            )}
             <div className="push90"></div>
           </>
         )}

@@ -964,6 +964,30 @@ option {
   font-weight: 400;
   /* margin-top: 20px; */
 }
+.hint {
+  position: absolute;
+  background-color: #0081ab;
+  width: 150px;
+  padding: 8px;
+  border-radius: 10px;
+  top: -20px;
+  font-size: 10px;
+  left: 40px;
+}
+.login__close {
+  position: absolute;
+  right: 6px;
+  top: 42px;
+  cursor: pointer;
+  font-size: 24px;
+}
+@media only screen and (max-width: 647px) {
+  .login__close {
+    right: 6px;
+    font-size: 16px;
+    top: 21px;
+  }
+}
 .timer {
   background-color: #00a941d3;
   border-radius: 15px;

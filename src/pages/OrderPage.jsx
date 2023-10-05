@@ -18,6 +18,7 @@ export default function OrderPage() {
   const [promo, setPromo] = useState("");
   const dispatch = useDispatch();
   const [visible, setVisible] = useState(false);
+  const [hint, setHint] = useState(false);
 
   useEffect(() => {
     axios.get(`https://crm-poizonstore.ru/checklist/${id}`).then((res) => {
@@ -101,51 +102,83 @@ export default function OrderPage() {
               </div>
               <div className="push40 hidden-xss"></div>
               <div className="push20 visible-xss"></div>
-              <div className="orderpage__flex">
-                <div className="price">
-                  {product?.fullprice?.toLocaleString()} ₽{" "}
-                </div>
-                {promo && (
-                  <span className="text size">Применен промокод: {promo}</span>
-                )}
-                <Link
-                  to={`/pay/${id}`}
-                  className="button no-icon green-btn orderpage__btn"
-                  onClick={() => dispatch(setSplit(false))}
-                >
-                  Оплатить
-                </Link>
-              </div>
-
-              <div className="push40 hidden-xss"></div>
-              {/* <div className="push20 visible-xss"></div> */}
-
-              <div
-                className="orderpage__flex-row"
-                style={{ marginTop: "20px" }}
-              >
-                <Link
-                  to={`/pay/${id}`}
-                  style={{ gridGap: "10px" }}
-                  className=" orderpage__split"
-                  onClick={() => dispatch(setSplit(true))}
-                >
-                  <span style={{ display: "block" }}>
-                    <strong>Оплатить Долями</strong>
-                  </span>
-                  <span style={{ display: "block" }}>
-                    <strong className="orderpage__prices">
-                      <div>{Math.round(product?.fullprice / 2)} ₽</div>
-                      <div>{Math.round(product?.fullprice / 2)} ₽</div>
-                    </strong>
-                  </span>
-                </Link>
-                <div className="orderpage__ques">
-                  <i className="uil uil-question"></i>
-                </div>
-              </div>
-              <div className="push60 hidden-xss"></div>
-              <div className="push25 visible-xss"></div>
+              {product?.buy_time_remaining ? (
+                <>
+                  {" "}
+                  <div className="orderpage__flex">
+                    <div className="price">
+                      {product?.fullprice?.toLocaleString()} ₽{" "}
+                    </div>
+                    {promo && (
+                      <span className="text size">
+                        Применен промокод: {promo}
+                      </span>
+                    )}
+                    <Link
+                      to={`/pay/${id}`}
+                      className="button no-icon green-btn orderpage__btn"
+                      onClick={() => dispatch(setSplit(false))}
+                    >
+                      Оплатить
+                    </Link>
+                  </div>
+                  <div className="push40 hidden-xss"></div>
+                  {/* <div className="push20 visible-xss"></div> */}
+                  {product.fullprice < 20000 && (
+                    <div
+                      className="orderpage__flex-row"
+                      style={{ marginTop: "20px" }}
+                    >
+                      <Link
+                        to={`/pay/${id}`}
+                        style={{ gridGap: "10px" }}
+                        className=" orderpage__split"
+                        onClick={() => dispatch(setSplit(true))}
+                      >
+                        <span style={{ display: "block" }}>
+                          <strong>Оплатить Долями</strong>
+                        </span>
+                        <span style={{ display: "block" }}>
+                          <strong className="orderpage__prices">
+                            <div>{Math.round(product?.fullprice / 2)} ₽</div>
+                            <div>{Math.round(product?.fullprice / 2)} ₽</div>
+                          </strong>
+                        </span>
+                      </Link>
+                      <div
+                        style={{ position: "relative" }}
+                        className="orderpage__ques"
+                        onClick={() => setHint((prev) => !prev)}
+                      >
+                        <i className="uil uil-question"></i>
+                        {hint && (
+                          <div className="hint">
+                            Вы можете оплатить 50% от стоимости заказа сейчас и
+                            50% через 2-3 недели, когда он будет у нас на складе
+                            в России.{" "}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  )}
+                  <div className="push60 hidden-xss"></div>
+                  <div className="push25 visible-xss"></div>
+                </>
+              ) : (
+                <>
+                  <a
+                    href={`https://t.me/noziop`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="button no-icon green-btn orderpage__btn"
+                    style={{ backgroundColor: "black", borderColor: "black" }}
+                  >
+                    Перерасчет Стоимости
+                  </a>
+                  <div className="push60 hidden-xss"></div>
+                  <div className="push25 visible-xss"></div>
+                </>
+              )}
               <div
                 className="table-wrapper"
                 style={{

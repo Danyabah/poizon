@@ -158,15 +158,20 @@ export default function OrderPageInProgress() {
             </a>
             <div className="push20 hidden-xss"></div>
             <div className="push10 visible-xss"></div>
-            <div className="price">
-              {product?.fullprice?.toLocaleString()} ₽
-            </div>
-            {product?.split && (
-              <b className="split-text">Оплачено через Cплит</b>
+            {stage[product?.status] > 1 && (
+              <>
+                {" "}
+                <div className="price">
+                  {product?.fullprice?.toLocaleString()} ₽
+                </div>
+                {product?.split && (
+                  <b className="split-text">Оплачено через Cплит</b>
+                )}
+                <SplitPayment />
+                <div className="push30 hidden-xss"></div>
+                <div className="push15 visible-xss"></div>
+              </>
             )}
-            <SplitPayment />
-            <div className="push30 hidden-xss"></div>
-            <div className="push15 visible-xss"></div>
             <div
               onClick={() => setVisible((prev) => !prev)}
               className={

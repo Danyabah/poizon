@@ -2,6 +2,8 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { parseSeconds } from "../utils/utils";
+import { useDispatch } from "react-redux";
+import { setSplit } from "../redux/slices/userReducer";
 
 export default function Timer() {
   const { id } = useParams();
@@ -10,6 +12,7 @@ export default function Timer() {
   const location = useLocation();
   const navigate = useNavigate();
   const [price, setPrice] = useState();
+  const dispatch = useDispatch();
   useEffect(() => {
     axios.get(`https://crm-poizonstore.ru/checklist/${id}`).then((res) => {
       setTimer(res.data.buy_time_remaining);
@@ -35,7 +38,13 @@ export default function Timer() {
   }, [timer]);
 
   return timer && location.hash !== "#split" ? (
-    <div className="timer" onClick={() => navigate(`/pay/${id}`)}>
+    <div
+      className="timer"
+      onClick={() => {
+        navigate(`/pay/${id}`);
+        dispatch(setSplit(false));
+      }}
+    >
       <div>
         <b className="timer__seconds">{parseSeconds(timer)}</b>{" "}
       </div>
