@@ -24,7 +24,12 @@ export default function Promocode() {
   function tryDelete(e, name) {
     if (window?.confirm(`Вы действительно хотите удалить промокод "${name}"`)) {
       axios
-        .delete(`https://crm-poizonstore.ru/promo/`, { data: { name: name } })
+        .delete(`https://crm-poizonstore.ru/promo/`, {
+          headers: {
+            Authorization: `Token ${token}`,
+          },
+          data: { name: name },
+        })
         .then(() => {
           window?.location.reload();
         });
