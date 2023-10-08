@@ -29,9 +29,24 @@ export default function OrderPage() {
     });
   }, [id]);
 
+  useEffect(() => {
+    let timeout;
+
+    if (hint) {
+      timeout = setTimeout(() => {
+        setHint(false);
+      }, 5000);
+    }
+
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, [hint]);
+
   if (stage[product?.status] >= 1) {
     return <Navigate to={`/orderpageinprogress/${id}`} />;
   }
+
   console.log(product);
 
   return (
@@ -49,7 +64,7 @@ export default function OrderPage() {
             </div>
             <div className="push20"></div>
             <div className="text size orderpage__flex">
-              <span>Размер: {product?.size}</span>
+              {/* <span>Размер: {product?.size}</span> */}
               <a href={product?.link} rel="noreferrer" target="_blank">
                 Открыть в Poizon
                 <svg
@@ -104,27 +119,7 @@ export default function OrderPage() {
               <div className="push20 visible-xss"></div>
               {product?.buy_time_remaining ? (
                 <>
-                  {" "}
                   <div className="orderpage__flex">
-                    <div className="price">
-                      {product?.fullprice?.toLocaleString()} ₽{" "}
-                    </div>
-                    {promo && (
-                      <span className="text size">
-                        Применен промокод: {promo}
-                      </span>
-                    )}
-                    <Link
-                      to={`/pay/${id}`}
-                      className="button no-icon green-btn orderpage__btn"
-                      onClick={() => dispatch(setSplit(false))}
-                    >
-                      Оплатить
-                    </Link>
-                  </div>
-                  <div className="push40 hidden-xss"></div>
-                  {/* <div className="push20 visible-xss"></div> */}
-                  {product.fullprice < 20000 && (
                     <div
                       className="orderpage__flex-row"
                       style={{ marginTop: "20px" }}
@@ -132,35 +127,74 @@ export default function OrderPage() {
                       <Link
                         to={`/pay/${id}`}
                         style={{ gridGap: "10px" }}
-                        className=" orderpage__split"
-                        onClick={() => dispatch(setSplit(true))}
+                        className=" orderpage__split orderpage__split-green"
+                        onClick={() => dispatch(setSplit(false))}
                       >
                         <span style={{ display: "block" }}>
-                          <strong>Оплатить Долями</strong>
+                          <strong>Оплатить</strong>
                         </span>
                         <span style={{ display: "block" }}>
                           <strong className="orderpage__prices">
-                            <div>{Math.round(product?.fullprice / 2)} ₽</div>
-                            <div>{Math.round(product?.fullprice / 2)} ₽</div>
+                            <div>{product?.fullprice?.toLocaleString()} ₽</div>
                           </strong>
                         </span>
                       </Link>
-                      <div
-                        style={{ position: "relative" }}
-                        className="orderpage__ques"
-                        onClick={() => setHint((prev) => !prev)}
-                      >
-                        <i className="uil uil-question"></i>
-                        {hint && (
-                          <div className="hint">
-                            Вы можете оплатить 50% от стоимости заказа сейчас и
-                            50% через 2-3 недели, когда он будет у нас на складе
-                            в России.{" "}
-                          </div>
-                        )}
-                      </div>
                     </div>
+                    {product.fullprice < 20000 && (
+                      <div
+                        className="orderpage__flex-row"
+                        style={{ marginTop: "20px" }}
+                      >
+                        <Link
+                          to={`/pay/${id}`}
+                          style={{ gridGap: "10px" }}
+                          className=" orderpage__split"
+                          onClick={() => dispatch(setSplit(true))}
+                        >
+                          <span style={{ display: "block" }}>
+                            <strong>Оплатить Долями</strong>
+                          </span>
+                          <span style={{ display: "block" }}>
+                            <strong className="orderpage__prices">
+                              <div>
+                                {Math.round(
+                                  product?.fullprice / 2
+                                )?.toLocaleString()}{" "}
+                                ₽
+                              </div>
+                              <div>
+                                {Math.round(
+                                  product?.fullprice / 2
+                                )?.toLocaleString()}{" "}
+                                ₽
+                              </div>
+                            </strong>
+                          </span>
+                        </Link>
+                        <div
+                          style={{ position: "relative" }}
+                          className="orderpage__ques"
+                          onClick={() => setHint((prev) => !prev)}
+                        >
+                          <i className="uil uil-question"></i>
+                          {hint && (
+                            <div className="hint">
+                              Вы можете оплатить 50% от стоимости заказа сейчас
+                              и 50% через 2-3 недели, когда он будет у нас на
+                              складе в России.
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                  <div className="push40 hidden-xss"></div>
+                  {promo && (
+                    <span className="text size orderpage__prom">
+                      Применен промокод: {promo}
+                    </span>
                   )}
+                  {/* <div className="push20 visible-xss"></div> */}
                   <div className="push60 hidden-xss"></div>
                   <div className="push25 visible-xss"></div>
                 </>
@@ -233,7 +267,17 @@ export default function OrderPage() {
                 </table>
               </div>
               <div className="history-wrap">
-                <div className="title">История заказа</div>
+                <a
+                  href={`https://t.me/poizoning_review`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="button no-icon green-btn orderpage__btn"
+                  style={{ backgroundColor: "black", borderColor: "black" }}
+                >
+                  Отзывы покупателей
+                </a>
+                <div className="push60 hidden-xss"></div>
+                {/* <div className="title">История заказа</div>
                 <div className="push60 hidden-xss"></div>
                 <div className="push20 visible-xss"></div>
                 <div className="text">
@@ -270,7 +314,7 @@ export default function OrderPage() {
                   <li className="pzn__status">
                     <span>Завершен</span>
                   </li>
-                </ul>
+                </ul> */}
               </div>
             </section>
             <div className="push100"></div>

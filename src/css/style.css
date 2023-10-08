@@ -970,9 +970,10 @@ option {
   width: 150px;
   padding: 8px;
   border-radius: 10px;
-  top: -20px;
+  top: 50px;
+  left: 0px;
   font-size: 10px;
-  left: 40px;
+  /* left: 40px; */
 }
 .login__close {
   position: absolute;
@@ -986,6 +987,10 @@ option {
     right: 6px;
     font-size: 16px;
     top: 21px;
+  }
+  .hint {
+    left: initial;
+    right: 0px;
   }
 }
 .timer {
@@ -2945,6 +2950,10 @@ option {
   grid-gap: 10px;
   margin-top: 20px;
 }
+.orderpage__flex {
+  display: flex;
+  gap: 15px;
+}
 @media only screen and (max-width: 647px) {
   .orderpage__flex {
     display: flex;
@@ -2964,18 +2973,27 @@ option {
   color: white;
   max-width: 290px;
   text-align: center;
+  min-width: 257px;
 }
+
 .orderpage__split span:first-child {
   max-width: 290px;
   background-color: #0081ab;
   padding: 21px 20px;
 }
+.orderpage__split-green span:first-child {
+  background-color: #00a942;
+}
+
 .orderpage__split span:last-child {
   max-width: 290px;
   background-color: #5396ac;
   padding: 0px 20px;
   border-bottom-left-radius: 10px;
   border-bottom-right-radius: 10px;
+}
+.orderpage__split-green span:last-child {
+  background-color: #3fa566;
 }
 .orderpage__split span:first-child {
   border-bottom: 4px solid white;
@@ -2992,28 +3010,37 @@ option {
   padding-top: 21px;
   padding-bottom: 21px;
 }
+
 .orderpage__prices div:last-child {
   padding-left: 10px;
   padding-top: 21px;
   padding-bottom: 21px;
   border-left: 2px solid white;
 }
+
+.orderpage__split-green div:first-child {
+  border-right: none;
+}
+.orderpage__split-green div:last-child {
+  border-left: none;
+}
 @media only screen and (max-width: 647px) {
   .orderpage__split {
     font-size: 10.26px;
     padding: 0px;
     color: white;
+    min-width: 117px;
     max-width: 180px;
     text-align: center;
   }
   .orderpage__split span:first-child {
     max-width: 180px;
-    background-color: #0081ab;
+    /* background-color: #0081ab; */
     padding: 8px 8px;
   }
   .orderpage__split span:last-child {
     max-width: 180px;
-    background-color: #5396ac;
+    /* background-color: #5396ac; */
     padding: 0px 8px;
     border-bottom-left-radius: 10px;
     border-bottom-right-radius: 10px;
@@ -3038,6 +3065,12 @@ option {
     padding-top: 8px;
     padding-bottom: 8px;
     border-left: 1px solid white;
+  }
+  .orderpage__split-green div:first-child {
+    border-right: none;
+  }
+  .orderpage__split-green div:last-child {
+    border-left: none;
   }
 }
 .orderpage__flex-row {

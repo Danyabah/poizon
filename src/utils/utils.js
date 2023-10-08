@@ -228,5 +228,20 @@ export const parseSeconds = (timer) =>
 
 export const allUppers = (string) => {
   let arr = string.split(" ");
-  return arr.map((e) => e[0].toUpperCase() + e.slice(1)).join(" ");
+  return arr
+    .map((e) => {
+      console.log(e[0]);
+      console.log(e[0] === "«");
+
+      if (e[0] !== '"' && e[0] !== "'" && e[0] !== "«") {
+        return e[0].toUpperCase() + e.slice(1);
+      } else {
+        if (e[0] === "«") {
+          return e[0] + e[2].toUpperCase() + e.slice(3);
+        }
+
+        return e[0] + e[1].toUpperCase() + e.slice(2);
+      }
+    })
+    .join(" ");
 };

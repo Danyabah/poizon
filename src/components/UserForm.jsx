@@ -18,6 +18,7 @@ export default function UserForm() {
   const [width, setWidth] = useState("320px");
   const [height, setHeight] = useState("240px");
   const [isActive, setIsActive] = useState(true);
+  const [coords, setCoords] = useState("");
 
   useEffect(() => {
     axios.get(`https://crm-poizonstore.ru/settings`).then((res) => {
@@ -32,6 +33,25 @@ export default function UserForm() {
       setHeight("250px");
     }
   }, []);
+
+  useEffect(() => {
+    let [address, house] = pickup.split(", ");
+    axios
+      .get(
+        `https://geocode-maps.yandex.ru/1.x/?apikey=5f800b37-ed0d-4c95-a0ce-b72d8ebf590f&geocode=Санкт-Петербург,${address},${house}&format=json`
+      )
+      .then((res) => {
+        console.log(res.data);
+
+        setCoords(
+          res.data.response.GeoObjectCollection.featureMember[0].GeoObject.Point
+            .pos
+        );
+      })
+      .catch((err) => {
+        alert("Адрес введен в неверном формате");
+      });
+  }, [pickup]);
 
   console.log(pickup);
 
@@ -169,11 +189,16 @@ export default function UserForm() {
                     <Map
                       style={{ width: width, height: height }}
                       defaultState={{
-                        center: [59.923725, 30.297219],
+                        center: [coords?.split(" ")[1], coords?.split(" ")[0]],
                         zoom: 15,
                       }}
                     >
-                      <Placemark geometry={[59.923725, 30.297219]} />
+                      <Placemark
+                        geometry={[
+                          coords?.split(" ")[1],
+                          coords?.split(" ")[0],
+                        ]}
+                      />
                     </Map>
                   </div>
                 </>
