@@ -110,9 +110,7 @@ export default function OrderForm() {
     link: Yup.string().required("Необходимо указать ссылку"),
     brand: Yup.string().required("Необходимо указать бренд"),
     model: Yup.string().required("Необходимо указать модель"),
-    size: Yup.string()
-      .min(1, "Необходимо указать размер")
-      .required("Необходимо указать размер"),
+
     curencycurency2: Yup.number()
       .min(1, "Необходимо указать цену")
       .required("Необходимо указать цену"),
@@ -129,6 +127,14 @@ export default function OrderForm() {
         formPayload.image = imagesUrl; //потом почистить массив изображений
         formPayload.status = "neworder";
         formPayload.brand = allUppers(formPayload.brand);
+
+        if (!formPayload.size.trim()) {
+          formPayload.size = null;
+        }
+
+        // категории
+        formPayload.category = formPayload.subcategory;
+        delete formPayload.subcategory;
 
         formPayload.model = allUppers(formPayload.model);
         if (formPayload?.promo.trim() === "") {
