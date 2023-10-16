@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import logo from "../utils/logo.PNG";
 import { useMutation } from "@tanstack/react-query";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   deliveryName,
   notSplitStyle,
@@ -12,6 +12,7 @@ import {
   splitStyle,
   status,
 } from "../utils/utils";
+import { setPreviewimage } from "../redux/slices/adminReducer";
 
 export default function PersonalAreaCheckPay() {
   const [categ, setCateg] = useState("");
@@ -22,6 +23,7 @@ export default function PersonalAreaCheckPay() {
   const [search, setSearch] = useState("");
   const token = useSelector((state) => state.user.token);
   const [product, setProduct] = useState(null);
+  const dispatch = useDispatch();
 
   function getProducts() {
     axios
@@ -91,6 +93,11 @@ export default function PersonalAreaCheckPay() {
         });
     }
   };
+
+  function goToDraft(obj) {
+    navigate(`/personalareaorder/${obj?.id}`);
+    dispatch(setPreviewimage(obj.previewimage));
+  }
   return (
     <>
       <header className="header-wrapper">
@@ -279,6 +286,18 @@ export default function PersonalAreaCheckPay() {
                       Телеграмм
                     </a>
                   )}
+                  {product.status === "draft" && (
+                    <a
+                      href="#"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        goToDraft(product);
+                      }}
+                      className="img-btn"
+                    >
+                      Редактировать
+                    </a>
+                  )}
                   {/* {product?.delivery_display === "Самовывоз из шоурума" && (
                     <div
                       className="img-btn img-btn-gr"
@@ -340,7 +359,7 @@ export default function PersonalAreaCheckPay() {
                   className="table-td"
                   onClick={() =>
                     categ === "draft"
-                      ? navigate(`/personalareaorder/${obj?.id}`)
+                      ? goToDraft(obj)
                       : navigate(`/personalareapay/${obj?.id}`)
                   }
                 >

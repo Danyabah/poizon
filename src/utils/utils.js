@@ -239,7 +239,6 @@ export const allUppers = (string) => {
         if (e[0] === "«") {
           return e[0] + e[2].toUpperCase() + e.slice(3);
         }
-
         return e[0] + e[1].toUpperCase() + e.slice(2);
       }
     })
