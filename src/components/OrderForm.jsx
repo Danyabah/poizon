@@ -622,7 +622,7 @@ export default function OrderForm() {
                     )
                     .then((res) => {
                       if (res.status === 201) {
-                        alert("добавлено в черновик");
+                        alert("Добавлено в черновик");
                       }
                       console.log(res);
                     });

@@ -11,7 +11,7 @@ import PurchaseForm from "../components/PurchaseForm";
 import { useMutation } from "@tanstack/react-query";
 import logo from "../utils/logo.PNG";
 import ChinaForm from "../components/ChinaForm";
-import { addToDraft, getDif, parseTg } from "../utils/utils";
+import { addToDraft, getDif, getStyle, parseTg } from "../utils/utils";
 import ChinarushForm from "../components/ChinarushForm";
 
 export default function PersonalAreaNew() {
@@ -59,6 +59,19 @@ export default function PersonalAreaNew() {
       case "china":
         dispatch(setChinarushProduct(obj));
         break;
+      default:
+        break;
+    }
+  }
+
+  function getCurProduct() {
+    switch (categ) {
+      case "buying":
+        return product;
+      case "bought":
+        return chinaProduct;
+      case "china":
+        return chinarushProduct;
       default:
         break;
     }
@@ -363,6 +376,7 @@ export default function PersonalAreaNew() {
                 <div key={obj?.id}>
                   <div className="container">
                     <div
+                      style={getStyle(getCurProduct(), obj)}
                       className="table-row"
                       onClick={() => changeProduct(obj)}
                     >

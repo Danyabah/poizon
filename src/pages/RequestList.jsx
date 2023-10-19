@@ -3,7 +3,7 @@ import Header from "../components/Header";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { parseTg } from "../utils/utils";
+import { getStyle, parseTg } from "../utils/utils";
 
 export default function RequestList() {
   const [products, setProducts] = useState([]);
@@ -11,7 +11,7 @@ export default function RequestList() {
   const [categ, setCateg] = useState("bought");
   const token = useSelector((state) => state.user.token);
   const [totalPage, setTotalPage] = useState(1);
-  const [product, setProduct] = useState(null);
+  const [fullProduct, setFullProduct] = useState(null);
 
   function getProducts() {
     axios
@@ -53,7 +53,7 @@ export default function RequestList() {
                   className={categ === "bought" ? "current" : ""}
                   onClick={() => {
                     setCateg("bought");
-                    setProduct(null);
+                    setFullProduct(null);
                   }}
                 >
                   <span>Выкуплено</span>
@@ -63,7 +63,7 @@ export default function RequestList() {
                   className={categ === "buying" ? "current" : ""}
                   onClick={() => {
                     setCateg("buying");
-                    setProduct(null);
+                    setFullProduct(null);
                   }}
                 >
                   <span>Ожидает выкупа</span>
@@ -76,13 +76,13 @@ export default function RequestList() {
           <div className="line hidden-xss"></div>
         </div>
         <div className="container">
-          {product && (
+          {fullProduct && (
             <div className="main-inner img-container">
               <div className="img-preview">
-                <a href={product.previewimage} className="" target="_blank">
+                <a href={fullProduct.previewimage} className="" target="_blank">
                   <img
                     style={{ objectFit: "contain" }}
-                    src={product.previewimage}
+                    src={fullProduct.previewimage}
                     alt=""
                   />
                 </a>
@@ -90,21 +90,21 @@ export default function RequestList() {
               <div>
                 <div className="push20"></div>
                 <div className="img-text">
-                  <b>Заказ:</b> <br /> #{product?.id}
+                  <b>Заказ:</b> <br /> #{fullProduct?.id}
                 </div>
                 <div className="img-text">
-                  <b>Сплит:</b> <br /> {product?.split ? "Да" : "Нет"}
+                  <b>Сплит:</b> <br /> {fullProduct?.split ? "Да" : "Нет"}
                 </div>
 
                 <div className="img-text">
                   <b>CNY:</b>
                   <br />
-                  {product?.curencycurency2} CNY
+                  {fullProduct?.curencycurency2} CNY
                 </div>
 
-                {product.tg && (
+                {fullProduct.tg && (
                   <a
-                    href={parseTg(product.tg)}
+                    href={parseTg(fullProduct.tg)}
                     target="_blank"
                     rel="noreferrer"
                     className="img-btn"
@@ -129,8 +129,9 @@ export default function RequestList() {
             {products.map((product) => (
               <div
                 className="table-row"
+                style={getStyle(fullProduct, product)}
                 key={product?.id}
-                onClick={() => setProduct(product)}
+                onClick={() => setFullProduct(product)}
               >
                 <div className="table-td">
                   <Link to={`/personalareapay/${product?.id}`}>

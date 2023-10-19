@@ -244,3 +244,16 @@ export const allUppers = (string) => {
     })
     .join(" ");
 };
+
+export const getStyle = (full, product) => {
+  if (!full?.id || !product?.id) {
+    return;
+  }
+  if (full.id == product.id) {
+    return {
+      border: "1px solid #246fff",
+    };
+  } else {
+    return {};
+  }
+};

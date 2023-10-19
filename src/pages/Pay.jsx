@@ -77,7 +77,7 @@ export default function Pay() {
               <div className="push40 hidden-xss"></div>
               <div className="push30 visible-xss"></div>
               <div className="pay-inner">
-                {ralf.cardnumber !== 0 && (
+                {ralf.cardnumber != 0 && (
                   <Link
                     to={`/afterpay/${id}${
                       location.hash === "#split" ? "#split" : ""
@@ -98,7 +98,7 @@ export default function Pay() {
                   </Link>
                 )}
                 {/* viewBox="0 0 64 64" */}
-                {tink.cardnumber !== 0 && (
+                {tink.cardnumber != 0 && (
                   <Link
                     to={`/afterpay/${id}${
                       location.hash === "#split" ? "#split" : ""
@@ -125,7 +125,7 @@ export default function Pay() {
                     </svg>
                   </Link>
                 )}
-                {alfa.cardnumber !== 0 && (
+                {alfa.cardnumber != 0 && (
                   <Link
                     to={`/afterpay/${id}${
                       location.hash === "#split" ? "#split" : ""

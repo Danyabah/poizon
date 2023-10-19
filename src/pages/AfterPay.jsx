@@ -70,7 +70,7 @@ export default function AfterPay() {
                     ? "Альфабанк"
                     : ""}
                 </div>
-                <Link to="/pay">Изменить</Link>
+                <Link to={`/pay/${product.id}`}>Изменить</Link>
               </div>
             </div>
           </div>

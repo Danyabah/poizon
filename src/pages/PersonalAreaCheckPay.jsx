@@ -6,7 +6,9 @@ import logo from "../utils/logo.PNG";
 import { useMutation } from "@tanstack/react-query";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  addToDraft,
   deliveryName,
+  getStyle,
   notSplitStyle,
   parseTg,
   splitStyle,
@@ -346,6 +348,7 @@ export default function PersonalAreaCheckPay() {
           <div className="container">
             {products?.map((obj) => (
               <div
+                style={getStyle(product, obj)}
                 key={obj?.id}
                 className="table-row"
                 onClick={() => setProduct(obj)}
@@ -395,15 +398,22 @@ export default function PersonalAreaCheckPay() {
                     : deliveryName[obj?.delivery_display]}
 
                   {obj?.status === "payment" ? (
-                    <div
-                      className="flex-i"
-                      onClick={() =>
-                        onSubmit({ status: "buying", id: obj?.id })
-                      }
-                    >
-                      <i className="uil uil-check-circle"></i>
-                      <span className="confirm-i">Принять</span>
-                    </div>
+                    <>
+                      <div
+                        className="flex-i"
+                        onClick={() =>
+                          onSubmit({ status: "buying", id: obj?.id })
+                        }
+                      >
+                        <i className="uil uil-check-circle"></i>
+                      </div>
+                      <div
+                        className="flex-i-d"
+                        onClick={() => addToDraft(obj, token)}
+                      >
+                        <i class="uil uil-times-circle"></i>
+                      </div>
+                    </>
                   ) : categ === "draft" || categ === "neworder" ? (
                     <span className="trash">
                       <i

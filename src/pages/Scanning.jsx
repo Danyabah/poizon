@@ -5,16 +5,18 @@ import axios from "axios";
 import { setReload } from "../redux/slices/adminReducer";
 import { Link, useLocation } from "react-router-dom";
 import {
+  addToDraft,
   deliveryName,
+  getStyle,
   notSplitStyle,
   parseTg,
   splitStyle,
 } from "../utils/utils";
 
 export default function Scanning() {
-  const [products, setProducts] = useState([]);
+  const [products, setFullProducts] = useState([]);
   const [page, setPage] = useState(1);
-  const [product, setProduct] = useState(null);
+  const [fullProduct, setFullProduct] = useState(null);
   const reload = useSelector((state) => state.admin.reload);
   const [totalPage, setTotalPage] = useState(1);
   const [search, setSearch] = useState("");
@@ -36,7 +38,7 @@ export default function Scanning() {
       .then((data) => {
         console.log(data.data);
 
-        setProducts(data.data.data);
+        setFullProducts(data.data.data);
         setTotalPage(data.data.total_pages);
       });
   }, [page, reload, search]);
@@ -52,7 +54,7 @@ export default function Scanning() {
       try {
         axios
           .patch(
-            `https://crm-poizonstore.ru/checklist/${product?.id}`,
+            `https://crm-poizonstore.ru/checklist/${fullProduct?.id}`,
             {
               status: "rush",
             },
@@ -63,7 +65,7 @@ export default function Scanning() {
             }
           )
           .then(() => {
-            setProduct({});
+            setFullProduct({});
 
             dispatch(setReload(!reload));
           });
@@ -82,14 +84,18 @@ export default function Scanning() {
           <div className="push45 hidden-xss"></div>
           <div className="push25 visible-xss"></div>
           <form className="main-inner">
-            {product ? (
+            {fullProduct ? (
               <>
                 <div className="main-inner img-container">
                   <div className="img-preview">
-                    <a href={product.previewimage} className="" target="_blank">
+                    <a
+                      href={fullProduct.previewimage}
+                      className=""
+                      target="_blank"
+                    >
                       <img
                         style={{ objectFit: "contain" }}
-                        src={product.previewimage}
+                        src={fullProduct.previewimage}
                         alt=""
                       />
                     </a>
@@ -97,16 +103,16 @@ export default function Scanning() {
                   <div>
                     <div className="push20"></div>
                     <div className="img-text">
-                      <b>Заказ:</b> <br /> #{product?.id}
+                      <b>Заказ:</b> <br /> #{fullProduct?.id}
                     </div>
                     <div className="img-text">
-                      <b>Сплит:</b> <br /> {product?.split ? "Да" : "Нет"}
+                      <b>Сплит:</b> <br /> {fullProduct?.split ? "Да" : "Нет"}
                     </div>
-                    {!product?.split && product.split_payment_proof ? (
+                    {!fullProduct?.split && fullProduct.split_payment_proof ? (
                       <div className="img-text">
                         <b>Оплачено полностью</b>
                       </div>
-                    ) : !product?.split && product.paymentprovement ? (
+                    ) : !fullProduct?.split && fullProduct.paymentprovement ? (
                       <div className="img-text">
                         <b>Оплачено полностью</b>
                       </div>
@@ -114,22 +120,24 @@ export default function Scanning() {
                       <div className="img-text">
                         <b>Сумма к оплате:</b>
                         <br />
-                        {product.split
-                          ? Math.round(product?.fullprice / 2).toLocaleString()
-                          : product?.fullprice?.toLocaleString()}{" "}
+                        {fullProduct.split
+                          ? Math.round(
+                              fullProduct?.fullprice / 2
+                            ).toLocaleString()
+                          : fullProduct?.fullprice?.toLocaleString()}{" "}
                         ₽
                       </div>
                     )}
-                    {product?.trackid && (
+                    {fullProduct?.trackid && (
                       <div className="img-text">
-                        <b>Трек номер Poizon:</b>
+                        <b>Трек номер:</b>
                         <br />
-                        {product?.trackid}
+                        {fullProduct?.trackid}
                       </div>
                     )}
-                    {product.tg && (
+                    {fullProduct.tg && (
                       <a
-                        href={parseTg(product.tg)}
+                        href={parseTg(fullProduct.tg)}
                         target="_blank"
                         rel="noreferrer"
                         className="img-btn"
@@ -144,6 +152,20 @@ export default function Scanning() {
                 </div>
                 <div className="button no-icon scanning" onClick={onSubmit}>
                   Принять на склад
+                </div>
+                <div
+                  className="button no-icon scanning"
+                  onClick={() => {
+                    addToDraft(fullProduct, token);
+                  }}
+                  style={{
+                    marginLeft: "20px",
+                    color: "white",
+                    backgroundColor: "black",
+                    border: "1px solid black",
+                  }}
+                >
+                  Конфисковано
                 </div>
                 <div className="push60 hidden-xss"></div>
                 <div className="push25 visible-xss"></div>
@@ -197,7 +219,8 @@ export default function Scanning() {
               <div
                 key={product?.id}
                 className="table-row"
-                onClick={() => setProduct(product)}
+                style={getStyle(fullProduct, product)}
+                onClick={() => setFullProduct(product)}
               >
                 <div
                   style={
