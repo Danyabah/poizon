@@ -73,8 +73,8 @@ export default function OrderForm() {
   const initialValues = {
     managerid: userInfo.id || "",
     link: product?.link || "",
-    category: categories[0]?.id,
-    subcategory: categories[0]?.children[0].id,
+    category: product?.category?.id || categories[0]?.id,
+    subcategory: product?.subcategory || categories[0]?.children[0].id,
     brand: product?.brand || "",
     model: product?.model || "",
     size: product?.size || "",
@@ -87,6 +87,7 @@ export default function OrderForm() {
     commission: price?.commission || 0,
     promo: "",
     fullprice: 0,
+
     comment: "",
   };
 
@@ -170,7 +171,7 @@ export default function OrderForm() {
     >
       {(formik) => {
         const { values, setValues, setFieldValue } = formik;
-        console.log(values);
+        console.log(values.category);
         return (
           <Form>
             <div className="title">Товар</div>
@@ -215,6 +216,12 @@ export default function OrderForm() {
                     categories[+e.target.value - 1].chinarush +
                     values.commission;
                   setLastPrice(fullprice);
+                  if (e.target.value == 7) {
+                    setFieldValue(
+                      "chinadelivery2",
+                      categories[6].children[0].chinarush
+                    );
+                  }
                   setFieldValue("fullprice", fullprice);
                 }}
               >
@@ -240,6 +247,17 @@ export default function OrderForm() {
                 name="subcategory"
                 className="form-control select-styler"
                 id="subcategory"
+                onChange={(e) => {
+                  setFieldValue("subcategory", e.target.value);
+                  if (values.category == 7) {
+                    setFieldValue(
+                      "chinadelivery2",
+                      categories[6].children.find(
+                        (el) => el.id == e.target.value
+                      ).chinarush
+                    );
+                  }
+                }}
               >
                 {categories[+values.category - 1]?.children?.map((categ) => (
                   <option key={categ.id} value={categ.id}>
@@ -412,16 +430,24 @@ export default function OrderForm() {
                 id="curencycurency2"
                 onChange={(e) => {
                   setFieldValue("curencycurency2", e.target.value);
-                  setFieldValue(
-                    "currency3",
-                    Math.round(+e.target.value * values.currency, 2)
-                  );
+                  let cur3 = Math.round(+e.target.value * values.currency, 2);
+                  let com = values.commission;
+                  if (values.category == 7) {
+                    let comPersent = categories[6].commission;
+                    console.log(Math.round(cur3 * (comPersent / 100)));
+
+                    setFieldValue(
+                      "commission",
+                      Math.round(cur3 * (comPersent / 100))
+                    );
+                    com = Math.round(cur3 * (comPersent / 100));
+                  }
+
+                  setFieldValue("currency3", cur3);
                   let fullprice =
-                    Math.round(+e.target.value * values.currency, 2) +
-                    values.chinadelivery +
-                    values.chinadelivery2 +
-                    values.commission;
-                  console.log(values.commission);
+                    cur3 + values.chinadelivery + values.chinadelivery2 + com;
+
+                  console.log(com);
                   setLastPrice(fullprice);
                   setFieldValue("fullprice", fullprice);
                 }}
@@ -481,6 +507,7 @@ export default function OrderForm() {
                 id="commission"
               />
             </div>
+
             <div className="form-group">
               <label className="label" htmlFor="promo">
                 Промокод
@@ -593,7 +620,7 @@ export default function OrderForm() {
                     )
                     .then((res) => {
                       if (res.status === 201) {
-                        alert("добавлено в черновик");
+                        alert("Добавлено в черновик");
                       }
                       console.log(res);
                     });

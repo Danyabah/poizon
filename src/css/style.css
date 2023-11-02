@@ -320,6 +320,13 @@ ul.tabs li:hover {
   opacity: 1;
   transition: all 200ms ease-out;
 }
+.flex-cont-i {
+  display: flex;
+  align-items: center;
+  position: absolute;
+  right: -100%;
+  gap: 20px;
+}
 .label,
 .text-label {
   margin-bottom: 10px;
@@ -699,6 +706,7 @@ option {
   display: flex;
   align-items: center;
   justify-content: flex-start;
+  width: 500px;
 }
 .table-wrapper th,
 .table-wrapper tr {
@@ -785,6 +793,9 @@ option {
   }
 }
 @media only screen and (max-width: 647px) {
+  .table-wrapper {
+    width: 200px;
+  }
   .table-wrapper tr {
     margin-bottom: 8px;
   }
@@ -819,7 +830,7 @@ option {
     width: 50px;
   }
   .text {
-    line-height: 36px;
+    line-height: 18px;
   }
   /* .history-wrap li:before {
     width: 5px;
@@ -946,6 +957,10 @@ option {
     width: 30px;
     height: 30px;
   }
+  .pay-inner .item .sber-img {
+    width: 30px;
+    height: 30px;
+  }
   .pay-inner .item:nth-child(3) svg {
     margin-right: 0;
   }
@@ -973,6 +988,7 @@ option {
   top: 50px;
   left: 0px;
   font-size: 10px;
+  z-index: 2;
   /* left: 40px; */
 }
 .login__close {
@@ -1197,7 +1213,8 @@ option {
 .table-row {
   display: grid;
   grid-template-columns: 1fr 1.5fr 1.5fr 2.3fr 1fr;
-  background: #e0e0e0;
+  /* background: #e0e0e0; */
+  background-color: #e0e0e0;
   grid-gap: 1px;
 }
 
@@ -1212,7 +1229,7 @@ option {
   line-height: 29px;
 }
 .table-td:first-child {
-  justify-content: flex-start;
+  /* justify-content: flex-start; */
 }
 .map {
   margin-bottom: 20px;
@@ -1283,12 +1300,20 @@ option {
     grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
   }
   .flex-i {
-    display: flex;
+    /* display: flex;
     align-items: center;
     position: absolute;
     left: 90%;
-    top: 35%;
+    top: 35%; */
     font-size: 35px;
+  }
+  .flex-cont-i {
+    display: flex;
+    align-items: center;
+    position: absolute;
+    right: -60%;
+    top: 3px;
+    gap: 5px;
   }
   .flex-i-2 i {
     top: 20%;
@@ -1324,7 +1349,7 @@ option {
   font-size: 20px;
   margin-left: 10px;
 }
-@media only screen and (max-width: 647px) {
+@media only screen and (max-width: 1000px) {
   ul.tabs li a {
     font-size: 10.26px;
     line-height: 12px;
@@ -1332,13 +1357,14 @@ option {
   .table-td {
     font-size: 8px;
     line-height: 10px;
-    padding: 20px 0 0;
+    padding: 10px 0;
+    min-width: 45px;
   }
   ul.tabs {
     grid-gap: 8px;
   }
   .table-row {
-    background: transparent;
+    background: #e0e0e0;
   }
   .pagination a {
     font-size: 10px;
@@ -1404,10 +1430,18 @@ option {
     margin-left: 2px;
   }
   .flex-i i {
-    font-size: 24px;
+    font-size: 12px;
+  }
+  .flex-i-d i {
+    font-size: 12px;
   }
   .flex-i {
-    left: 100%;
+    /* left: 70%;
+    top: 60% !important; */
+  }
+  .flex-i-d {
+    /* left: 100%;
+    top: 60% !important; */
   }
   .flex-i-2 i {
     left: 100%;
@@ -1466,7 +1500,7 @@ option {
     padding-left: 12px;
   }
   .order-table .table-td {
-    justify-content: flex-start;
+    /* justify-content: flex-start; */
   }
 }
 .filter__list {
@@ -1606,16 +1640,19 @@ option {
   line-height: 29px;
   padding: 27px 56px 24px;
   position: relative;
-  width: 100%;
-  border: 1px solid #e3e3e3;
+  /* z-index: -1; */
+  width: 400px;
+  /* border: 1px solid #e3e3e3; */
+  background-color: black;
+  color: white;
   border-radius: 10px;
 }
 .more-wrapper:before {
   content: "";
   width: 14px;
   height: 14px;
-  border-top: 1px solid #000;
-  border-right: 1px solid #000;
+  border-top: 1px solid #fff;
+  border-right: 1px solid #fff;
   transform: rotate(45deg);
   position: absolute;
   top: 35px;
@@ -1625,8 +1662,8 @@ option {
   content: "";
   width: 14px;
   height: 14px;
-  border-top: 1px solid #000;
-  border-right: 1px solid #000;
+  border-top: 1px solid #fff;
+  border-right: 1px solid #fff;
   transform: rotate(135deg);
   position: absolute;
   top: 35px;
@@ -1707,28 +1744,32 @@ option {
     font-weight: 400;
     font-size: 10.26px;
     line-height: 12px;
-    padding: 7px 33px 7px;
-    border-radius: 2.28389px;
+    /* padding: 7px 33px 7px; */
+    padding: 13px;
+    padding-left: 33px;
+    border-radius: 5px;
+    white-space: nowrap;
+    width: 180px;
   }
   .more-wrapper:before {
     width: 9px;
     height: 9px;
-    border-top: 1px solid #828282;
-    border-right: 1px solid #828282;
+    border-top: 1px solid #fff;
+    border-right: 1px solid #fff;
     transform: rotate(45deg);
     position: absolute;
-    top: 9px;
+    top: 15px;
     left: 5px;
   }
   .more-wrapper-active::before {
     content: "";
     width: 9px;
     height: 9px;
-    border-top: 1px solid #000;
-    border-right: 1px solid #000;
+    border-top: 1px solid #fff;
+    border-right: 1px solid #fff;
     transform: rotate(135deg);
     position: absolute;
-    top: 8px;
+    top: 14px;
     left: 8px;
   }
   .change {
@@ -1751,7 +1792,9 @@ option {
     height: 38px;
   }
 }
-
+.yel-btn {
+  margin-top: 0px !important;
+}
 /*****************************/
 /*****************************/
 /*****************************/
@@ -2801,15 +2844,16 @@ option {
 }
 
 .flex-i {
-  display: flex;
-  align-items: center;
-  position: absolute;
-  right: -100%;
-  top: 35%;
   font-size: 35px;
-  color: #428bca;
+  color: #56e147;
   cursor: pointer;
 }
+.flex-i-d {
+  font-size: 35px;
+  color: #dc2e2e;
+  cursor: pointer;
+}
+
 .trash {
   position: absolute;
   right: -35%;
@@ -2818,15 +2862,17 @@ option {
   color: #428bca;
   cursor: pointer;
 }
-@media only screen and (max-width: 883px) {
+@media only screen and (max-width: 1000px) {
   .trash {
-    font-size: 25px;
+    font-size: 20px;
+    top: 3px;
   }
 }
 @media only screen and (max-width: 422px) {
   .trash {
-    font-size: 20px;
+    font-size: 18px;
     right: -50%;
+    top: 3px;
   }
 }
 .pzn__statuses {
@@ -3091,4 +3137,29 @@ option {
   background-color: #0081ab;
   border-radius: 10px;
   color: white;
+}
+.sber {
+  background: #b2ebab;
+}
+.full-button {
+  width: 100%;
+  /* width: 65%; */
+  background-color: #00a942;
+  height: 60px;
+  font-size: 22px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+  color: white;
+}
+@media only screen and (max-width: 647px) {
+  .full-button {
+    width: 100%;
+    font-size: 18px;
+    height: 55px;
+  }
+}
+.table-row-bold {
+  font-weight: bold;
 }

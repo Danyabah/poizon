@@ -4,14 +4,19 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import logo from "../utils/logo.PNG";
 import { useMutation } from "@tanstack/react-query";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
+  addToDraft,
   deliveryName,
+  getStyle,
   notSplitStyle,
   parseTg,
   splitStyle,
+  stage,
   status,
 } from "../utils/utils";
+import { setPreviewimage } from "../redux/slices/adminReducer";
+import useFilter from "../utils/useFilter";
 
 export default function PersonalAreaCheckPay() {
   const [categ, setCateg] = useState("");
@@ -22,6 +27,12 @@ export default function PersonalAreaCheckPay() {
   const [search, setSearch] = useState("");
   const token = useSelector((state) => state.user.token);
   const [product, setProduct] = useState(null);
+  const dispatch = useDispatch();
+  const [filters, setFilters] = useState({
+    price: false,
+    status: false,
+    delivery: false,
+  });
 
   function getProducts() {
     axios
@@ -39,7 +50,7 @@ export default function PersonalAreaCheckPay() {
         setTotalPage(data.data.total_pages);
       });
   }
-
+  console.log(categ);
   useEffect(() => {
     getProducts();
   }, [page, categ, search]);
@@ -91,6 +102,36 @@ export default function PersonalAreaCheckPay() {
         });
     }
   };
+
+  function goToDraft(obj) {
+    navigate(`/personalareaorder/${obj?.id}`);
+    dispatch(setPreviewimage(obj.previewimage));
+  }
+
+  function sortProducts(categ) {
+    setFilters((prev) => ({ ...prev, [categ]: !prev[categ] }));
+    if (categ === "price") {
+      setProducts(
+        products.sort((a, b) =>
+          filters[categ] ? a.fullprice - b.fullprice : b.fullprice - a.fullprice
+        )
+      );
+    } else if (categ === "delivery") {
+      products.sort((a, b) =>
+        filters[categ]
+          ? a.delivery_display.localeCompare(b.delivery_display)
+          : b.delivery_display.localeCompare(a.delivery_display)
+      );
+    } else if (categ === "status") {
+      products.sort((a, b) =>
+        filters[categ]
+          ? stage[a.status] - stage[b.status]
+          : stage[b.status] - stage[a.status]
+      );
+    }
+  }
+  console.log(products);
+
   return (
     <>
       <header className="header-wrapper">
@@ -213,7 +254,7 @@ export default function PersonalAreaCheckPay() {
 
         <div className="check-table table">
           <div className="container">
-            {product && categ !== "draft" ? (
+            {product && (
               <div className="main-inner img-container">
                 <div className="img-preview">
                   <a href={product.previewimage} className="" target="_blank">
@@ -279,6 +320,18 @@ export default function PersonalAreaCheckPay() {
                       Телеграмм
                     </a>
                   )}
+                  {product.status === "draft" && (
+                    <a
+                      href="#"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        goToDraft(product);
+                      }}
+                      className="img-btn"
+                    >
+                      Редактировать
+                    </a>
+                  )}
                   {/* {product?.delivery_display === "Самовывоз из шоурума" && (
                     <div
                       className="img-btn img-btn-gr"
@@ -302,31 +355,61 @@ export default function PersonalAreaCheckPay() {
                 <div className="push20 hidden-xss"></div>
                 <div className="push10 visible-xss"></div>
               </div>
-            ) : (
-              <div className="push50"></div>
             )}
-            <div className="table-row">
+            <div className="table-row table-row-bold">
               <div className="table-td" style={{ justifyContent: "center" }}>
                 Номер
               </div>
               <div className="table-td">Дата</div>
-              <div className="table-td">Сумма</div>
-              {categ !== "" ? (
-                <div className="table-td">Способ оплаты</div>
-              ) : (
-                <div className="table-td">Статус</div>
-              )}
-              {categ === "payment" || categ === "buying" ? (
+              <div
+                className="table-td"
+                {...useFilter("price", products, setProducts)}
+              >
+                Сумма
+              </div>
+
+              <div
+                className="table-td"
+                style={{ display: categ !== "" ? "block" : "none" }}
+              >
+                Способ оплаты
+              </div>
+
+              <div
+                className="table-td"
+                {...useFilter("status", products, setProducts)}
+                style={{
+                  display: categ !== "" ? "none" : "block",
+                  cursor: "pointer",
+                }}
+              >
+                Статус
+              </div>
+
+              {(categ === "payment" || categ === "buying") && (
                 <div className="table-td">Сплит</div>
-              ) : (
-                <div className="table-td">Доставка</div>
               )}
+
+              <div
+                className="table-td"
+                {...useFilter("delivery", products, setProducts)}
+                style={{
+                  display:
+                    categ === "payment" || categ === "buying"
+                      ? "none"
+                      : "block",
+                  cursor: "pointer",
+                }}
+              >
+                Доставка
+              </div>
             </div>
           </div>
-          <div className="line hidden-xss"></div>
+          <div className="line "></div>
           <div className="container">
             {products?.map((obj) => (
               <div
+                style={getStyle(product, obj)}
                 key={obj?.id}
                 className="table-row"
                 onClick={() => setProduct(obj)}
@@ -340,11 +423,11 @@ export default function PersonalAreaCheckPay() {
                   className="table-td"
                   onClick={() =>
                     categ === "draft"
-                      ? navigate(`/personalareaorder/${obj?.id}`)
+                      ? goToDraft(obj)
                       : navigate(`/personalareapay/${obj?.id}`)
                   }
                 >
-                  {obj?.id}
+                  {obj?.id?.slice(0, -3) + ".."}
                 </div>
 
                 <div className="table-td">
@@ -376,14 +459,21 @@ export default function PersonalAreaCheckPay() {
                     : deliveryName[obj?.delivery_display]}
 
                   {obj?.status === "payment" ? (
-                    <div
-                      className="flex-i"
-                      onClick={() =>
-                        onSubmit({ status: "buying", id: obj?.id })
-                      }
-                    >
-                      <i className="uil uil-check-circle"></i>
-                      <span className="confirm-i">Принять</span>
+                    <div className="flex-cont-i">
+                      <div
+                        className="flex-i"
+                        onClick={() =>
+                          onSubmit({ status: "buying", id: obj?.id })
+                        }
+                      >
+                        <i className="uil uil-check-circle"></i>
+                      </div>
+                      <div
+                        className="flex-i-d"
+                        onClick={() => addToDraft(obj, token)}
+                      >
+                        <i class="uil uil-times-circle"></i>
+                      </div>
                     </div>
                   ) : categ === "draft" || categ === "neworder" ? (
                     <span className="trash">

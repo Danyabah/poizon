@@ -5,6 +5,7 @@ import { Link, useParams } from "react-router-dom";
 import ProvementForm from "../components/ProvementForm";
 import axios from "axios";
 import Timer from "../components/Timer";
+import { translatePay } from "../utils/utils";
 
 export default function AfterPay() {
   const paymentmethod = useSelector((state) => state.user.payMethod);
@@ -61,16 +62,9 @@ export default function AfterPay() {
               <div className="push10 visible-xss"></div>
               <div className="pay-in">
                 <div className="text">
-                  Перевод по номеру карты{" "}
-                  {paymentmethod === "tink"
-                    ? "Тинькофф"
-                    : paymentmethod == "ralf"
-                    ? "Райффайзен"
-                    : paymentmethod == "alfa"
-                    ? "Альфабанк"
-                    : ""}
+                  Перевод по номеру карты {translatePay[paymentmethod]}
                 </div>
-                <Link to="/pay">Изменить</Link>
+                <Link to={`/pay/${product.id}`}>Изменить</Link>
               </div>
             </div>
           </div>

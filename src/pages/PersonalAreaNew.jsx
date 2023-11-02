@@ -11,8 +11,9 @@ import PurchaseForm from "../components/PurchaseForm";
 import { useMutation } from "@tanstack/react-query";
 import logo from "../utils/logo.PNG";
 import ChinaForm from "../components/ChinaForm";
-import { addToDraft, getDif, parseTg } from "../utils/utils";
+import { addToDraft, getDif, getStyle, parseTg } from "../utils/utils";
 import ChinarushForm from "../components/ChinarushForm";
+import useFilter from "../utils/useFilter";
 
 export default function PersonalAreaNew() {
   const [categ, setCateg] = useState("buying");
@@ -59,6 +60,19 @@ export default function PersonalAreaNew() {
       case "china":
         dispatch(setChinarushProduct(obj));
         break;
+      default:
+        break;
+    }
+  }
+
+  function getCurProduct() {
+    switch (categ) {
+      case "buying":
+        return product;
+      case "bought":
+        return chinaProduct;
+      case "china":
+        return chinarushProduct;
       default:
         break;
     }
@@ -156,247 +170,259 @@ export default function PersonalAreaNew() {
           <div className="push10 visible-xss"></div>
         </div>
         <div className="line hidden-xss"></div>
-        {categ === 2 ? (
-          <PurchaseForm setCateg={setCateg} />
-        ) : (
-          <>
+
+        {categ === 2 && <PurchaseForm setCateg={setCateg} />}
+
+        <>
+          <div
+            className="container"
+            style={{ display: categ !== 2 ? "block" : "none" }}
+          >
+            <div className="push40  hidden-xss"></div>
+            {product?.id && categ === "buying" && (
+              <>
+                <div className="main-inner img-container">
+                  <div className="img-preview">
+                    <a href={product.previewimage} className="" target="_blank">
+                      <img
+                        style={{ objectFit: "contain" }}
+                        src={product.previewimage}
+                        alt=""
+                      />
+                    </a>
+                  </div>
+                  <div>
+                    <div className="push20"></div>
+                    <div className="img-text">
+                      <b>Заказ:</b> <br /> #{product?.id}
+                    </div>
+                    <div className="img-text">
+                      <b>Сплит:</b> <br /> {product?.split ? "Да" : "Нет"}
+                    </div>
+
+                    <div className="img-text">
+                      <b>CNY:</b>
+                      <br />
+                      {product?.curencycurency2} CNY
+                    </div>
+
+                    {product.tg && (
+                      <a
+                        href={parseTg(product.tg)}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="img-btn"
+                      >
+                        Телеграмм
+                      </a>
+                    )}
+                  </div>
+
+                  <div className="push20 hidden-xss"></div>
+                  <div className="push10 visible-xss"></div>
+                </div>
+                <div className="main-inner">
+                  <button
+                    className="button button-new no-icon"
+                    onClick={() => setCateg(2)}
+                  >
+                    На закупку
+                  </button>
+                  <div
+                    className="button button-new no-icon draft-btn"
+                    onClick={() => addToDraft(product, token)}
+                  >
+                    Отменить заказ
+                  </div>
+                </div>
+              </>
+            )}
+            {chinaProduct?.id && categ === "bought" && (
+              <>
+                <div className="main-inner img-container">
+                  <div className="img-preview">
+                    <a
+                      href={chinaProduct.previewimage}
+                      className=""
+                      target="_blank"
+                    >
+                      <img
+                        style={{ objectFit: "contain" }}
+                        src={chinaProduct.previewimage}
+                        alt=""
+                      />
+                    </a>
+                  </div>
+                  <div>
+                    <div className="push20"></div>
+                    <div className="img-text">
+                      <b>Заказ:</b> <br /> #{chinaProduct?.id}
+                    </div>
+                    <div className="img-text">
+                      <b>Сплит:</b> <br /> {chinaProduct?.split ? "Да" : "Нет"}
+                    </div>
+
+                    <div className="img-text">
+                      <b>CNY:</b>
+                      <br />
+                      {chinaProduct?.curencycurency2} CNY
+                    </div>
+
+                    {getDif(chinaProduct) > 0 && (
+                      <div className="img-text" style={{ color: "red" }}>
+                        <b>Мы должны:</b>
+                        <br />
+                        {getDif(chinaProduct)}₽
+                      </div>
+                    )}
+
+                    {chinaProduct.tg && (
+                      <a
+                        href={parseTg(chinaProduct.tg)}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="img-btn"
+                      >
+                        Телеграмм
+                      </a>
+                    )}
+                  </div>
+
+                  <div className="push20 hidden-xss"></div>
+                  <div className="push10 visible-xss"></div>
+                </div>
+                <div className="main-inner">
+                  <ChinaForm id={chinaProduct?.id} />
+                </div>
+              </>
+            )}
+            {chinarushProduct?.id && categ === "china" && (
+              <>
+                <div className="main-inner img-container">
+                  <div className="img-preview">
+                    <a
+                      href={chinarushProduct.previewimage}
+                      className=""
+                      target="_blank"
+                    >
+                      <img
+                        style={{ objectFit: "contain" }}
+                        src={chinarushProduct.previewimage}
+                        alt=""
+                      />
+                    </a>
+                  </div>
+                  <div>
+                    <div className="push20"></div>
+                    <div className="img-text">
+                      <b>Заказ:</b> <br /> #{chinarushProduct?.id}
+                    </div>
+                    <div className="img-text">
+                      <b>Сплит:</b> <br />{" "}
+                      {chinarushProduct?.split ? "Да" : "Нет"}
+                    </div>
+
+                    <div className="img-text">
+                      <b>CNY:</b>
+                      <br />
+                      {chinarushProduct?.curencycurency2} CNY
+                    </div>
+
+                    {chinarushProduct.tg && (
+                      <a
+                        href={parseTg(chinarushProduct.tg)}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="img-btn"
+                      >
+                        Телеграмм
+                      </a>
+                    )}
+                  </div>
+
+                  <div className="push20 hidden-xss"></div>
+                  <div className="push10 visible-xss"></div>
+                </div>
+                <div className="main-inner">
+                  <ChinarushForm id={chinarushProduct?.id} />
+                </div>
+              </>
+            )}
+            <div className="push40 hidden-xss"></div>
+            <div className="push20 visible-xss"></div>
+          </div>
+          <div className="line"></div>
+          <div className="order-table table">
             <div className="container">
-              <div className="push40  hidden-xss"></div>
-              {product?.id && categ === "buying" && (
-                <>
-                  <div className="main-inner img-container">
-                    <div className="img-preview">
-                      <a
-                        href={product.previewimage}
-                        className=""
-                        target="_blank"
-                      >
-                        <img
-                          style={{ objectFit: "contain" }}
-                          src={product.previewimage}
-                          alt=""
-                        />
-                      </a>
-                    </div>
-                    <div>
-                      <div className="push20"></div>
-                      <div className="img-text">
-                        <b>Заказ:</b> <br /> #{product?.id}
-                      </div>
-                      <div className="img-text">
-                        <b>Сплит:</b> <br /> {product?.split ? "Да" : "Нет"}
-                      </div>
+              <div className="table-row table-row-th table-row-bold">
+                <div className="table-td">Заказ</div>
+                {categ !== "china" ? (
+                  <div className="table-td">Дата заказа</div>
+                ) : (
+                  <div className="table-td">Дата приемки</div>
+                )}
 
-                      <div className="img-text">
-                        <b>CNY:</b>
-                        <br />
-                        {product?.curencycurency2} CNY
-                      </div>
-
-                      {product.tg && (
-                        <a
-                          href={parseTg(product.tg)}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="img-btn"
-                        >
-                          Телеграмм
-                        </a>
-                      )}
-                    </div>
-
-                    <div className="push20 hidden-xss"></div>
-                    <div className="push10 visible-xss"></div>
-                  </div>
-                  <div className="main-inner">
-                    <button
-                      className="button button-new no-icon"
-                      onClick={() => setCateg(2)}
-                    >
-                      На закупку
-                    </button>
-                    <div
-                      className="button button-new no-icon draft-btn"
-                      onClick={() => addToDraft(product, token)}
-                    >
-                      Отменить заказ
-                    </div>
-                  </div>
-                </>
-              )}
-              {chinaProduct?.id && categ === "bought" && (
-                <>
-                  <div className="main-inner img-container">
-                    <div className="img-preview">
-                      <a
-                        href={chinaProduct.previewimage}
-                        className=""
-                        target="_blank"
-                      >
-                        <img
-                          style={{ objectFit: "contain" }}
-                          src={chinaProduct.previewimage}
-                          alt=""
-                        />
-                      </a>
-                    </div>
-                    <div>
-                      <div className="push20"></div>
-                      <div className="img-text">
-                        <b>Заказ:</b> <br /> #{chinaProduct?.id}
-                      </div>
-                      <div className="img-text">
-                        <b>Сплит:</b> <br />{" "}
-                        {chinaProduct?.split ? "Да" : "Нет"}
-                      </div>
-
-                      <div className="img-text">
-                        <b>CNY:</b>
-                        <br />
-                        {chinaProduct?.curencycurency2} CNY
-                      </div>
-
-                      {getDif(chinaProduct) > 0 && (
-                        <div className="img-text" style={{ color: "red" }}>
-                          <b>Мы должны:</b>
-                          <br />
-                          {getDif(chinaProduct)}₽
-                        </div>
-                      )}
-
-                      {chinaProduct.tg && (
-                        <a
-                          href={parseTg(chinaProduct.tg)}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="img-btn"
-                        >
-                          Телеграмм
-                        </a>
-                      )}
-                    </div>
-
-                    <div className="push20 hidden-xss"></div>
-                    <div className="push10 visible-xss"></div>
-                  </div>
-                  <div className="main-inner">
-                    <ChinaForm id={chinaProduct?.id} />
-                  </div>
-                </>
-              )}
-              {chinarushProduct?.id && categ === "china" && (
-                <>
-                  <div className="main-inner img-container">
-                    <div className="img-preview">
-                      <a
-                        href={chinarushProduct.previewimage}
-                        className=""
-                        target="_blank"
-                      >
-                        <img
-                          style={{ objectFit: "contain" }}
-                          src={chinarushProduct.previewimage}
-                          alt=""
-                        />
-                      </a>
-                    </div>
-                    <div>
-                      <div className="push20"></div>
-                      <div className="img-text">
-                        <b>Заказ:</b> <br /> #{chinarushProduct?.id}
-                      </div>
-                      <div className="img-text">
-                        <b>Сплит:</b> <br />{" "}
-                        {chinarushProduct?.split ? "Да" : "Нет"}
-                      </div>
-
-                      <div className="img-text">
-                        <b>CNY:</b>
-                        <br />
-                        {chinarushProduct?.curencycurency2} CNY
-                      </div>
-
-                      {chinarushProduct.tg && (
-                        <a
-                          href={parseTg(chinarushProduct.tg)}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="img-btn"
-                        >
-                          Телеграмм
-                        </a>
-                      )}
-                    </div>
-
-                    <div className="push20 hidden-xss"></div>
-                    <div className="push10 visible-xss"></div>
-                  </div>
-                  <div className="main-inner">
-                    <ChinarushForm id={chinarushProduct?.id} />
-                  </div>
-                </>
-              )}
-              <div className="push40 hidden-xss"></div>
-              <div className="push20 visible-xss"></div>
+                <div
+                  className="table-td"
+                  {...useFilter(
+                    "price",
+                    products,
+                    setProducts,
+                    "curencycurency2"
+                  )}
+                >
+                  CNY
+                </div>
+                <div className="table-td">Название</div>
+                {categ === "china" ? (
+                  <div className="table-td">Трек номер</div>
+                ) : (
+                  <div className="table-td">Сплит</div>
+                )}
+              </div>
             </div>
             <div className="line"></div>
-            <div className="order-table table">
-              <div className="container">
-                <div className="table-row table-row-th">
-                  <div className="table-td">Заказ</div>
-                  {categ !== "china" ? (
-                    <div className="table-td">Дата заказа</div>
-                  ) : (
-                    <div className="table-td">Дата приемки</div>
-                  )}
-                  <div className="table-td">CNY</div>
-                  <div className="table-td">Название</div>
-                  {categ === "china" ? (
-                    <div className="table-td">Трек номер</div>
-                  ) : (
-                    <div className="table-td">Сплит</div>
-                  )}
-                </div>
-              </div>
-              <div className="line"></div>
-              {products?.map((obj) => (
-                <div key={obj?.id}>
-                  <div className="container">
+            {products?.map((obj) => (
+              <div key={obj?.id}>
+                <div className="container">
+                  <div
+                    style={getStyle(getCurProduct(), obj)}
+                    className="table-row"
+                    onClick={() => changeProduct(obj)}
+                  >
                     <div
-                      className="table-row"
-                      onClick={() => changeProduct(obj)}
+                      className="table-td"
+                      style={{ cursor: "pointer" }}
+                      onClick={() => navigate(`/personalareapay/${obj.id}`)}
                     >
-                      <div
-                        className="table-td"
-                        style={{ cursor: "pointer" }}
-                        onClick={() => navigate(`/personalareapay/${obj.id}`)}
-                      >
-                        {obj?.id}
-                      </div>
-                      <div className="table-td">
-                        {obj.startDate?.slice(0, 10)}
-                      </div>
-                      <div className="table-td">
-                        {obj?.curencycurency2?.toLocaleString()}
-                      </div>
-                      <div className="table-td">
-                        {obj?.brand} {obj?.model}
-                      </div>
-                      {categ === "china" ? (
-                        <div className="table-td">{obj?.trackid}</div>
-                      ) : (
-                        <div className="table-td">
-                          {obj?.split ? "Да" : "Нет"}
-                        </div>
-                      )}
+                      {obj?.id?.slice(0, -3) + ".."}
                     </div>
+                    <div className="table-td">
+                      {obj.startDate?.slice(0, 10)}
+                    </div>
+                    <div className="table-td">
+                      {obj?.curencycurency2?.toLocaleString()}
+                    </div>
+                    <div className="table-td">
+                      {obj?.brand} {obj?.model}
+                    </div>
+                    {categ === "china" ? (
+                      <div className="table-td">
+                        {obj?.trackid?.slice(0, -6) + ".."}
+                      </div>
+                    ) : (
+                      <div className="table-td">
+                        {obj?.split ? "Да" : "Нет"}
+                      </div>
+                    )}
                   </div>
-                  <div className="line"></div>
                 </div>
-              ))}
-            </div>
-          </>
-        )}
+                <div className="line"></div>
+              </div>
+            ))}
+          </div>
+        </>
+
         <div className="push80 hidden-xss"></div>
         <div className="push20 visible-xss"></div>
         <div className="container">

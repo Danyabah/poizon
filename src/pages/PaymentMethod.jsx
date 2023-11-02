@@ -3,6 +3,7 @@ import Header from "../components/Header";
 import Ralf from "../components/Ralf";
 import Tink from "../components/Tink";
 import Alfa from "../components/Alfa";
+import Sber from "../components/Sber";
 
 export default function PaymentMethod() {
   return (
@@ -20,6 +21,7 @@ export default function PaymentMethod() {
             <Ralf />
             <Tink />
             <Alfa />
+            <Sber />
           </div>
         </div>
 

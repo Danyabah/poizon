@@ -101,9 +101,9 @@ export const status = {
   //  buying: 'Оплачен',
   buying: "На закупке",
   bought: "Закуплен",
-  china: "На складе в Китае",
-  chinarush: "Доставка на склад РФ",
-  rush: "На складе в РФ",
+  china: "Склад Китай",
+  chinarush: "Доставка в РФ",
+  rush: "Склад РФ",
   cdek: "Доставляется СДЭК",
   completed: "Завершен",
 };
@@ -119,6 +119,8 @@ export const getDif = (product) => {
   return (product?.curencycurency2 - product?.realprice) * product?.currency;
 };
 export const stage = {
+  draft: -1,
+  neworder: 0,
   payment: 1,
   buying: 2,
   bought: 3,
@@ -150,6 +152,7 @@ export const translatePay = {
   tink: "Тинькофф",
   alfa: "Альфабанк",
   ralf: "Райффайзенбанк",
+  sber: "Сбербанк",
 };
 
 export const deliveryName = {
@@ -239,9 +242,21 @@ export const allUppers = (string) => {
         if (e[0] === "«") {
           return e[0] + e[2].toUpperCase() + e.slice(3);
         }
-
         return e[0] + e[1].toUpperCase() + e.slice(2);
       }
     })
     .join(" ");
+};
+
+export const getStyle = (full, product) => {
+  if (!full?.id || !product?.id) {
+    return;
+  }
+  if (full.id == product.id) {
+    return {
+      border: "1px solid #246fff",
+    };
+  } else {
+    return {};
+  }
 };

@@ -5,7 +5,9 @@ import { setPayMethod, setSplit } from "../redux/slices/userReducer";
 import { Link, useLocation, useParams } from "react-router-dom";
 import axios from "axios";
 import Timer from "../components/Timer";
+
 const raifImg = require("../utils/raif.png");
+const sberImg = require("../utils/icon_sber.png");
 
 export default function Pay() {
   const dispatch = useDispatch();
@@ -14,6 +16,7 @@ export default function Pay() {
   const [ralf, setRalfInfo] = useState({});
   const [alfa, setAlfaInfo] = useState({});
   const [tink, setTinkInfo] = useState({});
+  const [sber, setSberInfo] = useState({});
   const [product, setProduct] = useState({});
   const split = useSelector((state) => state.user.split);
   const location = useLocation();
@@ -27,6 +30,7 @@ export default function Pay() {
       setRalfInfo(res.data.ralf);
       setAlfaInfo(res.data.alfa);
       setTinkInfo(res.data.tink);
+      setSberInfo(res.data.sber);
     });
 
     if (location.hash === "#split") {
@@ -47,8 +51,14 @@ export default function Pay() {
             <div className="title">Заказ #{product?.id}</div>
             <div className="push20 hidden-xss"></div>
             <div className="push10 visible-xss"></div>
-            <div className="text">
-              {product?.brand} {product?.model}
+            <div className="img-preview">
+              <a href={product?.previewimage} className="" target="_blank">
+                <img
+                  style={{ objectFit: "contain" }}
+                  src={product?.previewimage}
+                  alt=""
+                />
+              </a>
             </div>
           </div>
         </div>
@@ -77,7 +87,7 @@ export default function Pay() {
               <div className="push40 hidden-xss"></div>
               <div className="push30 visible-xss"></div>
               <div className="pay-inner">
-                {ralf.cardnumber !== 0 && (
+                {ralf.cardnumber != 0 && (
                   <Link
                     to={`/afterpay/${id}${
                       location.hash === "#split" ? "#split" : ""
@@ -85,9 +95,7 @@ export default function Pay() {
                     onClick={() => dispatch(setPayMethod("ralf"))}
                     className="item ralf"
                   >
-                    <div className="item-title">
-                      Перевод на карту Райффайзен
-                    </div>
+                    <div className="item-title">Райффайзен</div>
                     <img
                       src={raifImg}
                       alt=""
@@ -98,7 +106,7 @@ export default function Pay() {
                   </Link>
                 )}
                 {/* viewBox="0 0 64 64" */}
-                {tink.cardnumber !== 0 && (
+                {tink.cardnumber != 0 && (
                   <Link
                     to={`/afterpay/${id}${
                       location.hash === "#split" ? "#split" : ""
@@ -106,9 +114,7 @@ export default function Pay() {
                     onClick={() => dispatch(setPayMethod("tink"))}
                     className="item tink"
                   >
-                    <div className="item-title">
-                      Перевод по номеру карты Тинькофф
-                    </div>
+                    <div className="item-title">Тинькофф</div>
                     <svg
                       width="65"
                       height="58"
@@ -125,7 +131,7 @@ export default function Pay() {
                     </svg>
                   </Link>
                 )}
-                {alfa.cardnumber !== 0 && (
+                {alfa.cardnumber != 0 && (
                   <Link
                     to={`/afterpay/${id}${
                       location.hash === "#split" ? "#split" : ""
@@ -133,7 +139,7 @@ export default function Pay() {
                     className="item alfa"
                     onClick={() => dispatch(setPayMethod("alfa"))}
                   >
-                    <div className="item-title">Перевод на карту Альфабанк</div>
+                    <div className="item-title">Альфабанк</div>
                     <svg
                       width="43"
                       height="66"
@@ -148,6 +154,27 @@ export default function Pay() {
                         fill="white"
                       />
                     </svg>
+                  </Link>
+                )}
+                {sber.cardnumber != 0 && (
+                  <Link
+                    to={`/afterpay/${id}${
+                      location.hash === "#split" ? "#split" : ""
+                    }`}
+                    className="item sber"
+                    onClick={() => dispatch(setPayMethod("sber"))}
+                  >
+                    <div className="item-title" style={{ color: "black" }}>
+                      Сбербанк
+                    </div>
+                    <img
+                      src={sberImg}
+                      alt=""
+                      className="sber-img"
+                      width={"65"}
+                      height={"65"}
+                      style={{ objectFit: "cover" }}
+                    />
                   </Link>
                 )}
               </div>

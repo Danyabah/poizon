@@ -452,25 +452,31 @@ export default function OrderPageInProgress() {
                     </span>
                   </li>
                 </ul>
-                {product.status === "completed" && (
-                  <div className="text">
-                    Спасибо большое за заказ! Были бы Вам очень благодарны, если
-                    сможете оставить небольшой отзыв с фото в диалоге{" "}
-                    <b>
-                      {" "}
-                      <a
-                        href="https://t.me/noziop"
-                        rel="noreferrer"
-                        target="_blank"
-                      >
-                        телеграм нашего менеджера
-                      </a>
-                    </b>
-                    .<br />
-                    <div className="push25 hidden-xss"></div>
-                    <div className="push15 visible-xss"></div>
-                    За отзыв с фото даем скидку <b>150₽</b> на следующий заказ.
-                  </div>
+                {(product.status === "completed" ||
+                  stage[sdekStatus] === 8) && (
+                  <>
+                    <div className="push50 hidden-xss"></div>
+                    <div className="push20 visible-xss"></div>
+                    <div className="text">
+                      Спасибо большое за заказ! Были бы Вам очень благодарны,
+                      если сможете оставить небольшой отзыв с фото в диалоге{" "}
+                      <b>
+                        {" "}
+                        <a
+                          href="https://t.me/noziop"
+                          rel="noreferrer"
+                          target="_blank"
+                        >
+                          телеграм нашего менеджера
+                        </a>
+                      </b>
+                      .<br />
+                      <div className="push25 hidden-xss"></div>
+                      <div className="push15 visible-xss"></div>
+                      За отзыв с фото даем скидку <b>150₽</b> на следующий
+                      заказ.
+                    </div>
+                  </>
                 )}
                 {product.status === "rush" &&
                   product.delivery === "Самовывоз из шоурума" && (

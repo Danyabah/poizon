@@ -62,7 +62,7 @@ export default function OrderPage() {
             <div className="title">
               {product?.brand} {product?.model}
             </div>
-            <div className="push20"></div>
+
             <div className="text size orderpage__flex">
               {/* <span>Размер: {product?.size}</span> */}
               <a href={product?.link} rel="noreferrer" target="_blank">
@@ -120,71 +120,91 @@ export default function OrderPage() {
               {product?.buy_time_remaining ? (
                 <>
                   <div className="orderpage__flex">
-                    <div
-                      className="orderpage__flex-row"
-                      style={{ marginTop: "20px" }}
-                    >
-                      <Link
-                        to={`/pay/${id}`}
-                        style={{ gridGap: "10px" }}
-                        className=" orderpage__split orderpage__split-green"
-                        onClick={() => dispatch(setSplit(false))}
-                      >
-                        <span style={{ display: "block" }}>
-                          <strong>Оплатить</strong>
-                        </span>
-                        <span style={{ display: "block" }}>
-                          <strong className="orderpage__prices">
-                            <div>{product?.fullprice?.toLocaleString()} ₽</div>
-                          </strong>
-                        </span>
-                      </Link>
-                    </div>
-                    {product.fullprice < 20000 && (
+                    {product.fullprice < 20000 ? (
+                      <>
+                        <div
+                          className="orderpage__flex-row"
+                          style={{ marginTop: "20px" }}
+                        >
+                          <Link
+                            to={`/pay/${id}`}
+                            style={{ gridGap: "10px" }}
+                            className=" orderpage__split orderpage__split-green"
+                            onClick={() => dispatch(setSplit(false))}
+                          >
+                            <span style={{ display: "block" }}>
+                              <strong>Оплатить</strong>
+                            </span>
+                            <span style={{ display: "block" }}>
+                              <strong className="orderpage__prices">
+                                <div>
+                                  {product?.fullprice?.toLocaleString()} ₽
+                                </div>
+                              </strong>
+                            </span>
+                          </Link>
+                        </div>
+                        <div
+                          className="orderpage__flex-row"
+                          style={{ marginTop: "20px" }}
+                        >
+                          <Link
+                            to={`/pay/${id}`}
+                            style={{ gridGap: "10px" }}
+                            className=" orderpage__split"
+                            onClick={() => dispatch(setSplit(true))}
+                          >
+                            <span style={{ display: "block" }}>
+                              <strong>Оплатить Долями</strong>
+                            </span>
+                            <span style={{ display: "block" }}>
+                              <strong className="orderpage__prices">
+                                <div>
+                                  {Math.round(
+                                    product?.fullprice / 2
+                                  )?.toLocaleString()}{" "}
+                                  ₽
+                                </div>
+                                <div>
+                                  {Math.round(
+                                    product?.fullprice / 2
+                                  )?.toLocaleString()}{" "}
+                                  ₽
+                                </div>
+                              </strong>
+                            </span>
+                          </Link>
+                          <div
+                            style={{ position: "relative" }}
+                            className="orderpage__ques"
+                            onClick={() => setHint((prev) => !prev)}
+                          >
+                            <i className="uil uil-question"></i>
+                            {hint && (
+                              <div className="hint">
+                                Вы можете оплатить 50% от стоимости заказа
+                                сейчас и 50% через 2-3 недели, когда он будет у
+                                нас на складе в России.
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </>
+                    ) : (
                       <div
                         className="orderpage__flex-row"
-                        style={{ marginTop: "20px" }}
+                        style={{ marginTop: "20px", width: "100%" }}
                       >
                         <Link
                           to={`/pay/${id}`}
                           style={{ gridGap: "10px" }}
-                          className=" orderpage__split"
-                          onClick={() => dispatch(setSplit(true))}
+                          className="full-button"
+                          onClick={() => dispatch(setSplit(false))}
                         >
                           <span style={{ display: "block" }}>
-                            <strong>Оплатить Долями</strong>
-                          </span>
-                          <span style={{ display: "block" }}>
-                            <strong className="orderpage__prices">
-                              <div>
-                                {Math.round(
-                                  product?.fullprice / 2
-                                )?.toLocaleString()}{" "}
-                                ₽
-                              </div>
-                              <div>
-                                {Math.round(
-                                  product?.fullprice / 2
-                                )?.toLocaleString()}{" "}
-                                ₽
-                              </div>
-                            </strong>
+                            <strong>Оплатить</strong>
                           </span>
                         </Link>
-                        <div
-                          style={{ position: "relative" }}
-                          className="orderpage__ques"
-                          onClick={() => setHint((prev) => !prev)}
-                        >
-                          <i className="uil uil-question"></i>
-                          {hint && (
-                            <div className="hint">
-                              Вы можете оплатить 50% от стоимости заказа сейчас
-                              и 50% через 2-3 недели, когда он будет у нас на
-                              складе в России.
-                            </div>
-                          )}
-                        </div>
                       </div>
                     )}
                   </div>
@@ -214,68 +234,85 @@ export default function OrderPage() {
                 </>
               )}
               <div
-                className="table-wrapper"
                 style={{
                   display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "flex-start",
+                  justifyContent: "space-between",
                   alignItems: "flex-start",
+                  gap: "20px",
                 }}
               >
-                <table>
-                  <div
-                    onClick={() => setVisible((prev) => !prev)}
-                    className={
-                      visible
-                        ? `more-wrapper more-wrapper-active`
-                        : `more-wrapper`
-                    }
-                    style={{ cursor: "pointer", marginBottom: "20px" }}
-                  >
-                    <strong>Подробности расчета</strong>
-                  </div>
-                  {visible && (
-                    <tbody>
-                      <tr>
-                        <th>Цена в CNY</th>
-                        <td>{product?.curencycurency2?.toLocaleString()} ¥</td>
-                      </tr>
-                      <tr>
-                        <th>Курс обмена</th>
-                        <td>{product?.currency?.toLocaleString()} ₽</td>
-                      </tr>
-                      <tr>
-                        <th>Цена в RUB</th>
-                        <td style={{ whiteSpace: "nowrap" }}>
-                          {product?.currency3?.toLocaleString()} ₽
-                        </td>
-                      </tr>
-                      <tr>
-                        <th>Доставка по Китаю</th>
-                        <td>{product?.chinadelivery?.toLocaleString()} ₽</td>
-                      </tr>
-                      <tr>
-                        <th>Доставка в РФ</th>
-                        <td>{product?.chinadelivery2?.toLocaleString()} ₽</td>
-                      </tr>
-                      <tr>
-                        <th>Комиссия сервиса</th>
-                        <td>{product?.commission?.toLocaleString()} ₽</td>
-                      </tr>
-                    </tbody>
-                  )}
-                </table>
-              </div>
-              <div className="history-wrap">
+                <div
+                  className="table-wrapper"
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "flex-start",
+                    alignItems: "flex-start",
+                  }}
+                >
+                  <table>
+                    <div
+                      onClick={() => setVisible((prev) => !prev)}
+                      className={
+                        visible
+                          ? `more-wrapper more-wrapper-active`
+                          : `more-wrapper`
+                      }
+                      style={{ cursor: "pointer", marginBottom: "20px" }}
+                    >
+                      <strong>Подробности расчета</strong>
+                    </div>
+
+                    {visible && (
+                      <tbody>
+                        <tr>
+                          <th>Цена в CNY</th>
+                          <td>
+                            {product?.curencycurency2?.toLocaleString()} ¥
+                          </td>
+                        </tr>
+                        <tr>
+                          <th>Курс обмена</th>
+                          <td>{product?.currency?.toLocaleString()} ₽</td>
+                        </tr>
+                        <tr>
+                          <th>Цена в RUB</th>
+                          <td style={{ whiteSpace: "nowrap" }}>
+                            {product?.currency3?.toLocaleString()} ₽
+                          </td>
+                        </tr>
+                        <tr>
+                          <th>Доставка по Китаю</th>
+                          <td>{product?.chinadelivery?.toLocaleString()} ₽</td>
+                        </tr>
+                        <tr>
+                          <th>Доставка в РФ</th>
+                          <td>{product?.chinadelivery2?.toLocaleString()} ₽</td>
+                        </tr>
+                        <tr>
+                          <th>Комиссия сервиса</th>
+                          <td>{product?.commission?.toLocaleString()} ₽</td>
+                        </tr>
+                      </tbody>
+                    )}
+                  </table>
+                </div>
                 <a
                   href={`https://t.me/poizoning_review`}
                   target="_blank"
                   rel="noreferrer"
-                  className="button no-icon green-btn orderpage__btn"
-                  style={{ backgroundColor: "black", borderColor: "black" }}
+                  className="button no-icon green-btn orderpage__btn yel-btn"
+                  style={{
+                    backgroundColor: "rgb(254, 254, 80)",
+                    borderColor: "rgb(254, 254, 80)",
+                    color: "black",
+                  }}
                 >
-                  Отзывы покупателей
+                  <strong>Отзывы покупателей</strong>
                 </a>
+              </div>
+
+              <div className="history-wrap">
                 <div className="push60 hidden-xss"></div>
                 {/* <div className="title">История заказа</div>
                 <div className="push60 hidden-xss"></div>
