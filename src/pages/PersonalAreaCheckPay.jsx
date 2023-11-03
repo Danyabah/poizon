@@ -45,7 +45,7 @@ export default function PersonalAreaCheckPay() {
         }
       )
       .then((data) => {
-        console.log(data.data.data);
+        console.log(data.data);
         setProducts(data.data.data);
         setTotalPage(data.data.total_pages);
       });
@@ -265,7 +265,7 @@ export default function PersonalAreaCheckPay() {
                     />
                   </a>
                 </div>
-                <div>
+                <div className="img-width">
                   <div className="push20"></div>
                   <div className="img-text">
                     <b>Заказ:</b> <br /> #{product?.id}
@@ -431,9 +431,10 @@ export default function PersonalAreaCheckPay() {
                 </div>
 
                 <div className="table-td">
-                  {obj.status === "neworder"
+                  {/* {obj.status === "neworder"
                     ? obj.startDate?.slice(0, 10)
-                    : obj.currentDate?.slice(0, 10)}
+                    :  */}
+                  {obj.startDate?.slice(0, 10)}
                 </div>
                 <div className="table-td">
                   {obj?.fullprice?.toLocaleString()}
@@ -510,7 +511,7 @@ export default function PersonalAreaCheckPay() {
             </li>
             <li>
               <button
-                disabled={page === totalPage}
+                disabled={page === Math.ceil(totalPage / 10)}
                 className="next-page"
                 onClick={() => setPage((prev) => prev + 1)}
               >

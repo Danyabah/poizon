@@ -43,7 +43,9 @@ export default function OrderPage() {
     };
   }, [hint]);
 
-  if (stage[product?.status] >= 1) {
+  if (!product.delivery && stage[product?.status] >= 1) {
+    return <Navigate to={`/order/${id}`} />;
+  } else if (stage[product?.status] >= 1) {
     return <Navigate to={`/orderpageinprogress/${id}`} />;
   }
 

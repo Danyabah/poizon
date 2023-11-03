@@ -441,7 +441,7 @@ export default function PersonalAreaNew() {
             </li>
             <li>
               <button
-                disabled={page === totalPage}
+                disabled={page === Math.ceil(totalPage / 10)}
                 className="next-page"
                 onClick={() => setPage((prev) => prev + 1)}
               >

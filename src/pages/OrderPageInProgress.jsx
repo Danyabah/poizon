@@ -250,11 +250,12 @@ export default function OrderPageInProgress() {
               <Link to={"/order"} className="change">
                 Изменить данные доставки
               </Link>
-            ) : product?.delivery === "cdek" ? (
+            ) : product?.delivery === "cdek" && stage[product?.status] < 6 ? (
               <Link to={`/pvz/${product?.id}#edit`} className="change">
                 Изменить адрес ПВЗ
               </Link>
-            ) : product?.delivery === "cdek_courier" ? (
+            ) : product?.delivery === "cdek_courier" &&
+              stage[product?.status] < 6 ? (
               <Link to={`/crrcdek/${product?.id}#edit`} className="change">
                 Изменить адрес доставки
               </Link>

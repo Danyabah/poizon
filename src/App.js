@@ -34,6 +34,9 @@ import Address from "./pages/Address";
 import PrivateManager from "./components/PrivateManager";
 import Crrcdek from "./components/Crrcdek";
 import Pvz from "./components/Pvz";
+import CompletePage from "./pages/CompletePage";
+
+import Gift from "./pages/Gift";
 
 function App() {
   return (
@@ -146,6 +149,22 @@ function App() {
           element={
             <Admin>
               <Statistics />
+            </Admin>
+          }
+        />
+        <Route
+          path="/completed"
+          element={
+            <Admin>
+              <CompletePage />
+            </Admin>
+          }
+        />
+        <Route
+          path="/gift"
+          element={
+            <Admin>
+              <Gift />
             </Admin>
           }
         />

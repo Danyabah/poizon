@@ -1149,7 +1149,7 @@ option {
     line-height: 12px;
   }
   .pay-in {
-    grid-gap: 24px;
+    grid-gap: 18px;
   }
   .fileInput label {
     font-weight: 400;
@@ -1172,6 +1172,11 @@ option {
   }
   .requisite-info .text.size {
     flex-direction: row;
+  }
+  .requisite-info {
+    flex-direction: row;
+    gap: 10px;
+    justify-content: flex-start;
   }
   .requisite {
     grid-gap: 20px;
@@ -1311,7 +1316,7 @@ option {
     display: flex;
     align-items: center;
     position: absolute;
-    right: -60%;
+    right: -67%;
     top: 3px;
     gap: 5px;
   }
@@ -2970,7 +2975,7 @@ option {
   align-items: center;
   margin-bottom: 10px;
 }
-@media (max-width: 450px) {
+@media (max-width: 500px) {
   .status__text {
     font-size: 16px;
   }
@@ -2978,10 +2983,17 @@ option {
     height: 232px;
   }
   .img-preview img {
-    max-width: 250px;
+    max-width: 230px;
   }
   .img-text {
     font-size: 12px;
+  }
+  .img-btn {
+    font-size: 10px;
+    padding: 3px 8px;
+  }
+  .img-width {
+    max-width: 100px;
   }
 }
 @media (max-width: 647px) {
@@ -3162,4 +3174,32 @@ option {
 }
 .table-row-bold {
   font-weight: bold;
+}
+.uil-parcel {
+  /* position: relative; */
+  /* left: 3px; */
+  font-size: 130%;
+}
+.uil-gift {
+  font-size: 130%;
+}
+.gift {
+  display: flex;
+  gap: 10px;
+}
+.gift-img {
+  border-radius: 8px;
+  max-width: 150px;
+}
+.gift-del svg {
+  width: 30px;
+  height: 30px;
+}
+.giftss {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+.gift-img-cont {
+  max-width: 300px;
 }

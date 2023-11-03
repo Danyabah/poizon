@@ -3,10 +3,10 @@ import Header from "../components/Header";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { getStyle, parseTg } from "../utils/utils";
+import { deliveryName, getStyle, parseTg } from "../utils/utils";
 import useFilter from "../utils/useFilter";
 
-export default function RequestList() {
+export default function CompletePage() {
   const [products, setProducts] = useState([]);
   const [page, setPage] = useState(1);
   const [categ, setCateg] = useState("bought");
@@ -17,7 +17,7 @@ export default function RequestList() {
   function getProducts() {
     axios
       .get(
-        `https://crm-poizonstore.ru/checklist/?page=${page}&limit=10&status=${categ}`,
+        `https://crm-poizonstore.ru/checklist/?page=${page}&limit=10&status=completed`,
         {
           headers: {
             Authorization: `Token ${token}`,
@@ -25,13 +25,14 @@ export default function RequestList() {
         }
       )
       .then((data) => {
+        console.log(data.data.data);
         setProducts(data.data.data);
         setTotalPage(data.data.total_pages);
       });
   }
   useEffect(() => {
     getProducts();
-  }, [categ, page]);
+  }, [page]);
 
   return (
     <>
@@ -42,38 +43,10 @@ export default function RequestList() {
           <div className="push45 hidden-xss"></div>
           <div className="push15 visible-xss"></div>
           <div className="main-inner">
-            <div className="title">Заявки</div>
+            <div className="title">Доставленные Заказы</div>
           </div>
           <div className="push90 hidden-xss"></div>
           <div className="push20 visible-xss"></div>
-          <div className="container">
-            <div className="push40 line hidden-xss"></div>
-            <div className="main-inner main-inner-menu">
-              <ul className="tabs">
-                <li
-                  className={categ === "bought" ? "current" : ""}
-                  onClick={() => {
-                    setCateg("bought");
-                    setFullProduct(null);
-                  }}
-                >
-                  <span>Выкуплено</span>
-                </li>
-
-                <li
-                  className={categ === "buying" ? "current" : ""}
-                  onClick={() => {
-                    setCateg("buying");
-                    setFullProduct(null);
-                  }}
-                >
-                  <span>Ожидает выкупа</span>
-                </li>
-              </ul>
-            </div>
-            <div className="push15 hidden-xss"></div>
-            <div className="push10 visible-xss"></div>
-          </div>
           <div className="line hidden-xss"></div>
         </div>
         <div className="container">
@@ -91,16 +64,13 @@ export default function RequestList() {
               <div>
                 <div className="push20"></div>
                 <div className="img-text">
-                  <b>Заказ:</b> <br /> #{fullProduct?.id}
-                </div>
-                <div className="img-text">
-                  <b>Сплит:</b> <br /> {fullProduct?.split ? "Да" : "Нет"}
+                  <b>Телефон:</b> <br /> {fullProduct?.buyerphone}
                 </div>
 
                 <div className="img-text">
-                  <b>CNY:</b>
+                  <b>Cумма:</b>
                   <br />
-                  {fullProduct?.curencycurency2} CNY
+                  {fullProduct?.fullprice} ₽
                 </div>
 
                 {fullProduct.tg && (
@@ -113,6 +83,16 @@ export default function RequestList() {
                     Телеграмм
                   </a>
                 )}
+                {fullProduct?.cdek_tracking && (
+                  <a
+                    href={`https://www.cdek.ru/ru/tracking?order_id=${fullProduct?.cdek_tracking}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="img-btn img-btn-gr"
+                  >
+                    Отследить СДЭК
+                  </a>
+                )}
               </div>
 
               <div className="push20 hidden-xss"></div>
@@ -122,20 +102,10 @@ export default function RequestList() {
           <div className="check-table depot table request orders">
             <div className="table-row table-row-bold">
               <div className="table-td">Номер</div>
-              <div className="table-td">Дата</div>
-              <div
-                className="table-td"
-                {...useFilter(
-                  "price",
-                  products,
-                  setProducts,
-                  "curencycurency2"
-                )}
-              >
-                CNY
-              </div>
-              <div className="table-td">Сплит</div>
-              <div className="table-td">Товар</div>
+              <div className="table-td">Дата заказа</div>
+              <div className="table-td">Дата доставки</div>
+              <div className="table-td">Способ доставки</div>
+              <div className="table-td">Имя</div>
             </div>
             {products.map((product) => (
               <div
@@ -150,15 +120,15 @@ export default function RequestList() {
                   </Link>
                 </div>
                 <div className="table-td">
+                  {product?.startDate?.slice(0, 10)}
+                </div>
+                <div className="table-td">
                   {product?.currentDate?.slice(0, 10)}
                 </div>
                 <div className="table-td">
-                  {product?.curencycurency2?.toLocaleString()} ¥
+                  {deliveryName[product?.delivery_display]}
                 </div>
-                <div className="table-td">{product?.split ? "Да" : "Нет"}</div>
-                <div className="table-td">
-                  {product?.brand} {product?.model}
-                </div>
+                <div className="table-td">{product?.buyername}</div>
               </div>
             ))}
           </div>

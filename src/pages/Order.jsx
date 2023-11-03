@@ -6,16 +6,15 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 
 export default function Order() {
+  const [product, setProduct] = useState({});
 
-  const [product,setProduct] = useState({})
+  const { id } = useParams();
 
-  const {id} = useParams()
-  
-  useEffect(()=>{
+  useEffect(() => {
     axios.get(`https://crm-poizonstore.ru/checklist/${id}`).then((res) => {
       setProduct(res.data);
     });
-  },[id])
+  }, [id]);
 
   return (
     <>
@@ -29,9 +28,14 @@ export default function Order() {
             <div className="title">Заказ #{product?.id}</div>
             <div className="push20 hidden-xss"></div>
             <div className="push10 visible-xss"></div>
-            <div className="text">
-              {" "}
-              {product?.brand} {product?.model}
+            <div className="img-preview">
+              <a href={product?.previewimage} className="" target="_blank">
+                <img
+                  style={{ objectFit: "contain" }}
+                  src={product?.previewimage}
+                  alt=""
+                />
+              </a>
             </div>
           </div>
         </div>

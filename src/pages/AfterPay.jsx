@@ -30,16 +30,22 @@ export default function AfterPay() {
             <div className="title">Заказ #{product?.id}</div>
             <div className="push20 hidden-xss"></div>
             <div className="push10 visible-xss"></div>
-            <div className="text">
-              {product?.brand} {product?.model}
+            <div className="img-preview">
+              <a href={product?.previewimage} className="" target="_blank">
+                <img
+                  style={{ objectFit: "contain" }}
+                  src={product?.previewimage}
+                  alt=""
+                />
+              </a>
             </div>
           </div>
         </div>
         <div className="push40 hidden-xss"></div>
-        <div className="push20 visible-xss"></div>
+        <div className="push10 visible-xss"></div>
         <div className="line"></div>
         <div className="push40 hidden-xss"></div>
-        <div className="push20 visible-xss"></div>
+        <div className="push10 visible-xss"></div>
         <div className="container">
           <div className="main-inner pay">
             <div className="title">Сумма оплаты</div>
@@ -55,15 +61,15 @@ export default function AfterPay() {
               </div>
             )}
             <div className="push40 hidden-xss"></div>
-            <div className="push15 visible-xss"></div>
+
             <div className="pay-wrap">
-              <div className="title">Способ оплаты</div>
               <div className="push40 hidden-xss"></div>
               <div className="push10 visible-xss"></div>
               <div className="pay-in">
-                <div className="text">
-                  Перевод по номеру карты {translatePay[paymentmethod]}
+                <div className="title" style={{ whiteSpace: "nowrap" }}>
+                  Способ оплаты
                 </div>
+                <div className="text">{translatePay[paymentmethod]}</div>
                 <Link to={`/pay/${product.id}`}>Изменить</Link>
               </div>
             </div>
