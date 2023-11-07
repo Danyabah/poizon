@@ -3203,3 +3203,40 @@ option {
 .gift-img-cont {
   max-width: 300px;
 }
+.gifts__container {
+  display: flex;
+  gap: 20px;
+}
+.gift__item {
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 4px 4px 8px 0px rgba(34, 60, 80, 0.2);
+  width: 150px;
+  height: 200px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.gift__item-img {
+  border-radius: 8px;
+  width: 110px;
+  height: 100px;
+  object-fit: cover;
+}
+.gift__item-name {
+  text-align: center;
+  font-weight: 800;
+}
+.gift__item_active {
+  background-color: #80e0ff;
+}
+.gifts__btn button {
+  max-width: 200px;
+  padding: 21px 40px;
+}
+@media only screen and (max-width: 647px) {
+  .gifts__btn button {
+    padding: 10px;
+  }
+}

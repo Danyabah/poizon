@@ -92,17 +92,35 @@ export default function Crrcdek() {
   }
 
   const onSubmit = (values) => {
-    mutate(values, {
-      onSuccess: (response) => {
-        console.log(response);
+    axios
+      .get(
+        `https://crm-poizonstore.ru/gifts?for_price=${product?.curencycurency2}`
+      )
+      .then((res) => {
+        if (res.data.length) {
+          mutate(values, {
+            onSuccess: (response) => {
+              navigate(`/giftchoose/${id}`);
+            },
+            onError: (response) => {
+              navigate(`/giftchoose/${id}`);
+            },
+          });
+        } else {
+          mutate(values, {
+            onSuccess: (response) => {
+              console.log(response);
+              console.log(window.delivery_sum);
 
-        navigate(`/orderpageinprogress/${id}`);
-      },
-      onError: (response) => {
-        // alert("Произошла ошибка");
-        navigate(`/orderpageinprogress/${id}`);
-      },
-    });
+              navigate(`/orderpageinprogress/${id}`);
+            },
+            onError: (response) => {
+              // alert("Произошла ошибка");
+              navigate(`/orderpageinprogress/${id}`);
+            },
+          });
+        }
+      });
   };
 
   const validSchema = Yup.object().shape({

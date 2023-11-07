@@ -76,7 +76,8 @@ export default function UserForm() {
         ) {
           navigate(`/pvz/${response.data.id}`);
         } else {
-          navigate(`/orderpageinprogress/${response.data.id}`);
+          // ERROR добавить проверку доступности подарка
+          navigate(`/giftchoose/${response.data.id}`);
         }
       },
       onError: (response) => {

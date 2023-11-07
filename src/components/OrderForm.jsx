@@ -5,7 +5,13 @@ import * as Yup from "yup";
 import { useMutation } from "@tanstack/react-query";
 import { useDispatch, useSelector } from "react-redux";
 import { setUserInfo } from "../redux/slices/userReducer";
-import { addToDraft, allUppers, subcategory, translate } from "../utils/utils";
+import {
+  addToDraft,
+  allUppers,
+  subcategory,
+  toDataUrl,
+  translate,
+} from "../utils/utils";
 import PreviewImage from "./PreviewImage";
 import { useLocation, useParams } from "react-router-dom";
 import { setPreviewimage, setPublicLink } from "../redux/slices/adminReducer";
@@ -14,6 +20,7 @@ export default function OrderForm() {
   const [categories, setCategories] = useState([]);
   const [price, setPrice] = useState({});
   const [lastPrice, setLastPrice] = useState(0);
+  const [loading, setLoading] = useState(false);
   const [lastDelivery, setLastDelivery] = useState(categories[0]?.chinarush);
 
   const userInfo = useSelector((state) => state.user.userInfo);
@@ -162,6 +169,34 @@ export default function OrderForm() {
 
   const fileRef = useRef(null);
 
+  function handleGet(link, func) {
+    setLoading(true);
+    axios
+      .post(
+        "https://crm-poizonstore.ru/poizon/good/",
+        {
+          url: link,
+        },
+        {
+          headers: {
+            Authorization: `Token ${token}`,
+          },
+        }
+      )
+      .then((res) => {
+        let info = res.data["0"].data;
+        let url = info.logoUrl;
+
+        toDataUrl(url, function (myBase64) {
+          func("image", [myBase64]);
+        });
+        func("brand", info.brandName);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }
+
   return (
     <Formik
       enableReinitialize={true}
@@ -170,8 +205,9 @@ export default function OrderForm() {
       onSubmit={onSubmit}
     >
       {(formik) => {
-        const { values, setValues, setFieldValue } = formik;
+        const { values, setValues, setFieldValue, isValid } = formik;
         console.log(values.category);
+
         return (
           <Form>
             <div className="title">Товар</div>
@@ -192,6 +228,14 @@ export default function OrderForm() {
                 component="span"
                 className="form-control"
               />
+              <button
+                disabled={values.link === "" || loading}
+                className="button no-icon"
+                type="button"
+                onClick={() => handleGet(values.link, setFieldValue)}
+              >
+                {loading ? "Загрузка..." : "Выгрузить"}
+              </button>
             </div>
             <div className="form-group">
               <label className="label" htmlFor="category">

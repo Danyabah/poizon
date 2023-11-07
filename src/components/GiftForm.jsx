@@ -79,7 +79,7 @@ export default function GiftForm({ setOpen }) {
             </div>
             <div className="form-group">
               <label className="label" htmlFor="min_price">
-                Доступен от (₽):
+                Доступен от (¥):
               </label>
               <Field
                 type="number"

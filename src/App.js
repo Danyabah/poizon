@@ -37,6 +37,7 @@ import Pvz from "./components/Pvz";
 import CompletePage from "./pages/CompletePage";
 
 import Gift from "./pages/Gift";
+import GitftChoose from "./pages/GitftChoose";
 
 function App() {
   return (
@@ -166,6 +167,12 @@ function App() {
             <Admin>
               <Gift />
             </Admin>
+          }
+        />
+         <Route
+          path="/giftchoose/:id"
+          element={
+              <GitftChoose />
           }
         />
         <Route path="/personalarea" element={<PersonalArea />} />

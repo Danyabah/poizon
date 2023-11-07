@@ -6,7 +6,7 @@ export default function PreviewImage({ name, file, setField }) {
   const [preview, setPreview] = useState([]);
   const dispatch = useDispatch();
   let arr = [];
-  console.log(file);
+
   useEffect(() => {
     [...file].forEach((element) => {
       if (element && typeof element == "object") {

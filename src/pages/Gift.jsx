@@ -91,7 +91,7 @@ export default function Gift() {
                             <strong>{pr.name}</strong>
                           </div>
                           <div className="item-info">
-                            <div>Доступен от: {pr.min_price} ₽</div>
+                            <div>Доступен от: {pr.min_price} ¥</div>
                           </div>
                         </div>
                       </div>

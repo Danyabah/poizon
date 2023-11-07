@@ -60,7 +60,6 @@ export default function OrderPageInProgress() {
       });
   }, [product]);
 
-  console.log(sdekStatus);
   useEffect(() => {
     if (product.startDate && product.currentDate) {
       let dmyStart = product.startDate?.slice(0, 10).split(".");
@@ -103,7 +102,6 @@ export default function OrderPageInProgress() {
     }
   }, [product]);
 
-  console.log(stage[sdekStatus]);
   return (
     <>
       <Header />
@@ -144,7 +142,18 @@ export default function OrderPageInProgress() {
             <div className="push20 visible-xss"></div>
             <div className="push40 hidden-xss"></div>
 
-            <div className="title">{product?.category?.name}</div>
+            <div className="title">
+              {product?.category?.name}{" "}
+              {product?.gift?.id && stage[product?.status] < 6 && (
+                <>
+                  +{" "}
+                  <Link to={`/giftchoose/${product?.id}`}>
+                    {product.gift.name}
+                    <i class="uil uil-gift"></i>
+                  </Link>
+                </>
+              )}
+            </div>
             <div className="push10 hidden-xss"></div>
             <div className="push5 visible-xss"></div>
 
@@ -241,11 +250,14 @@ export default function OrderPageInProgress() {
             <div className="push20 hidden-xss"></div>
 
             {product?.delivery === "pickup" && (
-              <div className="text">Адрес самовывоза: {pickup}</div>
+              <>
+                <div className="push15 visible-xss"></div>
+                <div className="text">Адрес самовывоза: {pickup}</div>
+              </>
             )}
             <div className="push15 visible-xss"></div>
             <div className="push35 hidden-xss"></div>
-            <div className="push15 visible-xss"></div>
+
             {stage[product?.status] < 6 && product?.delivery === "pickup" ? (
               <Link to={"/order"} className="change">
                 Изменить данные доставки

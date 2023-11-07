@@ -20,6 +20,7 @@ export default function ChinarushForm({ id }) {
         setLinksub(res.data.entity.cdek_number);
       });
   }, [id]);
+
   const onSubmit = (values) => {
     mutate(values, {
       onSuccess: (response) => {
@@ -32,6 +33,8 @@ export default function ChinarushForm({ id }) {
       },
     });
   };
+
+  console.log(linksub);
 
   const { mutate } = useMutation({
     mutationFn: () => {
