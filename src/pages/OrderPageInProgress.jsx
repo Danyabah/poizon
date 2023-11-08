@@ -144,10 +144,16 @@ export default function OrderPageInProgress() {
 
             <div className="title">
               {product?.category?.name}{" "}
-              {product?.gift?.id && stage[product?.status] < 6 && (
+              {product?.gift?.id && (
                 <>
                   +{" "}
-                  <Link to={`/giftchoose/${product?.id}`}>
+                  <Link
+                    to={
+                      stage[product?.status] < 6
+                        ? `/giftchoose/${product?.id}`
+                        : "#"
+                    }
+                  >
                     {product.gift.name}
                     <i class="uil uil-gift"></i>
                   </Link>

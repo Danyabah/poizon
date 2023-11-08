@@ -29,6 +29,7 @@ export default function OrderForm() {
   const [currency, setCurrency] = useState("");
   const [promo, setPromo] = useState([]);
   const dispatch = useDispatch();
+  const [sizes, setSizes] = useState([]);
 
   const [product, setProduct] = useState({});
 
@@ -175,7 +176,7 @@ export default function OrderForm() {
       .post(
         "https://crm-poizonstore.ru/poizon/good/",
         {
-          url: link,
+          url: link.trim(),
         },
         {
           headers: {
@@ -184,13 +185,17 @@ export default function OrderForm() {
         }
       )
       .then((res) => {
+        console.log(res.data);
         let info = res.data["0"].data;
         let url = info.logoUrl;
-
+        setSizes(info.responseList);
         toDataUrl(url, function (myBase64) {
           func("image", [myBase64]);
         });
         func("brand", info.brandName);
+      })
+      .catch((err) => {
+        alert("Проверьте ссылку");
       })
       .finally(() => {
         setLoading(false);
@@ -350,6 +355,63 @@ export default function OrderForm() {
                 className="form-control"
               />
             </div>
+            {sizes.length ? (
+              <div className="form-group">
+                <div className="sizes__container">
+                  {sizes.map((el) => {
+                    if (el.ordinaryValues) {
+                      return (
+                        <div
+                          className={`size-item ${
+                            values.size === el.value ? "size-active" : ""
+                          }`}
+                          onClick={() => {
+                            setFieldValue("size-item", el.value);
+                            let val = el.ordinaryValues / 100;
+                            setFieldValue("curencycurency2", val);
+
+                            let cur3 = Math.round(+val * values.currency, 2);
+                            let com = values.commission;
+                            if (values.category == 7) {
+                              let comPersent = categories[6].commission;
+                              console.log(
+                                Math.round(cur3 * (comPersent / 100))
+                              );
+
+                              setFieldValue(
+                                "commission",
+                                Math.round(cur3 * (comPersent / 100))
+                              );
+                              com = Math.round(cur3 * (comPersent / 100));
+                            }
+
+                            setFieldValue("currency3", cur3);
+                            let fullprice =
+                              cur3 +
+                              values.chinadelivery +
+                              values.chinadelivery2 +
+                              com;
+
+                            console.log(com);
+                            setLastPrice(fullprice);
+                            setFieldValue("fullprice", fullprice);
+                          }}
+                        >
+                          <span className="size__value">{el.value}</span>
+                          <span className="size__price">
+                            {el.ordinaryValues / 100} ¥
+                          </span>
+                        </div>
+                      );
+                    }
+                  })}
+                </div>
+                <div className="push20 visible-xss"></div>
+                <div className="push20 hidden-xss"></div>
+              </div>
+            ) : (
+              <></>
+            )}
             <div className="form-group">
               <label className="label" htmlFor="size">
                 Размер

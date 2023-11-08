@@ -183,6 +183,7 @@ export default function OrderTab() {
         <div className="title-img">Превью товара</div>
         <div className="push20 hidden-xss"></div>
         <div className="push10 visible-xss"></div>
+
         <div className="img-wrapper">
           <div class="item-img">
             <a
@@ -193,7 +194,29 @@ export default function OrderTab() {
             <img style={{ objectFit: "contain" }} src={byteString} alt="" />
           </div>
         </div>
-
+        <div className="push20 hidden-xss"></div>
+        <div className="push10 visible-xss"></div>
+        {product?.gift && (
+          <>
+            <div className="title-img">Подарок: {product.gift.name}</div>
+            <div className="push20 hidden-xss"></div>
+            <div className="push10 visible-xss"></div>
+            <div className="img-wrapper">
+              <div class="item-img">
+                <a
+                  href={product.gift.image}
+                  className="absolute fancybox"
+                  target="_blank"
+                ></a>
+                <img
+                  style={{ objectFit: "contain" }}
+                  src={product.gift.image}
+                  alt=""
+                />
+              </div>
+            </div>
+          </>
+        )}
         <div className="push90"></div>
       </form>
     </div>

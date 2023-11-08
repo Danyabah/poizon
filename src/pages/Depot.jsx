@@ -199,7 +199,7 @@ export default function Depot() {
             <div className="push50"></div>
           )}
 
-          <div className="check-table depot table">
+          <div className="check-table depot table depot-big">
             <div className="table-row">
               <div className="table-td" style={{ fontWeight: "bold" }}>
                 Номер заказа
@@ -210,6 +210,7 @@ export default function Depot() {
               <div className="table-td" style={{ fontWeight: "bold" }}>
                 Дата приемки
               </div>
+
               <div
                 className="table-td"
                 {...useFilter("delivery", products, setFullProducts)}
@@ -217,7 +218,9 @@ export default function Depot() {
               >
                 Способ доставки
               </div>
-
+              <div className="table-td" style={{ fontWeight: "bold" }}>
+                Подарок
+              </div>
               <div className="table-td" style={{ fontWeight: "bold" }}>
                 Имя
               </div>
@@ -253,7 +256,7 @@ export default function Depot() {
                 <div className="table-td">
                   {deliveryName[product.delivery_display]}
                 </div>
-
+                <div className="table-td">{product.gift?.name}</div>
                 <div className="table-td" style={{ position: "relative" }}>
                   {product?.buyername}
 
