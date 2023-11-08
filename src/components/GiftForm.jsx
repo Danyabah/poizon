@@ -5,11 +5,11 @@ import * as Yup from "yup";
 import { useMutation } from "@tanstack/react-query";
 import { useSelector } from "react-redux";
 import PreviewImage from "./PreviewImage";
-export default function GiftForm({ setOpen }) {
+export default function GiftForm({ setOpen, edit, setEdit }) {
   const initialValues = {
-    name: "",
-    min_price: "",
-    image: "",
+    name: edit?.name || "",
+    min_price: edit?.min_price || "",
+    image: [edit?.image] || "",
   };
   const token = useSelector((state) => state.user.token);
 
@@ -18,6 +18,7 @@ export default function GiftForm({ setOpen }) {
       onSuccess: (response) => {
         alert("Сохранено");
         setOpen(false);
+        setEdit(null);
         console.log(response);
       },
       onError: (response) => {
@@ -36,15 +37,27 @@ export default function GiftForm({ setOpen }) {
 
   const { mutate } = useMutation({
     mutationFn: (formPayload) => {
-      return axios.post(
-        `https://crm-poizonstore.ru/gifts/`,
-        { ...formPayload, image: formPayload.image[0] },
-        {
-          headers: {
-            Authorization: `Token ${token}`,
-          },
-        }
-      );
+      if (edit) {
+        return axios.patch(
+          `https://crm-poizonstore.ru/gifts/${edit?.id}`,
+          { ...formPayload, image: formPayload.image[0] },
+          {
+            headers: {
+              Authorization: `Token ${token}`,
+            },
+          }
+        );
+      } else {
+        return axios.post(
+          `https://crm-poizonstore.ru/gifts/`,
+          { ...formPayload, image: formPayload.image[0] },
+          {
+            headers: {
+              Authorization: `Token ${token}`,
+            },
+          }
+        );
+      }
     },
   });
 

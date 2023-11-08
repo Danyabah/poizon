@@ -9,6 +9,8 @@ export default function Gift() {
   const [gifts, setGifts] = useState([]);
   const [open, setOpen] = useState(false);
   const token = useSelector((state) => state.user.token);
+  const [edit, setEdit] = useState(null);
+
   useEffect(() => {
     axios
       .get(`https://crm-poizonstore.ru/gifts/`, {
@@ -35,6 +37,12 @@ export default function Gift() {
         });
     }
   }
+
+  function tryEdit(el) {
+    setEdit(el);
+    setOpen(true);
+  }
+
   return (
     <>
       <Header />
@@ -57,7 +65,9 @@ export default function Gift() {
                 </div>
                 <div className="push40 hidden-xss"></div>
                 <div className="push20 visible-xss"></div>
-                {open && <GiftForm setOpen={setOpen} />}
+                {open && (
+                  <GiftForm setOpen={setOpen} edit={edit} setEdit={setEdit} />
+                )}
                 <div className="push60 hidden-xss"></div>
                 <div className="push20 visible-xss"></div>
                 <div className="giftss">
@@ -93,6 +103,13 @@ export default function Gift() {
                           <div className="item-info">
                             <div>Доступен от: {pr.min_price} ¥</div>
                           </div>
+                          <div className="push10"></div>
+                          <button
+                            className="button"
+                            onClick={() => tryEdit(pr)}
+                          >
+                            Изменить
+                          </button>
                         </div>
                       </div>
                     );

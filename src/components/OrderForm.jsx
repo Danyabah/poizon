@@ -30,7 +30,7 @@ export default function OrderForm() {
   const [promo, setPromo] = useState([]);
   const dispatch = useDispatch();
   const [sizes, setSizes] = useState([]);
-
+  const [selectPrice, setSelectPrice] = useState(null);
   const [product, setProduct] = useState({});
 
   const { id } = useParams();
@@ -202,6 +202,28 @@ export default function OrderForm() {
       });
   }
 
+  const selectPriceVal = (pr, setFieldValue, values) => {
+    let val = pr / 100;
+    setFieldValue("curencycurency2", val);
+
+    let cur3 = Math.round(+val * values.currency, 2);
+    let com = values.commission;
+    if (values.category == 7) {
+      let comPersent = categories[6].commission;
+      console.log(Math.round(cur3 * (comPersent / 100)));
+
+      setFieldValue("commission", Math.round(cur3 * (comPersent / 100)));
+      com = Math.round(cur3 * (comPersent / 100));
+    }
+
+    setFieldValue("currency3", cur3);
+    let fullprice = cur3 + values.chinadelivery + values.chinadelivery2 + com;
+
+    console.log(com);
+    setLastPrice(fullprice);
+    setFieldValue("fullprice", fullprice);
+  };
+
   return (
     <Formik
       enableReinitialize={true}
@@ -359,7 +381,7 @@ export default function OrderForm() {
               <div className="form-group">
                 <div className="sizes__container">
                   {sizes.map((el) => {
-                    if (el.ordinaryValues) {
+                    if (el.ordinaryValues || el.lightningValues) {
                       return (
                         <div
                           className={`size-item ${
@@ -367,45 +389,63 @@ export default function OrderForm() {
                           }`}
                           onClick={() => {
                             setFieldValue("size", el.value);
-                            let val = el.ordinaryValues / 100;
-                            setFieldValue("curencycurency2", val);
-
-                            let cur3 = Math.round(+val * values.currency, 2);
-                            let com = values.commission;
-                            if (values.category == 7) {
-                              let comPersent = categories[6].commission;
-                              console.log(
-                                Math.round(cur3 * (comPersent / 100))
-                              );
-
-                              setFieldValue(
-                                "commission",
-                                Math.round(cur3 * (comPersent / 100))
-                              );
-                              com = Math.round(cur3 * (comPersent / 100));
-                            }
-
-                            setFieldValue("currency3", cur3);
-                            let fullprice =
-                              cur3 +
-                              values.chinadelivery +
-                              values.chinadelivery2 +
-                              com;
-
-                            console.log(com);
-                            setLastPrice(fullprice);
-                            setFieldValue("fullprice", fullprice);
+                            setSelectPrice(el);
                           }}
                         >
                           <span className="size__value">{el.value}</span>
                           <span className="size__price">
-                            {el.ordinaryValues / 100} ¥
+                            {(el.lightningValues || el.ordinaryValues) / 100} ¥
                           </span>
                         </div>
                       );
                     }
                   })}
                 </div>
+                {selectPrice && (
+                  <>
+                    <div className="push20 visible-xss"></div>
+                    <div className="push20 hidden-xss"></div>
+                    <div style={{ display: "flex", gap: "20px" }}>
+                      {selectPrice?.lightningValues ? (
+                        <button
+                          className="button"
+                          onClick={() =>
+                            selectPriceVal(
+                              selectPrice?.lightningValues,
+                              setFieldValue,
+                              values
+                            )
+                          }
+                        >
+                          {selectPrice?.lightningValues / 100} ¥
+                        </button>
+                      ) : (
+                        <></>
+                      )}
+                      {selectPrice?.ordinaryValues ? (
+                        <button
+                          onClick={() =>
+                            selectPriceVal(
+                              selectPrice?.ordinaryValues,
+                              setFieldValue,
+                              values
+                            )
+                          }
+                          className="button"
+                          style={{
+                            backgroundColor: "black",
+                            color: "white",
+                            borderColor: "black",
+                          }}
+                        >
+                          {selectPrice?.ordinaryValues / 100} ¥
+                        </button>
+                      ) : (
+                        <></>
+                      )}
+                    </div>
+                  </>
+                )}
                 <div className="push20 visible-xss"></div>
                 <div className="push20 hidden-xss"></div>
               </div>
