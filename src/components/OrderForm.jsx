@@ -366,7 +366,7 @@ export default function OrderForm() {
                             values.size === el.value ? "size-active" : ""
                           }`}
                           onClick={() => {
-                            setFieldValue("size-item", el.value);
+                            setFieldValue("size", el.value);
                             let val = el.ordinaryValues / 100;
                             setFieldValue("curencycurency2", val);
 
