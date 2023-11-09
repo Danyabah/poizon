@@ -381,7 +381,10 @@ export default function OrderForm() {
               <div className="form-group">
                 <div className="sizes__container">
                   {sizes.map((el) => {
-                    if (el.ordinaryValues || el.lightningValues) {
+                    if (
+                      el.lightningValues > 0 ||
+                      (el.avgPrice7 > 0 && el.orderCnt7)
+                    ) {
                       return (
                         <div
                           className={`size-item ${
@@ -394,7 +397,8 @@ export default function OrderForm() {
                         >
                           <span className="size__value">{el.value}</span>
                           <span className="size__price">
-                            {(el.lightningValues || el.ordinaryValues) / 100} ¥
+                            {/* {el.ordinaryValues / 100} ¥ */}
+                            {(el.lightningValues || el.avgPrice7) / 100} ¥
                           </span>
                         </div>
                       );
@@ -422,11 +426,11 @@ export default function OrderForm() {
                       ) : (
                         <></>
                       )}
-                      {selectPrice?.ordinaryValues ? (
+                      {selectPrice?.avgPrice7 ? (
                         <button
                           onClick={() =>
                             selectPriceVal(
-                              selectPrice?.ordinaryValues,
+                              selectPrice?.avgPrice7,
                               setFieldValue,
                               values
                             )
@@ -438,7 +442,7 @@ export default function OrderForm() {
                             borderColor: "black",
                           }}
                         >
-                          {selectPrice?.ordinaryValues / 100} ¥
+                          {selectPrice?.avgPrice7 / 100} ¥
                         </button>
                       ) : (
                         <></>
