@@ -171,6 +171,10 @@ export default function OrderForm() {
   const fileRef = useRef(null);
 
   function handleGet(link, func) {
+    link = link.match(
+      /(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g
+    )[0];
+
     setLoading(true);
     axios
       .post(
@@ -192,7 +196,9 @@ export default function OrderForm() {
         toDataUrl(url, function (myBase64) {
           func("image", [myBase64]);
         });
+        func("link", link);
         func("brand", info.brandName);
+        func("model", info.title.replace(/\p{sc=Han}|[0-9,.+]/gu, "").trim());
       })
       .catch((err) => {
         alert("Проверьте ссылку");
@@ -381,10 +387,7 @@ export default function OrderForm() {
               <div className="form-group">
                 <div className="sizes__container">
                   {sizes.map((el) => {
-                    if (
-                      el.lightningValues > 0 ||
-                      (el.avgPrice7 > 0 && el.orderCnt7)
-                    ) {
+                    if (el.lightningValues || el.ordinaryValues) {
                       return (
                         <div
                           className={`size-item ${
@@ -398,7 +401,7 @@ export default function OrderForm() {
                           <span className="size__value">{el.value}</span>
                           <span className="size__price">
                             {/* {el.ordinaryValues / 100} ¥ */}
-                            {(el.lightningValues || el.avgPrice7) / 100} ¥
+                            {(el.lightningValues || el.ordinaryValues) / 100} ¥
                           </span>
                         </div>
                       );
@@ -426,11 +429,11 @@ export default function OrderForm() {
                       ) : (
                         <></>
                       )}
-                      {selectPrice?.avgPrice7 ? (
+                      {selectPrice?.ordinaryValues ? (
                         <button
                           onClick={() =>
                             selectPriceVal(
-                              selectPrice?.avgPrice7,
+                              selectPrice?.ordinaryValues,
                               setFieldValue,
                               values
                             )
@@ -442,7 +445,7 @@ export default function OrderForm() {
                             borderColor: "black",
                           }}
                         >
-                          {selectPrice?.avgPrice7 / 100} ¥
+                          {selectPrice?.ordinaryValues / 100} ¥
                         </button>
                       ) : (
                         <></>

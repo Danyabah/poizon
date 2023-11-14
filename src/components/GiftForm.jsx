@@ -30,9 +30,6 @@ export default function GiftForm({ setOpen, edit, setEdit }) {
   const validSchema = Yup.object().shape({
     name: Yup.string().required("Необходимо указать название подарка"),
     min_price: Yup.number().required("Укажите от какой суммы доступен подарок"),
-    image: Yup.array()
-      .min(1, "Добавьте изображение подарка")
-      .required("Добавьте изображение подарка"),
   });
 
   const { mutate } = useMutation({
