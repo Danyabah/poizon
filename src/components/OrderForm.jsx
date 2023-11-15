@@ -192,10 +192,14 @@ export default function OrderForm() {
         console.log(res.data);
         let info = res.data["0"].data;
         let url = info.logoUrl;
+        setSelectPrice(null);
         setSizes(info.responseList);
+        func("image", []);
+
         toDataUrl(url, function (myBase64) {
           func("image", [myBase64]);
         });
+
         func("link", link);
         func("brand", info.brandName);
         func("model", info.title.replace(/\p{sc=Han}|[0-9,.+]/gu, "").trim());
@@ -281,6 +285,10 @@ export default function OrderForm() {
                 id="category"
                 onChange={(e) => {
                   setFieldValue("category", e.target.value);
+                  setFieldValue(
+                    "subcategory",
+                    categories[e.target.value - 1].children[0].id
+                  );
                   setLastDelivery(categories[+e.target.value - 1].chinarush);
                   setFieldValue(
                     "chinadelivery2",
@@ -414,7 +422,7 @@ export default function OrderForm() {
                     <div className="push20 hidden-xss"></div>
                     <div style={{ display: "flex", gap: "20px" }}>
                       {selectPrice?.lightningValues ? (
-                        <button
+                        <span
                           className="button"
                           onClick={() =>
                             selectPriceVal(
@@ -425,13 +433,13 @@ export default function OrderForm() {
                           }
                         >
                           {selectPrice?.lightningValues / 100} ¥
-                        </button>
+                        </span>
                       ) : (
                         <></>
                       )}
                       {selectPrice?.ordinaryValues ? (
-                        <button
-                          onClick={() =>
+                        <span
+                          onClick={(e) =>
                             selectPriceVal(
                               selectPrice?.ordinaryValues,
                               setFieldValue,
@@ -446,7 +454,7 @@ export default function OrderForm() {
                           }}
                         >
                           {selectPrice?.ordinaryValues / 100} ¥
-                        </button>
+                        </span>
                       ) : (
                         <></>
                       )}
