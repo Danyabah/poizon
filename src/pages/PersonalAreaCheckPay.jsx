@@ -37,7 +37,9 @@ export default function PersonalAreaCheckPay() {
   function getProducts() {
     axios
       .get(
-        `https://crm-poizonstore.ru/checklist/?page=${page}&limit=10&status=${categ}&search=${search}`,
+        `https://crm-poizonstore.ru/checklist/?page=${page}&limit=10${
+          categ ? `&status=${categ}` : ""
+        }&${categ ? `&search=${search}` : ""}`,
         {
           headers: {
             Authorization: `Token ${token}`,

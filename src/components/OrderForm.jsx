@@ -135,7 +135,7 @@ export default function OrderForm() {
         console.log(imagesUrl);
         formPayload.image = imagesUrl; //потом почистить массив изображений
         formPayload.status = "neworder";
-        formPayload.brand = allUppers(formPayload.brand);
+        // formPayload.brand = allUppers(formPayload.brand);
 
         if (!formPayload.size.trim()) {
           formPayload.size = null;
@@ -145,7 +145,7 @@ export default function OrderForm() {
         formPayload.category = formPayload.subcategory;
         delete formPayload.subcategory;
 
-        formPayload.model = allUppers(formPayload.model);
+        // formPayload.model = allUppers(formPayload.model);
         if (formPayload?.promo.trim() === "") {
           delete formPayload.promo;
         } else {
@@ -761,7 +761,9 @@ export default function OrderForm() {
               />
             </div>
             <div className="push5 visible-xss"></div>
-            <button className="button no-icon">Сохранить</button>
+            <button className="button no-icon" type="submit">
+              Сохранить
+            </button>
             <div
               className="button no-icon draft-btn"
               onClick={() => {

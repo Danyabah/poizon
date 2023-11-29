@@ -229,24 +229,31 @@ export const monthRU = {
 export const parseSeconds = (timer) =>
   new Date(timer * 1000).toISOString().slice(11, 19);
 
-export const allUppers = (string) => {
-  let arr = string.split(" ");
-  return arr
-    .map((e) => {
-      console.log(e[0]);
-      console.log(e[0] === "«");
+// export const allUppers = (string) => {
+//   let arr = string.split(" ");
+//   console.log(arr);
+//   return arr
+//     .map((e) => {
+//       console.log(e[0]);
+//       console.log(e[0] === "«");
 
-      if (e[0] !== '"' && e[0] !== "'" && e[0] !== "«") {
-        return e[0].toUpperCase() + e.slice(1);
-      } else {
-        if (e[0] === "«") {
-          return e[0] + e[2].toUpperCase() + e.slice(3);
-        }
-        return e[0] + e[1].toUpperCase() + e.slice(2);
-      }
-    })
-    .join(" ");
-};
+//       if (
+//         e[0] !== '"' &&
+//         e[0] !== "'" &&
+//         e[0] !== "«" &&
+//         e[0] !== "-" &&
+//         e[0] !== ""
+//       ) {
+//         return e[0].toUpperCase() + e.slice(1);
+//       } else {
+//         if (e[0] === "«") {
+//           return e[0] + e[2].toUpperCase() + e.slice(3);
+//         }
+//         return e[0] + e[1].toUpperCase() + e.slice(2);
+//       }
+//     })
+//     .join(" ");
+// };
 
 export const getStyle = (full, product) => {
   if (!full?.id || !product?.id) {
