@@ -571,6 +571,7 @@ option {
 .img-logo {
   max-width: 250px;
 }
+
 @media only screen and (max-width: 647px) {
   .label,
   .text-label {
@@ -1652,6 +1653,22 @@ option {
   color: white;
   border-radius: 10px;
 }
+.flex-link {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+}
+.link-btn {
+  font-weight: 400;
+  font-size: 24px;
+  line-height: 29px;
+  padding: 24px 27px;
+
+  /* background-color: black; */
+  color: #428bca;
+  border: 1px solid #428bca;
+  border-radius: 10px;
+}
 .more-wrapper:before {
   content: "";
   width: 14px;
@@ -1729,6 +1746,12 @@ option {
 } */
 
 @media only screen and (max-width: 647px) {
+  .link-btn {
+    font-size: 10.26px;
+    line-height: 12px;
+    padding: 13px;
+    white-space: nowrap;
+  }
   /* .history-wrap li.current::before {
     content: "";
     background-image: url("../utils/poizonbox.png");

@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 export default function CursForm() {
   const [currency, setCurrency] = useState("");
+  const [yuan, setYuan] = useState(0);
   const token = useSelector((state) => state.user.token);
   const dispatch = useDispatch();
   useEffect(() => {
@@ -20,17 +21,19 @@ export default function CursForm() {
       })
       .then((res) => {
         setCurrency(res.data.currency);
+        setYuan(res.data.yuan_rate_commission);
         dispatch(setPaymentCurrency(res.data.currency));
       });
   }, []);
 
   const initialValues = {
-    currency: currency || "",
+    yuan_rate_commission: yuan || "",
   };
 
   const onSubmit = (values) => {
     mutate(values, {
       onSuccess: (response) => {
+        setCurrency(response.data.currency);
         dispatch(setPaymentCurrency(response.data.currency));
         alert("Сохранено");
       },
@@ -41,7 +44,7 @@ export default function CursForm() {
   };
 
   const validSchema = Yup.object().shape({
-    currency: Yup.number().required("Необходимо указать курс"),
+    yuan_rate_commission: Yup.number().required("Необходимо указать комиссию"),
   });
 
   const { mutate } = useMutation({
@@ -68,19 +71,25 @@ export default function CursForm() {
               <div className="push40 hidden-xss"></div>
               <div className="push10 visible-xss"></div>
               <div className="form-group">
-                <label className="label" htmlFor="curs">
-                  Курс RUB/CNY
+                <label className="label" htmlFor="yuan_rate_commission">
+                  Рыночный курс ЦБ (RUB/CNY): {currency - yuan}
+                </label>
+                <label className="label" htmlFor="yuan_rate_commission">
+                  Итого курс (RUB/CNY): {currency}
+                </label>
+                <label className="label" htmlFor="yuan_rate_commission">
+                  Наценка на курс
                 </label>
                 <div className="push10 visible-xss"></div>
                 <Field
-                  name="currency"
+                  name="yuan_rate_commission"
                   type="number"
                   className="form-control"
                   id="currency"
                 />
                 <ErrorMessage
                   style={{ color: "red" }}
-                  name="currency"
+                  name="yuan_rate_commission"
                   component="span"
                   className="form-control"
                 />

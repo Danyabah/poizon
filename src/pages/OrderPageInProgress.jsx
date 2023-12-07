@@ -163,22 +163,11 @@ export default function OrderPageInProgress() {
             <div className="push10 hidden-xss"></div>
             <div className="push5 visible-xss"></div>
 
-            <a
-              className="text"
-              href={product?.link}
-              rel="noreferrer"
-              target="_blank"
-            >
-              <b> Ссылка на товар</b>
-            </a>
             <div className="push20 hidden-xss"></div>
             <div className="push10 visible-xss"></div>
             {stage[product?.status] > 1 && (
               <>
                 {" "}
-                <div className="price">
-                  {product?.fullprice?.toLocaleString()} ₽
-                </div>
                 {product?.split && (
                   <b className="split-text">Оплачено через Cплит</b>
                 )}
@@ -187,15 +176,26 @@ export default function OrderPageInProgress() {
                 <div className="push15 visible-xss"></div>
               </>
             )}
-            <div
-              onClick={() => setVisible((prev) => !prev)}
-              className={
-                visible ? `more-wrapper more-wrapper-active` : `more-wrapper`
-              }
-              style={{ cursor: "pointer" }}
-            >
-              Подробности расчета
+            <div className="flex-link">
+              <div
+                onClick={() => setVisible((prev) => !prev)}
+                className={
+                  visible ? `more-wrapper more-wrapper-active` : `more-wrapper`
+                }
+                style={{ cursor: "pointer" }}
+              >
+                Подробности расчета
+              </div>
+              <a
+                className="text link-btn"
+                href={product?.link}
+                rel="noreferrer"
+                target="_blank"
+              >
+                <b> Ссылка на товар</b>
+              </a>
             </div>
+
             <div>
               <div className="push30 hidden-xss"></div>
               <div className="table-wrapper">

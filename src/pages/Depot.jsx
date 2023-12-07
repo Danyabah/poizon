@@ -131,7 +131,7 @@ export default function Depot() {
                 <div className="img-text">
                   <b>Сплит:</b> <br /> {fullProduct?.split ? "Да" : "Нет"}
                 </div>
-                {!fullProduct?.split && fullProduct.split_payment_proof ? (
+                {fullProduct?.split && fullProduct.split_payment_proof ? (
                   <div className="img-text">
                     <b>Оплачено полностью</b>
                   </div>

@@ -39,7 +39,7 @@ export default function PersonalAreaCheckPay() {
       .get(
         `https://crm-poizonstore.ru/checklist/?page=${page}&limit=10${
           categ ? `&status=${categ}` : ""
-        }&${categ ? `&search=${search}` : ""}`,
+        }&${search ? `&search=${search}` : ""}`,
         {
           headers: {
             Authorization: `Token ${token}`,
