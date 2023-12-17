@@ -31,7 +31,7 @@ export default function OrderForm() {
   const dispatch = useDispatch();
   const [sizes, setSizes] = useState([]);
   const [selectPrice, setSelectPrice] = useState(null);
-  const [product, setProduct] = useState({});
+  const [product, setProduct] = useState(null);
 
   const { id } = useParams();
 
@@ -40,6 +40,7 @@ export default function OrderForm() {
       console.log(res);
       if (typeof res.data["error"] == "undefined") {
         setProduct(res.data);
+        console.log(categories);
       }
     });
   }, [id]);
@@ -78,11 +79,23 @@ export default function OrderForm() {
       });
   }, []);
 
+  function getCategoryId(id) {
+    for (let i = 0; i < categories.length; i++) {
+      const el = categories[i];
+      for (let j = 0; j < el.children.length; j++) {
+        const child = el.children[j];
+        if (child.id == id) {
+          return el.id;
+        }
+      }
+    }
+  }
+
   const initialValues = {
     managerid: userInfo.id || "",
     link: product?.link || "",
-    category: product?.category?.id || categories[0]?.id,
-    subcategory: product?.subcategory || categories[0]?.children[0].id,
+    category: getCategoryId(product?.category?.id) || categories[0]?.id,
+    subcategory: product?.category?.id || categories[0]?.children[0].id,
     brand: product?.brand || "",
     model: product?.model || "",
     size: product?.size || "",
@@ -131,39 +144,60 @@ export default function OrderForm() {
   const { mutate } = useMutation({
     mutationFn: (formPayload) => {
       if (window.confirm("Вы уверены?")) {
-        formPayload.curencycurency2 = +formPayload.curencycurency2;
-        console.log(imagesUrl);
-        formPayload.image = imagesUrl; //потом почистить массив изображений
-        formPayload.status = "neworder";
-        // formPayload.brand = allUppers(formPayload.brand);
+        let data = Object.assign({}, formPayload);
 
-        if (!formPayload.size.trim()) {
-          formPayload.size = null;
+        data.curencycurency2 = +data.curencycurency2;
+        console.log(imagesUrl);
+        data.image = imagesUrl; //потом почистить массив изображений
+        data.status = "neworder";
+        // data.brand = allUppers(data.brand);
+
+        if (!data.size.trim()) {
+          data.size = null;
         }
 
         // категории
-        formPayload.category = formPayload.subcategory;
-        delete formPayload.subcategory;
+        data.category = data.subcategory;
+        delete data.subcategory;
 
-        // formPayload.model = allUppers(formPayload.model);
-        if (formPayload?.promo.trim() === "") {
-          delete formPayload.promo;
+        // data.model = allUppers(data.model);
+        if (data?.promo.trim() === "") {
+          delete data.promo;
         } else {
-          formPayload.promo = JSON.parse(formPayload.promo).name;
+          data.promo = JSON.parse(data.promo).name;
         }
-        if (formPayload.comment && formPayload.comment.trim() === "") {
-          delete formPayload.comment;
+        if (data.comment && data.comment.trim() === "") {
+          delete data.comment;
         }
 
-        return axios.post(
-          `https://crm-poizonstore.ru/checklist/`,
-          formPayload,
-          {
+        if (!product) {
+          return axios.post(`https://crm-poizonstore.ru/checklist/`, data, {
             headers: {
               Authorization: `Token ${token}`,
             },
-          }
-        );
+          });
+        } else {
+          delete data.image;
+
+          return axios.patch(
+            `https://crm-poizonstore.ru/checklist/${product.id}`,
+            {
+              ...data,
+              paymentprovement: null,
+              paymenttype: null,
+              delivery: null,
+              delivery_display: null,
+              buyername: null,
+              buyerphone: null,
+              status: "neworder",
+            },
+            {
+              headers: {
+                Authorization: `Token ${token}`,
+              },
+            }
+          );
+        }
       }
     },
   });
@@ -243,7 +277,7 @@ export default function OrderForm() {
     >
       {(formik) => {
         const { values, setValues, setFieldValue, isValid } = formik;
-        console.log(values.category);
+        console.log(values.subcategory);
 
         return (
           <Form>

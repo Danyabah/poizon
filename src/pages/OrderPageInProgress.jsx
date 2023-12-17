@@ -21,7 +21,7 @@ export default function OrderPageInProgress() {
   const dispatch = useDispatch();
   const [date, setDate] = useState(0);
   const [pickup, setPickup] = useState("");
-  const [sdekStatus, setSdekStatus] = useState("");
+
   const [delCost, setDelCost] = useState("");
   const [linksub, setLinksub] = useState("");
   const { id } = useParams();
@@ -46,17 +46,6 @@ export default function OrderPageInProgress() {
         setLinksub(res.data.entity.cdek_number);
         setDelCost(res.data.entity.delivery_recipient_cost.value);
         console.log(stage[product.status]);
-        if (stage[product.status] < 6) {
-          setSdekStatus(
-            res.data.entity.statuses.find(
-              (el) => el.code === "READY_FOR_SHIPMENT_IN_SENDER_CITY"
-            )?.code
-          );
-        } else {
-          setSdekStatus(
-            res.data.entity.statuses.find((el) => el.code === "DELIVERED")?.code
-          );
-        }
       });
   }, [product]);
 
@@ -236,23 +225,51 @@ export default function OrderPageInProgress() {
             <div className="text">
               Способ доставки: {product?.delivery_display}
             </div>
-            {delCost && <b>Стоимость доставки: {delCost} ₽</b>}
+            {delCost && <b>Доставка СДЭК: {delCost} ₽</b>}
             <div className="push30 hidden-xss"></div>
             <div className="push15 visible-xss"></div>
-            {linksub && (
-              <div>
-                <b>
-                  <a
-                    rel={"noreferrer"}
-                    className="cdek__track"
-                    target="_blank"
-                    href={`https://www.cdek.ru/ru/tracking?order_id=${linksub}`}
-                  >
-                    Отследить заказ в СДЭК
-                  </a>
-                </b>
-              </div>
-            )}
+            <div className="flex-link">
+              {linksub && stage[product?.status] === 6 && (
+                <div>
+                  <b>
+                    <a
+                      rel={"noreferrer"}
+                      className="btn link-btn link-btn-green"
+                      target="_blank"
+                      href={`https://www.cdek.ru/ru/tracking?order_id=${linksub}`}
+                    >
+                      Отследить СДЭК
+                    </a>
+                  </b>
+                </div>
+              )}
+              {stage[product?.status] < 6 && product?.delivery === "pickup" ? (
+                <Link
+                  to={`/order/${product?.id}#edit`}
+                  className="btn link-btn link-btn-white"
+                >
+                  Изменить Доставку
+                </Link>
+              ) : product?.delivery === "cdek" && stage[product?.status] < 6 ? (
+                <Link
+                  to={`/pvz/${product?.id}#edit`}
+                  className="btn link-btn link-btn-white"
+                >
+                  Изменить Доставку
+                </Link>
+              ) : product?.delivery === "cdek_courier" &&
+                stage[product?.status] < 6 ? (
+                <Link
+                  to={`/crrcdek/${product?.id}#edit`}
+                  className="btn link-btn link-btn-white"
+                >
+                  Изменить Доставку
+                </Link>
+              ) : (
+                <></>
+              )}
+            </div>
+
             <div className="push20 hidden-xss"></div>
 
             {product?.delivery === "pickup" && (
@@ -263,23 +280,6 @@ export default function OrderPageInProgress() {
             )}
             <div className="push15 visible-xss"></div>
             <div className="push35 hidden-xss"></div>
-
-            {stage[product?.status] < 6 && product?.delivery === "pickup" ? (
-              <Link to={"/order"} className="change">
-                Изменить данные доставки
-              </Link>
-            ) : product?.delivery === "cdek" && stage[product?.status] < 6 ? (
-              <Link to={`/pvz/${product?.id}#edit`} className="change">
-                Изменить адрес ПВЗ
-              </Link>
-            ) : product?.delivery === "cdek_courier" &&
-              stage[product?.status] < 6 ? (
-              <Link to={`/crrcdek/${product?.id}#edit`} className="change">
-                Изменить адрес доставки
-              </Link>
-            ) : (
-              <></>
-            )}
 
             <div className="push40 hidden-xss"></div>
             <div className="push25 visible-xss"></div>
@@ -430,9 +430,7 @@ export default function OrderPageInProgress() {
                   )}
                   <li
                     className={`pzn__status ${
-                      stage[product?.status] === 6 &&
-                      stage[sdekStatus] !== 7 &&
-                      stage[sdekStatus] !== 8
+                      stage[product?.status] === 6
                         ? "current"
                         : stage[product?.status] > 5
                         ? "ready"
@@ -445,9 +443,9 @@ export default function OrderPageInProgress() {
                   {product?.delivery !== "Самовывоз из шоурума" && (
                     <li
                       className={`pzn__status ${
-                        stage[product?.status] === 7 || stage[sdekStatus] === 7
+                        stage[product?.status] === 7
                           ? "current"
-                          : stage[product?.status] > 6 || stage[sdekStatus] > 6
+                          : stage[product?.status] > 6
                           ? "ready"
                           : ""
                       }`}
@@ -457,9 +455,9 @@ export default function OrderPageInProgress() {
                   )}
                   <li
                     className={`pzn__status ${
-                      stage[product?.status] === 8 || stage[sdekStatus] === 8
+                      stage[product?.status] === 8
                         ? "current"
-                        : stage[product?.status] > 7 || stage[sdekStatus] > 7
+                        : stage[product?.status] > 7
                         ? "ready"
                         : ""
                     }`}
@@ -471,8 +469,7 @@ export default function OrderPageInProgress() {
                     </span>
                   </li>
                 </ul>
-                {(product.status === "completed" ||
-                  stage[sdekStatus] === 8) && (
+                {product.status === "completed" && (
                   <>
                     <div className="push50 hidden-xss"></div>
                     <div className="push20 visible-xss"></div>

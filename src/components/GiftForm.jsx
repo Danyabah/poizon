@@ -9,7 +9,8 @@ export default function GiftForm({ setOpen, edit, setEdit }) {
   const initialValues = {
     name: edit?.name || "",
     min_price: edit?.min_price || "",
-    image: [edit?.image] || "",
+    image: [],
+    available_count: edit?.available_count || 0,
   };
   const token = useSelector((state) => state.user.token);
 
@@ -19,10 +20,11 @@ export default function GiftForm({ setOpen, edit, setEdit }) {
         alert("Сохранено");
         setOpen(false);
         setEdit(null);
+
         console.log(response);
       },
       onError: (response) => {
-        alert("Произошла ошибка");
+        // alert("Произошла ошибка");
       },
     });
   };
@@ -30,14 +32,22 @@ export default function GiftForm({ setOpen, edit, setEdit }) {
   const validSchema = Yup.object().shape({
     name: Yup.string().required("Необходимо указать название подарка"),
     min_price: Yup.number().required("Укажите от какой суммы доступен подарок"),
+    available_count: Yup.number().required("Укажите количество в наличии"),
   });
 
   const { mutate } = useMutation({
     mutationFn: (formPayload) => {
       if (edit) {
+        let data = Object.assign({}, formPayload);
+
+        if (data.image[0]) {
+          data.image = data.image[0];
+        } else {
+          delete data.image;
+        }
         return axios.patch(
           `https://crm-poizonstore.ru/gifts/${edit?.id}`,
-          { ...formPayload, image: formPayload.image[0] },
+          data,
           {
             headers: {
               Authorization: `Token ${token}`,
@@ -105,6 +115,23 @@ export default function GiftForm({ setOpen, edit, setEdit }) {
               />
             </div>
             <div className="form-group">
+              <label className="label" htmlFor="available_count">
+                Количество в наличии:
+              </label>
+              <Field
+                type="number"
+                name="available_count"
+                className="form-control"
+                id="available_count"
+              />
+              <ErrorMessage
+                style={{ color: "red" }}
+                name="available_count"
+                component="span"
+                className="form-control"
+              />
+            </div>
+            <div className="form-group">
               <div className="text bold700">Загрузите изображение подарка</div>
               <div className="push20"></div>
               <div
@@ -121,7 +148,7 @@ export default function GiftForm({ setOpen, edit, setEdit }) {
                   }}
                 />
 
-                {(values.image === "" || values.image.length == 0) && (
+                {(values.image === "" || values.image?.length == 0) && (
                   <label htmlFor="image">
                     <svg
                       width="28"
@@ -137,7 +164,7 @@ export default function GiftForm({ setOpen, edit, setEdit }) {
                         fill="black"
                       />
                     </svg>
-                    Загрузить фото
+                    Изменить фото
                   </label>
                 )}
               </div>
@@ -149,7 +176,7 @@ export default function GiftForm({ setOpen, edit, setEdit }) {
                 className="form-control"
               />
               <div className="images-wrapper">
-                {values.image !== "" && (
+                {values.image && (
                   <PreviewImage
                     name="image"
                     setField={setFieldValue}

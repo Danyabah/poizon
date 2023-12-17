@@ -269,6 +269,10 @@ export const getStyle = (full, product) => {
 };
 
 export const toDataUrl = (url, callback) => {
+  if (!url.startsWith("https://")) {
+    callback(url);
+    return;
+  }
   var xhr = new XMLHttpRequest();
   xhr.onload = function () {
     var reader = new FileReader();

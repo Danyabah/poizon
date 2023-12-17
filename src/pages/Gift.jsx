@@ -103,6 +103,9 @@ export default function Gift() {
                           <div className="item-info">
                             <div>Доступен от: {pr.min_price} ¥</div>
                           </div>
+                          <div className="item-info">
+                            <div>Количество: {pr.available_count}</div>
+                          </div>
                           <div className="push10"></div>
                           <button
                             className="button"

@@ -1663,11 +1663,20 @@ option {
   font-size: 24px;
   line-height: 29px;
   padding: 24px 27px;
-
+  font-weight: bold;
   /* background-color: black; */
-  color: #428bca;
-  border: 1px solid #428bca;
+  background-color: #5ca3e2;
+  color: white;
+  border: 1px solid #244c6e;
   border-radius: 10px;
+}
+.link-btn-white {
+  background-color: white;
+  color: #244c6e;
+}
+.link-btn-green {
+  background-color: #00a942;
+  border: 1px solid #01702c;
 }
 .more-wrapper:before {
   content: "";
