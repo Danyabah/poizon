@@ -38,6 +38,7 @@ import CompletePage from "./pages/CompletePage";
 
 import Gift from "./pages/Gift";
 import GitftChoose from "./pages/GitftChoose";
+import CalcPrice from "./pages/CalcPrice";
 
 function App() {
   return (
@@ -99,7 +100,14 @@ function App() {
         />
         <Route path="/personalareanew" element={<PersonalAreaNew />} />
         <Route path="/personalareaorder" element={<PersonalAreaOrder />} />
-        <Route path="/personalareaorder/:id" element={<PersonalAreaOrder />} />
+        <Route
+          path="/personalareaorder/:id"
+          element={
+            <Admin>
+              <PersonalAreaOrder />
+            </Admin>
+          }
+        />
         <Route path="/personalareapay/:id" element={<PersonalAreaPay />} />
 
         <Route
@@ -169,13 +177,9 @@ function App() {
             </Admin>
           }
         />
-         <Route
-          path="/giftchoose/:id"
-          element={
-              <GitftChoose />
-          }
-        />
+        <Route path="/giftchoose/:id" element={<GitftChoose />} />
         <Route path="/personalarea" element={<PersonalArea />} />
+        <Route path="/calcprice" element={<CalcPrice />} />
       </Routes>
     </div>
   );

@@ -1,11 +1,24 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import logo from "../utils/logo.PNG";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
+import axios from "axios";
 
 export default function Header() {
   const userInfo = useSelector((state) => state.user.userInfo);
-
+  const token = useSelector((state) => state.user.token);
+  const [curs, setCurs] = useState(0);
+  useEffect(() => {
+    axios
+      .get(`https://crm-poizonstore.ru/settings/`, {
+        headers: {
+          Authorization: `Token ${token}`,
+        },
+      })
+      .then((res) => {
+        setCurs(res.data.currency);
+      });
+  }, []);
   return (
     <header className="header-wrapper">
       <div className="container">
@@ -19,6 +32,10 @@ export default function Header() {
               <img className="img-logo " src={logo} alt="" />
             </>
           )}
+          <div className="header__curs">
+            <span>¥: </span>
+            <span>{curs}</span>
+          </div>
           <div className="links__social">
             <a href="https://poizon-store.ru" rel="noreferrer" target="_blank">
               <i className="uil uil-store"></i>

@@ -5,7 +5,7 @@ import { Navigate } from "react-router-dom";
 export default function Admin({ children }) {
   const userInfo = useSelector((state) => state.user.userInfo);
 
-  if (userInfo.job === "admin") {
+  if (userInfo.job === "admin" || userInfo.job === "productmanager") {
     return children;
   } else {
     return <Navigate to={"/work"} />;

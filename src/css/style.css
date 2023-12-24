@@ -88,14 +88,20 @@ a:hover {
   padding-top: 91px;
   padding-bottom: 50px;
   align-items: center;
-  /* justify-content: center; */
+  justify-content: space-between;
   /* flex-direction: column; */
 }
+
 .logo {
   font-weight: 600;
   font-size: 39.7206px;
   line-height: 48px;
   color: #000000;
+}
+.header__curs {
+  font-size: 30px;
+  white-space: nowrap;
+  font-weight: bold;
 }
 .title {
   font-weight: 500;
@@ -132,7 +138,19 @@ a:hover {
   justify-content: center;
   grid-gap: 20px;
 }
+.links__social {
+  font-size: 30px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
 
+.links__social a {
+  color: #000;
+}
+.calc__link {
+  font-size: 20px;
+}
 @media only screen and (max-width: 991px) {
   .header {
     padding-top: 26px;
@@ -140,12 +158,21 @@ a:hover {
     grid-gap: 20px;
     justify-content: space-between;
   }
+  .header__curs {
+    font-size: 18px;
+  }
+  .links__social {
+    font-size: 20px;
+  }
 }
 @media only screen and (max-width: 647px) {
   .logo {
     font-weight: 600;
     font-size: 22.2122px;
     line-height: 27px;
+  }
+  .calc__link {
+    font-size: 14px;
   }
   .hidden-xss {
   }
@@ -2844,14 +2871,7 @@ option {
   margin: 0 auto;
   border-radius: 10px;
 }
-.links__social {
-  font-size: 30px;
-}
 
-.links__social a {
-  margin: 0 15px;
-  color: #000;
-}
 .image__item img {
   width: 250px;
   height: 250px;
@@ -2877,13 +2897,6 @@ option {
 }
 
 @media only screen and (max-width: 422px) {
-  .links__social {
-    font-size: 25px;
-  }
-  .links__social a {
-    margin: 0 7px;
-    color: #000;
-  }
 }
 
 .flex-i {
@@ -3304,4 +3317,9 @@ option {
 .size-active {
   border: 1px solid #0081ab;
   background-color: #80e0ff;
+}
+.black-btn {
+  background-color: rgb(36, 35, 35);
+  color: white;
+  border: 1px solid black;
 }

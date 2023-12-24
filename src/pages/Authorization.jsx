@@ -34,6 +34,13 @@ export default function Authorization() {
               >
                 Я работаю здесь
               </Link>
+              <Link
+                to={"/calcprice"}
+                href="autorisation_work.html"
+                className="button autorisation no-icon"
+              >
+                Рассчитать стоимость
+              </Link>
             </div>
           </div>
         </div>

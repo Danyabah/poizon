@@ -15,6 +15,7 @@ import {
 import PreviewImage from "./PreviewImage";
 import { useLocation, useParams } from "react-router-dom";
 import { setPreviewimage, setPublicLink } from "../redux/slices/adminReducer";
+import EditProduct from "./EditProduct";
 
 export default function OrderForm() {
   const [categories, setCategories] = useState([]);
@@ -177,7 +178,7 @@ export default function OrderForm() {
             },
           });
         } else {
-          delete data.image;
+          // delete data.image;
 
           return axios.patch(
             `https://crm-poizonstore.ru/checklist/${product.id}`,
@@ -277,10 +278,18 @@ export default function OrderForm() {
     >
       {(formik) => {
         const { values, setValues, setFieldValue, isValid } = formik;
-        console.log(values.subcategory);
-
+        console.log(values);
         return (
           <Form>
+            <EditProduct
+              product={product}
+              categories={categories}
+              setLastPrice={setLastPrice}
+              setPrice={(price) => {
+                setFieldValue("curencycurency2", price);
+              }}
+            />
+
             <div className="title">Товар</div>
             <div className="push20"></div>
             <div className="form-group">
