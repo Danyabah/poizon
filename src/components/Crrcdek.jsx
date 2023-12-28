@@ -142,6 +142,7 @@ export default function Crrcdek() {
     mutationFn: (formPayload) => {
       let { buyername, buyerphone, buyersurname, city, street, house, flat } =
         formPayload;
+      console.log(delivery);
       let newObj = {
         type: 1,
         number: product.id,
@@ -155,7 +156,7 @@ export default function Crrcdek() {
           ],
         },
         delivery_recipient_cost: {
-          value: +delivery + 3.75,
+          value: (+delivery + 3.75) * 0.03 + +delivery + 3.75,
           vat_rate: 6,
         },
         threshold: 1000000,
@@ -198,6 +199,7 @@ export default function Crrcdek() {
         // ПРИ РЕДАКТИРОВАНИИ
         return axios.patch(`https://crm-poizonstore.ru/cdek/orders/`, newObj);
       } else {
+        console.log(newObj);
         return axios.post(`https://crm-poizonstore.ru/cdek/orders/`, newObj);
       }
     },

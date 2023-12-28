@@ -8,6 +8,7 @@ import { useSelector } from "react-redux";
 export default function SubCategForm() {
   const [categories, setCategories] = useState([]);
   const token = useSelector((state) => state.user.token);
+  const [selectedCateg, setSelectedCateg] = useState(1);
 
   const initialValues = {
     category: 0,
@@ -72,9 +73,32 @@ export default function SubCategForm() {
 
         return (
           <Form className="main-inner">
-            <div className="title">Подкатегории Техники</div>
+            <div className="title">Подкатегории</div>
             <div className="push40 hidden-xss"></div>
             <div className="push10 visible-xss"></div>
+            <div className="form-group">
+              <label className="label" htmlFor="category">
+                Категория
+              </label>
+              <div className="push10 visible-xss"></div>
+              <Field
+                as="select"
+                className="form-control"
+                onChange={(e) => {
+                  setSelectedCateg(e.target.value);
+                  setFieldValue("chinarush", 0);
+                  setFieldValue("category", 0);
+                }}
+                value={selectedCateg}
+              >
+                <option value={0}>Не указано</option>
+                {categories.map((categ, i) => (
+                  <option key={categ.id} value={i + 1}>
+                    {categ.name}
+                  </option>
+                ))}
+              </Field>
+            </div>
             <div className="form-group">
               <label className="label" htmlFor="category">
                 Подкатегории
@@ -87,7 +111,7 @@ export default function SubCategForm() {
                 className="form-control"
                 id="category"
                 onChange={(e) => {
-                  let price = categories[6]?.children.find(
+                  let price = categories[selectedCateg - 1]?.children.find(
                     (obj) => obj.id == e.target.value
                   );
 
@@ -96,7 +120,7 @@ export default function SubCategForm() {
                 }}
               >
                 <option value={0}>Не указано</option>
-                {categories[6]?.children?.map((categ) => (
+                {categories[selectedCateg - 1]?.children?.map((categ) => (
                   <option key={categ.id} value={categ.id}>
                     {categ.name}
                   </option>

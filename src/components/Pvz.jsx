@@ -120,7 +120,10 @@ export default function Pvz() {
           ],
         },
         delivery_recipient_cost: {
-          value: +window?.delivery_sum + 3.75,
+          value:
+            (+window?.delivery_sum + 3.75) * 0.03 +
+            +window?.delivery_sum +
+            3.75,
           vat_rate: 6,
         },
         value: 0,
@@ -161,6 +164,7 @@ export default function Pvz() {
         // на редактирование
         return axios.patch(`https://crm-poizonstore.ru/cdek/orders/`, newObj);
       } else {
+        console.log(newObj);
         return axios.post(`https://crm-poizonstore.ru/cdek/orders/`, newObj);
       }
     },

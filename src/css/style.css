@@ -931,6 +931,12 @@ option {
     margin-right: -10px;
     max-width: 50px;
   }
+  .order .row input {
+    width: 20px;
+    height: 40px;
+    margin-left: 10px;
+    border-radius: 10px;
+  }
 }
 
 .pay-inner .item.tink {

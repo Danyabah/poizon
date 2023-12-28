@@ -14,7 +14,7 @@ export default function PurchaseForm({ setCateg }) {
   const dispatch = useDispatch();
 
   const initialValues = {
-    realprice: 0,
+    realprice: product.curencycurency2,
     checkphoto: [],
   };
 
@@ -85,26 +85,23 @@ export default function PurchaseForm({ setCateg }) {
                 />
               </a>
             </div>
-            <div className="label">
-              <strong>Указанная цена в ¥: {product.curencycurency2}</strong>
-            </div>
 
-            <a
-              className="text"
-              href={product?.link}
-              rel="noreferrer"
-              target="_blank"
-            >
-              Ссылка
-            </a>
             <div className="push40 hidden-xss"></div>
             <Form className="main-inner">
               <div className="button-wrapper purchase">
-                <button className="button no-icon" type="submit">
+                <a
+                  className="button no-icon"
+                  href={product?.link}
+                  rel="noreferrer"
+                  target="_blank"
+                >
+                  Товар на Poizon
+                </a>
+                <button className="button no-icon green-btn" type="submit">
                   Закуплено
                 </button>
                 <div
-                  className="button no-icon"
+                  className="button no-icon black-btn"
                   onClick={() => setCateg("buying")}
                 >
                   Отменить закупку

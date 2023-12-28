@@ -19,6 +19,7 @@ export default function OrderPage() {
   const dispatch = useDispatch();
   const [visible, setVisible] = useState(false);
   const [hint, setHint] = useState(false);
+  const [agree, serAgree] = useState(false);
 
   useEffect(() => {
     axios.get(`https://crm-poizonstore.ru/checklist/${id}`).then((res) => {
@@ -209,6 +210,39 @@ export default function OrderPage() {
                         </Link>
                       </div>
                     )}
+                  </div>
+                  <div className="push40 hidden-xss"></div>
+                  <div className="form-group order">
+                    <p
+                      className="row"
+                      style={{
+                        margin: 0,
+                      }}
+                    >
+                      <label
+                        className="label"
+                        htmlFor="nocomission"
+                        style={{
+                          margin: 0,
+                        }}
+                      >
+                        Согласен с{" "}
+                        <a
+                          href="https://poizon-store.ru/public-offer"
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          Публичной Офертой
+                        </a>
+                      </label>
+                      <input
+                        value={agree}
+                        onChange={(e) => serAgree(e.target.checked)}
+                        name="nocomission"
+                        type="checkbox"
+                        id="nocomission"
+                      />
+                    </p>
                   </div>
                   <div className="push40 hidden-xss"></div>
                   {promo && (

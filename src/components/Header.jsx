@@ -35,6 +35,7 @@ export default function Header() {
           <div className="header__curs">
             <span>¥: </span>
             <span>{curs}</span>
+            <span> ₽</span>
           </div>
           <div className="links__social">
             <a href="https://poizon-store.ru" rel="noreferrer" target="_blank">
