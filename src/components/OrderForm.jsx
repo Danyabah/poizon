@@ -179,6 +179,9 @@ export default function OrderForm() {
           });
         } else {
           // delete data.image;
+          if (data.image[0] === product.image[0]) {
+            delete data.image;
+          }
 
           return axios.patch(
             `https://crm-poizonstore.ru/checklist/${product.id}`,
@@ -237,7 +240,7 @@ export default function OrderForm() {
 
         func("link", link);
         func("brand", info.brandName);
-        func("model", info.title.replace(/\p{sc=Han}|[0-9,.+]/gu, "").trim());
+        func("model", info.title.replace(/\p{sc=Han}|[,.+]/gu, "").trim());
       })
       .catch((err) => {
         alert("Проверьте ссылку");
