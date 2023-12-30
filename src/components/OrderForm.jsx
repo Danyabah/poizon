@@ -341,11 +341,29 @@ export default function OrderForm() {
                     categories[+e.target.value - 1].chinarush
                   );
 
+                  let cur3 = Math.round(+values.curencycurency2 * values.currency, 2);
+                  let com = values.commission;
+                  if ( e.target.value == 7) {
+                    let comPersent = categories[6].commission;
+                    console.log(Math.round(cur3 * (comPersent / 100)));
+
+                    setFieldValue(
+                      "commission",
+                      Math.round(cur3 * (comPersent / 100))
+                    );
+                    com = Math.round(cur3 * (comPersent / 100));
+                  }
+
+                
+                  
+
+              
+
                   let fullprice =
                     values.currency3 +
                     values.chinadelivery +
                     categories[+e.target.value - 1].chinarush +
-                    values.commission;
+                    com;
                   setLastPrice(fullprice);
                   if (e.target.value == 7) {
                     setFieldValue(
