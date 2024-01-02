@@ -3096,8 +3096,13 @@ option {
   background-color: #0081ab;
   padding: 21px 20px;
 }
+
 .orderpage__split-green span:first-child {
   background-color: #00a942;
+}
+
+.order-diabled span:first-child {
+  background-color: #444444;
 }
 
 .orderpage__split span:last-child {
@@ -3107,6 +3112,7 @@ option {
   border-bottom-left-radius: 10px;
   border-bottom-right-radius: 10px;
 }
+
 .orderpage__split-green span:last-child {
   background-color: #3fa566;
 }
@@ -3114,6 +3120,9 @@ option {
   border-bottom: 4px solid white;
   border-top-right-radius: 10px;
   border-top-left-radius: 10px;
+}
+.order-diabled span:last-child {
+  background-color: #444444;
 }
 .orderpage__prices {
   display: flex;
@@ -3152,6 +3161,9 @@ option {
     max-width: 180px;
     /* background-color: #0081ab; */
     padding: 8px 8px;
+  }
+  .orderpage__split-green {
+    min-width: 100%;
   }
   .orderpage__split span:last-child {
     max-width: 180px;
@@ -3221,6 +3233,9 @@ option {
   align-items: center;
   border-radius: 10px;
   color: white;
+}
+.full-button .order-diabled {
+  background-color: #444444;
 }
 @media only screen and (max-width: 647px) {
   .full-button {

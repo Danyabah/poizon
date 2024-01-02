@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Header from "../components/Header";
-import { Link, Navigate, useParams } from "react-router-dom";
+import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
 import { useEffect } from "react";
 import axios from "axios";
 import { useDispatch } from "react-redux";
@@ -20,6 +20,17 @@ export default function OrderPage() {
   const [visible, setVisible] = useState(false);
   const [hint, setHint] = useState(false);
   const [agree, serAgree] = useState(false);
+  const navigate = useNavigate();
+
+  function handlePay(address) {
+    if (agree) {
+      navigate(address);
+    } else {
+      alert(
+        "Пожалуйста, подтвердите свое согласие с «Публичной офертой» перед оформлением заказа"
+      );
+    }
+  }
 
   useEffect(() => {
     axios.get(`https://crm-poizonstore.ru/checklist/${id}`).then((res) => {
@@ -127,13 +138,21 @@ export default function OrderPage() {
                       <>
                         <div
                           className="orderpage__flex-row"
-                          style={{ marginTop: "20px" }}
+                          style={{ marginTop: "20px", width: "100%" }}
                         >
-                          <Link
-                            to={`/pay/${id}`}
-                            style={{ gridGap: "10px" }}
-                            className=" orderpage__split orderpage__split-green"
-                            onClick={() => dispatch(setSplit(false))}
+                          <button
+                            style={{
+                              gridGap: "10px",
+                              border: "none",
+                              background: "none",
+                            }}
+                            className={`orderpage__split orderpage__split-green ${
+                              !agree ? "order-diabled" : ""
+                            }`}
+                            onClick={() => {
+                              handlePay(`/pay/${id}`);
+                              dispatch(setSplit(false));
+                            }}
                           >
                             <span style={{ display: "block" }}>
                               <strong>Оплатить</strong>
@@ -145,17 +164,21 @@ export default function OrderPage() {
                                 </div>
                               </strong>
                             </span>
-                          </Link>
+                          </button>
                         </div>
                         <div
                           className="orderpage__flex-row"
                           style={{ marginTop: "20px" }}
                         >
-                          <Link
-                            to={`/pay/${id}`}
-                            style={{ gridGap: "10px" }}
-                            className=" orderpage__split"
-                            onClick={() => dispatch(setSplit(true))}
+                          <button
+                            style={{ gridGap: "10px", border: "none" }}
+                            className={`orderpage__split ${
+                              !agree ? "order-diabled" : ""
+                            }`}
+                            onClick={() => {
+                              handlePay(`/pay/${id}`);
+                              dispatch(setSplit(true));
+                            }}
                           >
                             <span style={{ display: "block" }}>
                               <strong>Оплатить Долями</strong>
@@ -176,7 +199,7 @@ export default function OrderPage() {
                                 </div>
                               </strong>
                             </span>
-                          </Link>
+                          </button>
                           <div
                             style={{ position: "relative" }}
                             className="orderpage__ques"
@@ -198,16 +221,20 @@ export default function OrderPage() {
                         className="orderpage__flex-row"
                         style={{ marginTop: "20px", width: "100%" }}
                       >
-                        <Link
-                          to={`/pay/${id}`}
-                          style={{ gridGap: "10px" }}
-                          className="full-button"
-                          onClick={() => dispatch(setSplit(false))}
+                        <button
+                          style={{ gridGap: "10px", border: "none" }}
+                          className={`full-button ${
+                            !agree ? "order-diabled" : ""
+                          }`}
+                          onClick={() => {
+                            handlePay(`/pay/${id}`);
+                            dispatch(setSplit(false));
+                          }}
                         >
                           <span style={{ display: "block" }}>
                             <strong>Оплатить</strong>
                           </span>
-                        </Link>
+                        </button>
                       </div>
                     )}
                   </div>
@@ -217,6 +244,7 @@ export default function OrderPage() {
                       className="row"
                       style={{
                         margin: 0,
+                        justifyContent: "center",
                       }}
                     >
                       <label
