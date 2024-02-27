@@ -3234,7 +3234,10 @@ option {
   border-radius: 10px;
   color: white;
 }
-.full-button .order-diabled {
+.full-button.order-diabled {
+  background-color: #444444;
+}
+.timer.order-diabled {
   background-color: #444444;
 }
 @media only screen and (max-width: 647px) {

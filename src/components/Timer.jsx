@@ -5,7 +5,7 @@ import { parseSeconds } from "../utils/utils";
 import { useDispatch } from "react-redux";
 import { setSplit } from "../redux/slices/userReducer";
 
-export default function Timer() {
+export default function Timer({ agree = true }) {
   const { id } = useParams();
   const [timer, setTimer] = useState(10);
   const [interval, setStateInterval] = useState(0);
@@ -39,10 +39,16 @@ export default function Timer() {
 
   return timer && location.hash !== "#split" ? (
     <div
-      className="timer"
+      className={`timer ${!agree ? "order-diabled" : ""}`}
       onClick={() => {
-        navigate(`/pay/${id}`);
-        dispatch(setSplit(false));
+        if (agree) {
+          navigate(`/pay/${id}`);
+          dispatch(setSplit(false));
+        } else {
+          alert(
+            "Пожалуйста, подтвердите свое согласие с «Публичной офертой» перед оформлением заказа"
+          );
+        }
       }}
     >
       <div>

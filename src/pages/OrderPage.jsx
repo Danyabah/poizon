@@ -66,7 +66,7 @@ export default function OrderPage() {
   return (
     <>
       <Header />
-      <Timer />
+      <Timer agree={agree} />
       <div className="line"></div>
       <div className="push60 hidden-xss"></div>
       <div className="push20 visible-xss"></div>
