@@ -162,7 +162,28 @@ export const deliveryName = {
 };
 
 export function addToDraft(values, token) {
-  if (window.confirm("Вы уверены что хотите отменить заказ?")) {
+  if (values?.split_payment_proof && stage[values.status] <= 6) {
+    let copy = { ...values };
+
+    axios
+      .patch(
+        `https://crm-poizonstore.ru/checklist/${copy.id}`,
+        {
+          split_payment_proof: null,
+        },
+        {
+          headers: {
+            Authorization: `Token ${token}`,
+          },
+        }
+      )
+      .then((res) => {
+        if (res.status === 200) {
+          alert("Отклонено");
+        }
+        console.log(res);
+      });
+  } else if (window.confirm("Вы уверены что хотите отменить заказ?")) {
     let copy = { ...values };
     // copy.status = "draft";
     delete copy.status;
